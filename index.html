@@ -3,61 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajni Public School - Online Result 2026</title>
+    <title>Rajni Public School - Result 2026</title>
     <style>
-        /* डिजाइन और सजावट */
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .search-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 420px; text-align: center; border-top: 6px solid #1a73e8; }
-        h2 { color: #1a73e8; margin-bottom: 10px; }
-        input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus { border-color: #1a73e8; }
-        .btn-search { background: #1a73e8; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 93%; }
-        .btn-search:hover { background: #1557b0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .search-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid #d93025; }
+        input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button { background: #d93025; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 93%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #b2221a; }
 
-        /* मार्कशीट का डिजाइन */
-        #marksheetArea { display: none; margin-top: 30px; width: 100%; max-width: 800px; background: white; padding: 40px; border: 2px solid #000; box-shadow: 0 0 20px rgba(0,0,0,0.1); position: relative; }
-        .school-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
-        .photo-box { width: 120px; height: 140px; border: 1px solid #000; float: right; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; }
-        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        /* मार्कशीट स्टाइल */
+        #marksheetArea { display: none; width: 900px; background: white; padding: 40px; border: 2px solid #000; box-shadow: 0 0 25px rgba(0,0,0,0.2); margin-top: 30px; }
+        .school-info { text-align: center; border-bottom: 2px solid #000; margin-bottom: 15px; padding-bottom: 10px; }
+        .photo-frame { width: 110px; height: 130px; border: 1px solid #000; float: right; overflow: hidden; background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
         
-        .student-info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .student-info-table td { padding: 8px; font-size: 16px; vertical-align: top; }
+        .st-details { width: 100%; margin-bottom: 15px; font-size: 15px; border-collapse: collapse; }
+        .st-details td { padding: 4px 0; }
         
-        .main-marks-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .main-marks-table th, .main-marks-table td { border: 1px solid #000; padding: 12px; text-align: left; }
-        .main-marks-table th { background: #f2f2f2; text-transform: uppercase; font-size: 14px; }
-        
-        .footer-area { margin-top: 60px; display: flex; justify-content: space-between; font-weight: bold; }
-        .print-btn { background: #34a853; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; font-size: 15px; }
+        .marks-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; text-align: center; }
+        .marks-table th, .marks-table td { border: 1px solid #000; padding: 7px; }
+        .bg-gray { background: #f1f3f4; font-weight: bold; }
+        .text-left { text-align: left !important; padding-left: 10px !important; font-weight: bold; }
 
-        /* प्रिंट के समय क्या दिखे और क्या नहीं */
-        @media print {
-            body { background: white; padding: 0; }
-            .search-card, .print-btn { display: none; }
-            #marksheetArea { border: none; box-shadow: none; width: 100%; margin: 0; padding: 20px; }
-        }
+        .summary-box { margin-top: 20px; display: flex; justify-content: space-around; background: #f8f9fa; padding: 15px; border: 1px solid #000; font-weight: bold; font-size: 16px; }
+        .footer-sig { margin-top: 60px; display: flex; justify-content: space-between; font-weight: bold; }
+        
+        @media print { .search-box, .print-btn { display: none; } #marksheetArea { border: none; box-shadow: none; width: 100%; margin: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="search-card">
-        <h2>RAJNI PUBLIC SCHOOL</h2>
-        <p>Annual Examination Result - 2026</p>
-        <input type="text" id="rollInput" placeholder="Enter Roll Number (Ex: 101)">
-        <button class="btn-search" onclick="fetchResult()">Show Result</button>
+    <div class="search-box">
+        <h2 style="color:#d93025;">RAJNI PUBLIC SCHOOL</h2>
+        <p>Annual Examination Portal 2026</p>
+        <input type="text" id="rollNo" placeholder="Enter Roll Number (e.g., 3)">
+        <button onclick="getStudentResult()">View Report Card</button>
     </div>
 
     <div id="marksheetArea">
-        <div class="photo-box" id="studentPhoto">NO PHOTO</div>
-        <div class="school-header">
-            <h1 style="margin:0; font-size: 28px;">RAJNI PUBLIC SCHOOL</h1>
+        <div class="photo-frame" id="stPhoto">PHOTO</div>
+        <div class="school-info">
+            <h1 style="margin:0; font-size: 30px;">RAJNI PUBLIC SCHOOL</h1>
             <p style="margin:5px 0;">Affiliated to State Board | Session: <span id="outSession"></span></p>
-            <h3 style="margin:10px 0; text-decoration: underline;">ANNUAL PROGRESS REPORT CARD</h3>
+            <h3 style="text-decoration: underline;">ANNUAL PROGRESS REPORT</h3>
         </div>
 
-        <table class="student-info-table">
+        <table class="st-details">
             <tr>
-                <td width="50%"><strong>Student Name:</strong> <span id="outName"></span></td>
+                <td width="55%"><strong>Student Name:</strong> <span id="outName"></span></td>
                 <td><strong>Roll No:</strong> <span id="outRoll"></span></td>
             </tr>
             <tr>
@@ -65,105 +58,125 @@
                 <td><strong>Class:</strong> <span id="outClass"></span></td>
             </tr>
             <tr>
-                <td><strong>Mother's Name:</strong> <span id="outMother"></span></td>
-                <td><strong>Date of Birth:</strong> <span id="outDob"></span></td>
-            </tr>
-            <tr>
                 <td><strong>Registration No:</strong> <span id="outReg"></span></td>
-                <td><strong>Issue Date:</strong> <span id="outIssue"></span></td>
-            </tr>
-            <tr>
-                <td colspan="2"><strong>Address:</strong> <span id="outAddr"></span></td>
+                <td><strong>DOB:</strong> <span id="outDob"></span></td>
             </tr>
         </table>
 
-        <table class="main-marks-table">
+        <table class="marks-table">
             <thead>
-                <tr>
-                    <th width="70%">Description / Subjects</th>
-                    <th>Obtained Details</th>
+                <tr class="bg-gray">
+                    <th rowspan="2">SCHOLASTIC SUBJECTS</th>
+                    <th colspan="2">FA-1 Exam</th>
+                    <th colspan="2">HALF YEARLY</th>
+                    <th colspan="2">ANNUAL EXAM</th>
+                    <th rowspan="2">FINAL GRADE</th>
+                </tr>
+                <tr class="bg-gray">
+                    <th>MM</th><th>Obt.</th>
+                    <th>Marks</th><th>Grade</th>
+                    <th>Marks</th><th>Grade</th>
                 </tr>
             </thead>
             <tbody id="marksBody">
-                <tr><td>Attendance</td><td id="outAtten"></td></tr>
-            </tbody>
+                </tbody>
         </table>
 
-        <div class="footer-area">
-            <p>Class Teacher Sign</p>
-            <p>Principal Signature</p>
+        <div class="summary-box">
+            <div>TOTAL OBTAINED: <span id="totalObt"></span> / 500</div>
+            <div>PERCENTAGE: <span id="perc"></span>%</div>
+            <div>RESULT: <span id="resStatus"></span></div>
         </div>
 
-        <button class="print-btn" onclick="window.print()">Print Marksheet</button>
+        <div style="margin-top:15px;"><strong>Attendance:</strong> <span id="outAtten"></span> | <strong>Issue Date:</strong> <span id="outIssue"></span></div>
+
+        <div class="footer-sig">
+            <p>Class Teacher</p>
+            <p>Parent's Sign</p>
+            <p>Principal Signature</p>
+        </div>
+        <button class="print-btn" onclick="window.print()" style="margin-top:20px; background:#1a73e8; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">Print Marksheet</button>
     </div>
 
     <script>
-        // अपना Sheet3 (database) वाला CSV लिंक यहाँ नीचे पेस्ट करें
-        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?gid=1253973170&single=true&output=csv";
+        // *** अपनी Sheet3 (database) का CSV लिंक यहाँ पेस्ट करें ***
+        const CSV_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?gid=1253973170&single=true&output=csv";
 
-        async function fetchResult() {
-            const rollVal = document.getElementById("rollInput").value.trim();
-            if(!rollVal) return alert("Please enter a Roll Number!");
+        async function getStudentResult() {
+            const rollInput = document.getElementById("rollNo").value.trim();
+            if(!rollInput) return alert("Please enter Roll Number");
 
             try {
-                const response = await fetch(GOOGLE_SHEET_CSV_URL);
-                const csvData = await response.text();
-                const rows = csvData.split("\n").map(row => row.split(","));
+                const resp = await fetch(CSV_LINK);
+                const text = await resp.text();
+                const rows = text.split("\n").map(r => r.split(","));
 
-                let foundData = null;
-
-                // डेटा सर्च करना (Row 1 के बाद से)
+                let found = null;
                 for (let i = 1; i < rows.length; i++) {
-                    const row = rows[i];
-                    // Column I (Index 8) में Roll No चेक करना
-                    if (row[8] && row[8].toString().trim() === rollVal) {
-                        foundData = row;
+                    if (rows[i][8] && rows[i][8].toString().trim() == rollInput) {
+                        found = rows[i];
                         break;
                     }
                 }
 
-                if (foundData) {
-                    displayMarksheet(foundData);
-                } else {
-                    alert("Roll Number '" + rollVal + "' not found in our records.");
-                }
-
-            } catch (error) {
-                console.error(error);
-                alert("Database Connection Error! Please check your CSV Link or Internet.");
-            }
+                if (found) { displayData(found); } 
+                else { alert("Roll Number " + rollInput + " not found!"); }
+            } catch (e) { alert("Database Connection Error!"); }
         }
 
-        function displayMarksheet(d) {
-            // डेटा को मैप करना (Mapping columns to IDs)
-            document.getElementById("outName").innerText = d[1] || "-";    // Column B
-            document.getElementById("outFather").innerText = d[2] || "-";  // Column C
-            document.getElementById("outMother").innerText = d[3] || "-";  // Column D
-            document.getElementById("outDob").innerText = d[4] || "-";     // Column E
-            document.getElementById("outClass").innerText = d[5] || "-";   // Column F
-            document.getElementById("outAddr").innerText = d[6] || "-";    // Column G
-            document.getElementById("outReg").innerText = d[7] || "-";     // Column H
-            document.getElementById("outRoll").innerText = d[8] || "-";    // Column I
-            document.getElementById("outSession").innerText = d[9] || "-"; // Column J
-            document.getElementById("outAtten").innerText = d[10] || "-";  // Column K
-            document.getElementById("outIssue").innerText = d[11] || "-";  // Column L
+        function displayData(d) {
+            document.getElementById("outName").innerText = d[1];
+            document.getElementById("outFather").innerText = d[2];
+            document.getElementById("outDob").innerText = d[4];
+            document.getElementById("outClass").innerText = d[5];
+            document.getElementById("outReg").innerText = d[7];
+            document.getElementById("outRoll").innerText = d[8];
+            document.getElementById("outSession").innerText = d[9];
+            document.getElementById("outAtten").innerText = d[10];
+            document.getElementById("outIssue").innerText = d[11];
 
-            // फोटो हैंडल करना (Column M = Index 12)
-            const photoBox = document.getElementById("studentPhoto");
-            const driveID = d[12] ? d[12].trim() : "";
+            // Subjects Mapping
+            const subjects = [
+                { name: "HINDI", faM: 34, faO: 35, hyM: 92, hyG: 208, anM: 179, anG: 224 },
+                { name: "ENGLISH", faM: 36, faO: 37, hyM: 93, hyG: 209, anM: 180, anG: 225 },
+                { name: "MATHEMATICS", faM: 38, faO: 39, hyM: 94, hyG: 210, anM: 181, anG: 226 },
+                { name: "SCIENCE", faM: 40, faO: 41, hyM: 95, hyG: 211, anM: 182, anG: 227 },
+                { name: "EVS / SST", faM: 42, faO: 43, hyM: 96, hyG: 212, anM: 183, anG: 228 }
+            ];
+
+            let tableRows = "";
+            let totalObtained = 0;
+
+            subjects.forEach(s => {
+                const annualMarks = parseFloat(d[s.anM]) || 0;
+                totalObtained += annualMarks;
+                
+                tableRows += `<tr>
+                    <td class="text-left">${s.name}</td>
+                    <td>${d[s.faM] || '-'}</td>
+                    <td>${d[s.faO] || '-'}</td>
+                    <td>${d[s.hyM] || '-'}</td>
+                    <td>${d[s.hyG] || '-'}</td>
+                    <td>${d[s.anM] || '-'}</td>
+                    <td>${d[s.anG] || '-'}</td>
+                    <td><strong>${d[s.anG] || '-'}</strong></td>
+                </tr>`;
+            });
+
+            document.getElementById("marksBody").innerHTML = tableRows;
+            document.getElementById("totalObt").innerText = totalObtained;
             
-            if(driveID.length > 5) {
-                // गूगल ड्राइव डायरेक्ट इमेज लिंक
-                photoBox.innerHTML = `<img src="https://lh3.googleusercontent.com/u/0/d/${driveID}=w200-h200-p-k-no-nu" 
-                                           onerror="this.src='https://via.placeholder.com/120x140?text=PHOTO+ERROR'">`;
-            } else {
-                photoBox.innerHTML = "NO PHOTO";
-            }
+            const percentage = (totalObtained / 500) * 100;
+            document.getElementById("perc").innerText = percentage.toFixed(2);
+            document.getElementById("resStatus").innerText = percentage >= 33 ? "PASSED" : "PROMOTED";
 
-            // मार्कशीट दिखाना
+            // Photo Logic
+            const driveID = d[12] ? d[12].trim() : "";
+            if(driveID.length > 5) {
+                document.getElementById("stPhoto").innerHTML = `<img src="https://lh3.googleusercontent.com/u/0/d/${driveID}">`;
+            } else { document.getElementById("stPhoto").innerHTML = "NO PHOTO"; }
+
             document.getElementById("marksheetArea").style.display = "block";
-            // पेज को नीचे की ओर स्क्रॉल करना
-            document.getElementById("marksheetArea").scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
