@@ -2,142 +2,144 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rajni Public School - Result Portal</title>
     <style>
-        /* सुंदर डिजाइन के लिए CSS */
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #e9ecef; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .search-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 5px solid #007bff; }
-        h2 { color: #333; margin-bottom: 20px; }
-        input { width: 85%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus { border-color: #007bff; }
-        button { background: #007bff; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 93%; transition: 0.3s; }
-        button:hover { background: #0056b3; transform: translateY(-2px); }
-
-        /* मार्कशीट का डिजाइन */
-        #resultArea { display: none; margin-top: 30px; width: 100%; max-width: 650px; background: white; padding: 40px; border: 2px solid #000; box-shadow: 0 0 20px rgba(0,0,0,0.2); position: relative; }
-        .school-name { text-align: center; font-size: 24px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
-        .exam-name { text-align: center; font-size: 16px; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .student-info { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 16px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #000; padding: 10px; text-align: center; }
-        th { background: #f2f2f2; }
-        .footer { margin-top: 30px; display: flex; justify-content: space-between; font-weight: bold; }
-        .status-pass { color: green; font-weight: bold; font-size: 20px; }
-        .status-fail { color: red; font-weight: bold; font-size: 20px; }
-        @media print { .search-box, .print-btn { display: none; } #resultArea { border: none; box-shadow: none; margin-top: 0; } }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .search-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 350px; text-align: center; border-top: 5px solid #007bff; }
+        input { width: 85%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button { background: #007bff; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 93%; font-weight: bold; font-size: 16px; }
+        
+        /* मार्कशीट डिजाइन */
+        #marksheet { display: none; background: white; width: 750px; padding: 40px; margin-top: 30px; border: 2px solid #333; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .header-table { width: 100%; margin-bottom: 20px; }
+        .school-info { text-align: center; }
+        .photo-box { width: 100px; height: 120px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #f9f9f9; }
+        .student-details { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .student-details td { padding: 8px; border: none; font-size: 15px; }
+        .main-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .main-table th, .main-table td { border: 1px solid #000; padding: 10px; text-align: left; }
+        .footer-sign { display: flex; justify-content: space-between; margin-top: 50px; font-weight: bold; }
+        @media print { .search-card, .print-btn { display: none; } #marksheet { border: none; box-shadow: none; margin-top: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="search-box">
-        <h2>Student Result Search</h2>
-        <input type="text" id="rollNo" placeholder="Enter Roll Number">
-        <button onclick="fetchSheetData()">Check Result</button>
+    <div class="search-card">
+        <h2>Result Portal 2026</h2>
+        <input type="text" id="rollInput" placeholder="Enter Roll Number">
+        <button onclick="fetchResult()">Show Marksheet</button>
     </div>
 
-    <div id="resultArea">
-        <div class="school-name">RAJNI PUBLIC SCHOOL</div>
-        <div class="exam-name">Annual Examination Report Card - 2026</div>
+    <div id="marksheet">
+        <table class="header-table">
+            <tr>
+                <td width="120">
+                    <div class="photo-box" id="studentPhoto">NO PHOTO</div>
+                </td>
+                <td class="school-info">
+                    <h1 style="margin:0; color:#007bff;">RAJNI PUBLIC SCHOOL</h1>
+                    <p style="margin:5px 0;">ANNUAL PROGRESS REPORT CARD</p>
+                    <p><strong>Session:</strong> <span id="sSession"></span></p>
+                </td>
+            </tr>
+        </table>
 
-        <div class="student-info">
-            <div>
-                <p><strong>Name:</strong> <span id="stName"></span></p>
-                <p><strong>Father's Name:</strong> <span id="stFather"></span></p>
-            </div>
-            <div>
-                <p><strong>Roll No:</strong> <span id="stRoll"></span></p>
-            </div>
-        </div>
+        <table class="student-details">
+            <tr>
+                <td><strong>Student Name:</strong> <span id="sName"></span></td>
+                <td><strong>Roll No:</strong> <span id="sRoll"></span></td>
+            </tr>
+            <tr>
+                <td><strong>Father's Name:</strong> <span id="sFather"></span></td>
+                <td><strong>Class:</strong> <span id="sClass"></span></td>
+            </tr>
+            <tr>
+                <td><strong>Mother's Name:</strong> <span id="sMother"></span></td>
+                <td><strong>DOB:</strong> <span id="sDob"></span></td>
+            </tr>
+            <tr>
+                <td><strong>Registration No:</strong> <span id="sReg"></span></td>
+                <td><strong>Issue Date:</strong> <span id="sIssue"></span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Address:</strong> <span id="sAddr"></span></td>
+            </tr>
+        </table>
 
-        <table>
+        <table class="main-table">
             <thead>
                 <tr>
-                    <th>Subject Name</th>
-                    <th>Max Marks</th>
-                    <th>Marks Obtained</th>
+                    <th>Description</th>
+                    <th>Details / Marks</th>
                 </tr>
             </thead>
-            <tbody id="marksRows">
+            <tbody>
+                <tr><td>Attendance</td><td id="sAtten"></td></tr>
                 </tbody>
         </table>
 
-        <div class="footer">
-            <p>Result Status: <span id="finalStatus"></span></p>
-            <p>Signature of Principal</p>
+        <div class="footer-sign">
+            <p>Class Teacher</p>
+            <p>Principal Signature</p>
         </div>
-        
-        <button class="print-btn" onclick="window.print()" style="margin-top: 20px; background: #28a745; width: auto;">Print Now</button>
+
+        <button class="print-btn" onclick="window.print()" style="margin-top:30px; background:#28a745; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">Print Result</button>
     </div>
 
     <script>
-        // अपना Google Sheet CSV Link यहाँ नीचे वाले डबल कोट्स में पेस्ट करें
-        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?output=csv";
+        // अपना Sheet3 (database) वाला CSV लिंक यहाँ डालें
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?output=csv";
 
-        async function fetchSheetData() {
-            const inputRoll = document.getElementById("rollNo").value.trim();
-            if(!inputRoll) { alert("Please enter a Roll Number"); return; }
+        async function fetchResult() {
+            const roll = document.getElementById("rollInput").value.trim();
+            if(!roll) return alert("Please enter Roll Number");
 
             try {
-                const response = await fetch(GOOGLE_SHEET_CSV_URL);
-                const csvData = await response.text();
-                const rows = csvData.split("\n").map(row => row.split(","));
+                const response = await fetch(CSV_URL);
+                const text = await response.text();
+                const rows = text.split("\n").map(r => r.split(","));
 
-                let studentFound = false;
-
-                // Loop through rows (starting from 1 to skip header)
+                let found = false;
                 for (let i = 1; i < rows.length; i++) {
-                    const row = rows[i];
-                    // row[0] में Roll Number होना चाहिए
-                    if (row[0] && row[0].trim() === inputRoll) {
-                        displayResult(row);
-                        studentFound = true;
+                    const data = rows[i];
+                    // data[8] = Roll No (Column I)
+                    if (data[8] && data[8].trim() === roll) {
+                        displayData(data);
+                        found = true;
                         break;
                     }
                 }
-
-                if (!studentFound) {
-                    alert("Result not found for Roll No: " + inputRoll);
-                }
-
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Error connecting to database. Make sure your link is correct!");
+                if (!found) alert("Roll Number not found in Database!");
+            } catch (e) {
+                alert("Database Connection Error!");
             }
         }
 
-        function displayResult(data) {
-            document.getElementById("stRoll").innerText = data[0];
-            document.getElementById("stName").innerText = data[1];
-            document.getElementById("stFather").innerText = data[2];
+        function displayData(d) {
+            document.getElementById("sName").innerText = d[1];   // Name (B)
+            document.getElementById("sFather").innerText = d[2]; // Father (C)
+            document.getElementById("sMother").innerText = d[3]; // Mother (D)
+            document.getElementById("sDob").innerText = d[4];    // DOB (E)
+            document.getElementById("sClass").innerText = d[5];  // Class (F)
+            document.getElementById("sAddr").innerText = d[6];   // Address (G)
+            document.getElementById("sReg").innerText = d[7];    // Reg No (H)
+            document.getElementById("sRoll").innerText = d[8];   // Roll No (I)
+            document.getElementById("sSession").innerText = d[9];// Session (J)
+            document.getElementById("sAtten").innerText = d[10]; // Attendance (K)
+            document.getElementById("sIssue").innerText = d[11]; // Issue Date (L)
 
-            // मान लीजिए Column 3, 4, 5 में Hindi, English, Maths के मार्क्स हैं
-            const subjects = [
-                { name: "Hindi", marks: data[3] },
-                { name: "English", marks: data[4] },
-                { name: "Mathematics", marks: data[5] }
-            ];
-
-            let tableHTML = "";
-            let totalMarks = 0;
-
-            subjects.forEach(sub => {
-                tableHTML += `<tr><td>${sub.name}</td><td>100</td><td>${sub.marks}</td></tr>`;
-                totalMarks += parseInt(sub.marks) || 0;
-            });
-
-            document.getElementById("marksRows").innerHTML = tableHTML;
+            // फोटो वाला हिस्सा (Column M = d[12])
+            const photoDiv = document.getElementById("studentPhoto");
+            const driveID = d[12] ? d[12].trim() : "";
             
-            const statusLabel = document.getElementById("finalStatus");
-            if(totalMarks >= 100) {
-                statusLabel.innerText = "PASSED";
-                statusLabel.className = "status-pass";
+            if(driveID && driveID.length > 5) {
+                // यह गूगल ड्राइव इमेज को डायरेक्ट लोड करेगा
+                photoDiv.innerHTML = `<img src="https://lh3.googleusercontent.com/u/0/d/${driveID}" style="width:100%; height:100%; object-fit:cover;">`;
             } else {
-                statusLabel.innerText = "FAILED";
-                statusLabel.className = "status-fail";
+                photoDiv.innerHTML = "NO PHOTO";
             }
 
-            document.getElementById("resultArea").style.display = "block";
+            document.getElementById("marksheet").style.display = "block";
         }
     </script>
 </body>
