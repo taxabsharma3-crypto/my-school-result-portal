@@ -3,48 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajni Public School - Result 2026</title>
+    <title>Rajni Public School - Online Result 2026</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .search-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 5px solid #28a745; }
-        input { width: 85%; padding: 12px; margin-bottom: 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
-        input:focus { border-color: #28a745; }
-        button { background: #28a745; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 93%; transition: 0.3s; }
-        button:hover { background: #218838; }
+        /* डिजाइन और सजावट */
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .search-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 420px; text-align: center; border-top: 6px solid #1a73e8; }
+        h2 { color: #1a73e8; margin-bottom: 10px; }
+        input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: #1a73e8; }
+        .btn-search { background: #1a73e8; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; width: 93%; }
+        .btn-search:hover { background: #1557b0; }
 
-        /* मार्कशीट डिजाइन */
-        #resultView { display: none; margin-top: 30px; width: 100%; max-width: 700px; background: white; padding: 40px; border: 1px solid #000; box-shadow: 0 0 15px rgba(0,0,0,0.1); position: relative; }
-        .school-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-        .photo-frame { width: 110px; height: 130px; border: 1px solid #000; float: right; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; }
-        .details-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .details-table td { padding: 8px; font-size: 15px; vertical-align: top; }
-        .marks-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .marks-table th, .marks-table td { border: 1px solid #000; padding: 10px; text-align: left; }
-        .marks-table th { background: #f2f2f2; }
-        .footer { margin-top: 50px; display: flex; justify-content: space-between; font-weight: bold; }
-        .print-btn { background: #007bff; margin-top: 20px; width: auto; padding: 10px 25px; }
-        @media print { .search-box, .print-btn { display: none; } #resultView { border: none; box-shadow: none; margin-top: 0; } }
+        /* मार्कशीट का डिजाइन */
+        #marksheetArea { display: none; margin-top: 30px; width: 100%; max-width: 800px; background: white; padding: 40px; border: 2px solid #000; box-shadow: 0 0 20px rgba(0,0,0,0.1); position: relative; }
+        .school-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
+        .photo-box { width: 120px; height: 140px; border: 1px solid #000; float: right; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .student-info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .student-info-table td { padding: 8px; font-size: 16px; vertical-align: top; }
+        
+        .main-marks-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .main-marks-table th, .main-marks-table td { border: 1px solid #000; padding: 12px; text-align: left; }
+        .main-marks-table th { background: #f2f2f2; text-transform: uppercase; font-size: 14px; }
+        
+        .footer-area { margin-top: 60px; display: flex; justify-content: space-between; font-weight: bold; }
+        .print-btn { background: #34a853; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; font-size: 15px; }
+
+        /* प्रिंट के समय क्या दिखे और क्या नहीं */
+        @media print {
+            body { background: white; padding: 0; }
+            .search-card, .print-btn { display: none; }
+            #marksheetArea { border: none; box-shadow: none; width: 100%; margin: 0; padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="search-box">
-        <h2 style="margin-top:0;">Student Result Portal</h2>
-        <p>Enter Roll Number to View Result</p>
-        <input type="text" id="rollInput" placeholder="Ex: 101, 102...">
-        <button onclick="searchStudent()">Search Result</button>
+    <div class="search-card">
+        <h2>RAJNI PUBLIC SCHOOL</h2>
+        <p>Annual Examination Result - 2026</p>
+        <input type="text" id="rollInput" placeholder="Enter Roll Number (Ex: 101)">
+        <button class="btn-search" onclick="fetchResult()">Show Result</button>
     </div>
 
-    <div id="resultView">
-        <div class="photo-frame" id="stPhoto">PHOTO</div>
+    <div id="marksheetArea">
+        <div class="photo-box" id="studentPhoto">NO PHOTO</div>
         <div class="school-header">
-            <h1 style="margin:0;">RAJNI PUBLIC SCHOOL</h1>
-            <p style="margin:5px 0; font-size: 18px;">Annual Result Report - 2025-26</p>
+            <h1 style="margin:0; font-size: 28px;">RAJNI PUBLIC SCHOOL</h1>
+            <p style="margin:5px 0;">Affiliated to State Board | Session: <span id="outSession"></span></p>
+            <h3 style="margin:10px 0; text-decoration: underline;">ANNUAL PROGRESS REPORT CARD</h3>
         </div>
 
-        <table class="details-table">
+        <table class="student-info-table">
             <tr>
-                <td><strong>Name:</strong> <span id="outName"></span></td>
+                <td width="50%"><strong>Student Name:</strong> <span id="outName"></span></td>
                 <td><strong>Roll No:</strong> <span id="outRoll"></span></td>
             </tr>
             <tr>
@@ -53,10 +66,10 @@
             </tr>
             <tr>
                 <td><strong>Mother's Name:</strong> <span id="outMother"></span></td>
-                <td><strong>DOB:</strong> <span id="outDob"></span></td>
+                <td><strong>Date of Birth:</strong> <span id="outDob"></span></td>
             </tr>
             <tr>
-                <td><strong>Reg. No:</strong> <span id="outReg"></span></td>
+                <td><strong>Registration No:</strong> <span id="outReg"></span></td>
                 <td><strong>Issue Date:</strong> <span id="outIssue"></span></td>
             </tr>
             <tr>
@@ -64,86 +77,93 @@
             </tr>
         </table>
 
-        <table class="marks-table">
+        <table class="main-marks-table">
             <thead>
                 <tr>
-                    <th>Description</th>
-                    <th>Detail / Remark</th>
+                    <th width="70%">Description / Subjects</th>
+                    <th>Obtained Details</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="marksBody">
                 <tr><td>Attendance</td><td id="outAtten"></td></tr>
-                <tr><td>Session</td><td id="outSession"></td></tr>
             </tbody>
         </table>
 
-        <div class="footer">
-            <p>Class Teacher</p>
+        <div class="footer-area">
+            <p>Class Teacher Sign</p>
             <p>Principal Signature</p>
         </div>
-        
-        <button class="print-btn" onclick="window.print()" style="color:white; border-radius:5px; cursor:pointer; border:none;">Print Marksheet</button>
+
+        <button class="print-btn" onclick="window.print()">Print Marksheet</button>
     </div>
 
     <script>
-        // अपनी Sheet3 (database) का CSV लिंक यहाँ डालें
-        const SHEET_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?output=csv";
+        // अपना Sheet3 (database) वाला CSV लिंक यहाँ नीचे पेस्ट करें
+        const GOOGLE_SHEET_CSV_URL = "यहाँ_अपना_CSV_LINK_पेस्ट_करें";
 
-        async function searchStudent() {
-            const val = document.getElementById("rollInput").value.trim();
-            if(!val) return alert("Please enter Roll Number");
+        async function fetchResult() {
+            const rollVal = document.getElementById("rollInput").value.trim();
+            if(!rollVal) return alert("Please enter a Roll Number!");
 
             try {
-                const response = await fetch(SHEET_LINK);
-                const csvText = await response.text();
-                // डेटा को क्लीन करना (Split by rows and columns)
-                const rows = csvText.split("\n").map(r => r.split(","));
+                const response = await fetch(GOOGLE_SHEET_CSV_URL);
+                const csvData = await response.text();
+                const rows = csvData.split("\n").map(row => row.split(","));
 
-                let foundRow = null;
+                let foundData = null;
 
-                // Column I (Index 8) में सर्च करना
+                // डेटा सर्च करना (Row 1 के बाद से)
                 for (let i = 1; i < rows.length; i++) {
-                    const currentRow = rows[i];
-                    if (currentRow[8] && currentRow[8].toString().trim() == val) {
-                        foundRow = currentRow;
+                    const row = rows[i];
+                    // Column I (Index 8) में Roll No चेक करना
+                    if (row[8] && row[8].toString().trim() === rollVal) {
+                        foundData = row;
                         break;
                     }
                 }
 
-                if (foundRow) {
-                    showMarksheet(foundRow);
+                if (foundData) {
+                    displayMarksheet(foundData);
                 } else {
-                    alert("Roll Number '" + val + "' not found in our database!");
+                    alert("Roll Number '" + rollVal + "' not found in our records.");
                 }
 
-            } catch (err) {
-                alert("Database Error! Check your Internet or CSV Link.");
+            } catch (error) {
+                console.error(error);
+                alert("Database Connection Error! Please check your CSV Link or Internet.");
             }
         }
 
-        function showMarksheet(d) {
-            document.getElementById("outName").innerText = d[1];   // Col B
-            document.getElementById("outFather").innerText = d[2]; // Col C
-            document.getElementById("outMother").innerText = d[3]; // Col D
-            document.getElementById("outDob").innerText = d[4];    // Col E
-            document.getElementById("outClass").innerText = d[5];  // Col F
-            document.getElementById("outAddr").innerText = d[6];   // Col G
-            document.getElementById("outReg").innerText = d[7];    // Col H
-            document.getElementById("outRoll").innerText = d[8];   // Col I
-            document.getElementById("outSession").innerText = d[9];// Col J
-            document.getElementById("outAtten").innerText = d[10]; // Col K
-            document.getElementById("outIssue").innerText = d[11]; // Col L
+        function displayMarksheet(d) {
+            // डेटा को मैप करना (Mapping columns to IDs)
+            document.getElementById("outName").innerText = d[1] || "-";    // Column B
+            document.getElementById("outFather").innerText = d[2] || "-";  // Column C
+            document.getElementById("outMother").innerText = d[3] || "-";  // Column D
+            document.getElementById("outDob").innerText = d[4] || "-";     // Column E
+            document.getElementById("outClass").innerText = d[5] || "-";   // Column F
+            document.getElementById("outAddr").innerText = d[6] || "-";    // Column G
+            document.getElementById("outReg").innerText = d[7] || "-";     // Column H
+            document.getElementById("outRoll").innerText = d[8] || "-";    // Column I
+            document.getElementById("outSession").innerText = d[9] || "-"; // Column J
+            document.getElementById("outAtten").innerText = d[10] || "-";  // Column K
+            document.getElementById("outIssue").innerText = d[11] || "-";  // Column L
 
-            // फोटो वाला हिस्सा (Column M = Index 12)
-            const photoDiv = document.getElementById("stPhoto");
-            const dID = d[12] ? d[12].trim() : "";
-            if(dID.length > 5) {
-                photoDiv.innerHTML = `<img src="https://lh3.googleusercontent.com/u/0/d/$${dID}" style="width:100%; height:100%; object-fit:cover;">`;
+            // फोटो हैंडल करना (Column M = Index 12)
+            const photoBox = document.getElementById("studentPhoto");
+            const driveID = d[12] ? d[12].trim() : "";
+            
+            if(driveID.length > 5) {
+                // गूगल ड्राइव डायरेक्ट इमेज लिंक
+                photoBox.innerHTML = `<img src="https://lh3.googleusercontent.com/u/0/d/${driveID}=w200-h200-p-k-no-nu" 
+                                           onerror="this.src='https://via.placeholder.com/120x140?text=PHOTO+ERROR'">`;
             } else {
-                photoDiv.innerHTML = "NO PHOTO";
+                photoBox.innerHTML = "NO PHOTO";
             }
 
-            document.getElementById("resultView").style.display = "block";
+            // मार्कशीट दिखाना
+            document.getElementById("marksheetArea").style.display = "block";
+            // पेज को नीचे की ओर स्क्रॉल करना
+            document.getElementById("marksheetArea").scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
