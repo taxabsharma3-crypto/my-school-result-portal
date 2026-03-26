@@ -50,6 +50,82 @@
                 const student = rows.find(r => r[7] && r[7].trim() == val);
 
                 if(student) {
+                    function renderMarksheet(d) {
+    // 1. स्टूडेंट की बेसिक जानकारी (Columns A-L)
+    document.getElementById("sName").innerText = d[1] || "-";    // Column B
+    document.getElementById("sFather").innerText = d[2] || "-";  // Column C
+    document.getElementById("sDob").innerText = d[4] || "-";     // Column E
+    document.getElementById("sClass").innerText = d[5] || "-";   // Column F
+    document.getElementById("sReg").innerText = d[7] || "-";     // Column H
+    document.getElementById("sRoll").innerText = d[8] || "-";     // Column I
+    document.getElementById("sAtten").innerText = d[10] || "0";  // Column K
+    
+    // 2. विषय (Subjects) और उनके नंबर (Marks)
+    // FA1: AI(34), AJ(35) | HY: CO(92), CP(93) | FA2: DR(121), DS(122) | AN: FX(179), FY(180)
+    const subjects = [
+        {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
+        {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
+        {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
+        {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
+        {n:"SST", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188},
+        {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:189, ano:190},
+        {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
+        {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194}
+    ];
+
+    let html = "";
+    let tF1o=0, tHYo=0, tF2o=0, tANo=0, totalMax=0;
+
+    subjects.forEach(s => {
+        let o1=parseFloat(d[s.f1o])||0, m1=parseFloat(d[s.f1m])||0;
+        let o2=parseFloat(d[s.hyo])||0, m2=parseFloat(d[s.hym])||0;
+        let o3=parseFloat(d[s.f2o])||0, m3=parseFloat(d[s.f2m])||0;
+        let o4=parseFloat(d[s.ano])||0, m4=parseFloat(d[s.anm])||0;
+        
+        tF1o+=o1; tHYo+=o2; tF2o+=o3; tANo+=o4;
+        let subMax = m1+m2+m3+m4; let subObt = o1+o2+o3+o4;
+        totalMax += subMax;
+
+        html += `<tr>
+            <td class="sub-name">${s.n}</td>
+            <td>${m1}</td><td>${o1}</td><td>${getGrade(o1,m1)}</td>
+            <td>${m2}</td><td>${o2}</td><td>${getGrade(o2,m2)}</td>
+            <td>${m3}</td><td>${o3}</td><td>${getGrade(o3,m3)}</td>
+            <td>${m4}</td><td>${o4}</td><td>${getGrade(o4,m4)}</td>
+            <td style="background:#fff9c4">${subMax}</td>
+            <td style="background:#fff9c4"><b>${subObt}</b></td>
+            <td style="background:#fff9c4">${getGrade(subObt,subMax)}</td>
+        </tr>`;
+    });
+
+    document.getElementById("marksBody").innerHTML = html;
+    
+    // 3. रिजल्ट समरी (Promotion & Remarks)
+    let grandObt = tF1o + tHYo + tF2o + tANo;
+    let perc = (grandObt / totalMax) * 100;
+    let nxtClass = parseInt(d[5]?.replace(/[^0-9]/g, '') || "0") + 1;
+
+    document.getElementById("resStatus").innerText = perc >= 33 ? "RESULT: PASSED" : "RESULT: PROMOTED (GRACE)";
+    document.getElementById("promoMsg").innerHTML = `Congratulations! <b>${d[1]}</b> has secured <b>${perc.toFixed(2)}%</b> and is promoted to <b>Class: ${nxtClass}</b> for Session 2026-27.`;
+    document.getElementById("sRemarks").innerText = d[235] || "Regular and Hardworking Student.";
+
+    // 4. फोटो दिखाना (Column M / Index 12)
+    let pID = d[12]?.includes("id=") ? d[12].split("id=")[1].split("&")[0] : (d[12]?.includes("/d/") ? d[12].split("/d/")[1].split("/")[0] : d[12]);
+    if(pID && pID.length > 5) {
+        document.getElementById("photoArea").innerHTML = `<img src="https://lh3.googleusercontent.com/d/${pID.trim()}" style="width:100%; height:100%; object-fit:cover;">`;
+    }
+
+    // मार्कशीट दिखाना
+    document.getElementById("marksheet").style.display = "block";
+}
+
+// ग्रेड निकालने का फंक्शन
+function getGrade(obt, mm) {
+    if(!mm || mm == 0) return "-";
+    let p = (obt/mm)*100;
+    if(p >= 91) return "A1"; if(p >= 81) return "A2"; if(p >= 71) return "B1";
+    if(p >= 61) return "B2"; if(p >= 51) return "C1"; if(p >= 33) return "D"; return "E";
+}
                     debug.innerText = "Student Found! Loading Marksheet...";
                     alert("Record Found: " + student[1]);
                     // यहाँ आपकी मार्कशीट रेंडर करने वाला पुराना फंक्शन (renderData) डाल सकते हैं
