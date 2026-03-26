@@ -98,33 +98,44 @@
         google.charts.load('current', { 'packages': ['corechart'] });
 
         function fetchData() {
-            const regNo = document.getElementById("regInput").value.trim();
-            if (!regNo) return alert("Please enter Registration Number");
+    const regNo = document.getElementById("regInput").value.trim();
+    if (!regNo) return alert("Please enter Registration Number");
+    
+    document.getElementById("msg").innerText = "Searching Database...";
+    
+    // SQL-like query to find Registration No in Column H
+    const query = encodeURIComponent(`SELECT * WHERE H = '${regNo}'`);
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}&tq=${query}`;
+
+    fetch(url)
+        .then(res => res.text())
+        .then(data => {
+            // Google Visualization API returns data with a prefix, we need to slice it
+            const jsonText = data.match(/google\.visualization\.Query\.setResponse\(([\s\S\w\W]*)\);/);
+            if (!jsonText) throw new Error("Invalid Response Format");
+
+            const json = JSON.parse(jsonText[1]);
             
-            document.getElementById("msg").innerText = "Searching Database...";
-            
-            // Google Query Language (SQL based) - Registration No H column (Col7) में ढूँढना
-            const query = encodeURIComponent(`SELECT * WHERE H = '${regNo}'`);
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}&tq=${query}`;
+            if (json.status === "error") {
+                document.getElementById("msg").innerText = "Error: " + json.errors[0].detailed_message;
+                return;
+            }
 
-            fetch(url)
-                .then(res => res.text())
-                .then(data => {
-                    const json = JSON.parse(data.substr(47).slice(0, -2));
-                    const rows = json.table.rows;
-
-                    if (rows.length > 0) {
-                        const d = rows[0].c.map(cell => cell ? (cell.v || cell.f || "") : "");
-                        renderSheet(d);
-                    } else {
-                        document.getElementById("msg").innerText = "Error: Registration No Not Found!";
-                    }
-                })
-                .catch(err => {
-                    document.getElementById("msg").innerText = "Connection Error! Check Sheet ID & Privacy.";
-                });
-        }
-
+            const rows = json.table.rows;
+            if (rows && rows.length > 0) {
+                // Mapping Google's complex JSON to a simple array
+                const d = rows[0].c.map(cell => cell ? (cell.v || "") : "");
+                renderSheet(d);
+                document.getElementById("msg").innerText = "Result Loaded Successfully!";
+            } else {
+                document.getElementById("msg").innerText = "Registration No '" + regNo + "' Not Found!";
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById("msg").innerText = "Error: Make sure Sheet is Shared as 'Anyone with the link'";
+        });
+}
         function getGr(o, m) {
             if(!m || m == 0) return "-";
             let p = (o/m)*100;
