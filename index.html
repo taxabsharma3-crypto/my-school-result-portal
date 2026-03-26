@@ -139,13 +139,43 @@
         }
 
         function renderSheet(d) {
-            document.getElementById("sName").innerText = d[1];
-            document.getElementById("sFather").innerText = d[2];
-            document.getElementById("sDob").innerText = d[4];
-            document.getElementById("sClass").innerText = d[5];
-            document.getElementById("sReg").innerText = d[7];
-            document.getElementById("sRoll").innerText = d[8];
-            document.getElementById("resComment").innerText = d[235] || "Promoted to next class.";
+            function renderSheet(d) {
+    // ... पुराने कोड (Name, Father, Table) को वैसा ही रहने दें ...
+
+    // 1. स्पेशल रिमार्क (Column IB - Index 235)
+    document.getElementById("resComment").innerText = d[235] || "He/She is a bright student and has shown consistent performance throughout the session.";
+
+    // 2. रिजल्ट कैलकुलेशन
+    let percentage = (gObt / gMM) * 100;
+    document.getElementById("resTotal").innerText = gObt + " / " + gMM;
+    document.getElementById("resPerc").innerText = percentage.toFixed(2);
+    document.getElementById("resGrade").innerText = getGr(gObt, gMM);
+
+    // 3. प्रमोशन मैसेज लॉजिक
+    let currentClass = d[5] || ""; 
+    let classNumber = parseInt(currentClass.replace(/[^0-9]/g, '')); 
+    let nextClass = !isNaN(classNumber) ? (classNumber + 1) : "the next higher standard";
+
+    let statusTitle = document.getElementById("statusTitle");
+    let promotionMsg = document.getElementById("promotionMsg");
+    let promotionBox = document.getElementById("promotionBox");
+
+    if (percentage >= 33) {
+        statusTitle.innerText = "RESULT: PASSED";
+        statusTitle.style.color = "#166534";
+        promotionBox.style.borderColor = "#16a34a";
+        promotionBox.style.background = "#f0fdf4";
+        promotionMsg.innerHTML = `Congratulations! <b>${d[1]}</b> is promoted to <b>Class: ${nextClass}</b> for the upcoming session 2026-27.`;
+    } else {
+        statusTitle.innerText = "RESULT: PROMOTED (GRACE)";
+        statusTitle.style.color = "#d93025";
+        promotionBox.style.borderColor = "#d93025";
+        promotionBox.style.background = "#fff1f0";
+        promotionMsg.innerHTML = `Student is promoted to <b>Class: ${nextClass}</b> on trial basis. Hard work is required in the next session.`;
+    }
+
+    document.getElementById("marksheet").style.display = "block";
+}
 
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
