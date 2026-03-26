@@ -2,90 +2,131 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Rajni Public School - Final Result Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Result - Rajni Public School</title>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
     <style>
-        body { font-family: 'Times New Roman', serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .search-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 400px; text-align: center; border-top: 5px solid #d32f2f; }
-        input { width: 85%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 6px; }
-        button { background: #d32f2f; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; width: 95%; font-weight: bold; }
-        #loader { display: none; color: #1a73e8; margin-top: 10px; font-weight: bold; }
-        #marksheet { display: none; width: 1050px; background: white; padding: 40px; border: 4px double #000; margin-top: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.2); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #000; padding: 6px; text-align: center; font-size: 13px; }
+        :root { --red: #d32f2f; --green: #2e7d32; --blue: #1a73e8; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .search-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--red); margin-bottom: 30px; }
+        input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; text-align: center; }
+        button { background: var(--red); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 93%; font-weight: bold; font-size: 17px; }
+        
+        #marksheet { display: none; width: 1100px; background: white; padding: 40px; border: 4px double #000; box-shadow: 0 0 30px rgba(0,0,0,0.2); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
+        .photo-box { width: 120px; height: 145px; border: 1px solid #000; background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th, td { border: 1px solid #000; padding: 6px; text-align: center; }
         th { background: #f2f2f2; }
-        .promo-box { margin-top: 20px; padding: 15px; background: #f1f8e9; border: 2px solid #2e7d32; text-align: center; border-radius: 8px; }
+        .sub-name { text-align: left; padding-left: 12px; font-weight: bold; }
+        .total-row { background: #e3f2fd; font-weight: bold; }
+        
+        .promo-box { margin-top: 20px; padding: 20px; border: 2px solid var(--green); background: #f1f8e9; text-align: center; border-radius: 10px; font-size: 18px; }
+        @media print { .search-card, .print-btn { display: none; } #marksheet { border: 2px solid #000; width: 100%; padding: 10px; } }
     </style>
 </head>
 <body>
 
-    <div class="search-box">
-        <h2 style="color:#d32f2f;">RAJNI PUBLIC SCHOOL</h2>
-        <input type="text" id="regInput" placeholder="Enter Registration No.">
-        <button onclick="fetchData()">GENERATE MARKSHEET</button>
-        <div id="loader">Connecting to Server...</div>
+    <div class="search-card">
+        <h2 style="color:var(--red); margin:0;">RAJNI PUBLIC SCHOOL</h2>
+        <p>Result Portal 2025-26</p>
+        <input type="text" id="regInput" placeholder="Enter Registration Number">
+        <button onclick="fetchData()">GENERATE REPORT CARD</button>
+        <div id="msg" style="margin-top:10px; font-weight:bold; color:var(--blue);"></div>
     </div>
 
     <div id="marksheet">
-        <div style="text-align:center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
-            <h1 style="margin:0; color:#d32f2f; font-size: 36px;">RAJNI PUBLIC SCHOOL</h1>
-            <p style="font-weight:bold;">ANNUAL PROGRESS REPORT CARD | 2025-26</p>
+        <div class="header">
+            <div style="font-weight:bold;">LOGO</div>
+            <div style="text-align:center;">
+                <h1 style="margin:0; color:var(--red); font-size: 36px;">RAJNI PUBLIC SCHOOL</h1>
+                <p style="font-weight:bold;">ANNUAL PROGRESS REPORT CARD | SESSION 2025-26</p>
+            </div>
+            <div class="photo-box" id="studentPhoto">PHOTO</div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 20px; font-size: 16px;">
-            <div><strong>Name:</strong> <span id="sName"></span><br><strong>Father:</strong> <span id="sFather"></span></div>
-            <div style="text-align: right;"><strong>Reg No:</strong> <span id="sReg"></span> | <strong>Class:</strong> <span id="sClass"></span></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #000; padding: 15px; margin-bottom: 20px; font-size: 16px;">
+            <div>
+                <strong>Name:</strong> <span id="sName"></span><br>
+                <strong>Father:</strong> <span id="sFather"></span><br>
+                <strong>DOB:</strong> <span id="sDob"></span>
+            </div>
+            <div style="text-align: right;">
+                <strong>Reg No:</strong> <span id="sReg"></span><br>
+                <strong>Roll No:</strong> <span id="sRoll"></span> | <strong>Class:</strong> <span id="sClass"></span>
+            </div>
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th rowspan="2">SUBJECTS</th>
-                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL</th><th colspan="3">TOTAL</th>
+                    <th rowspan="2" width="160">SUBJECTS</th>
+                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th>
+                    <th colspan="3">FA-2</th><th colspan="3">ANNUAL EXAM</th>
+                    <th colspan="3" style="background:#fffde7;">GRAND TOTAL</th>
                 </tr>
                 <tr>
-                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th>
+                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th>
+                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th>
+                    <th style="background:#fffde7;">MM</th><th style="background:#fffde7;">OBT</th><th style="background:#fffde7;">GR</th>
                 </tr>
             </thead>
             <tbody id="marksBody"></tbody>
+            <tfoot id="totalRow"></tfoot>
         </table>
 
-        <div class="promo-box" id="promoMsg"></div>
-        <div style="margin-top: 50px; display: flex; justify-content: space-between; font-weight: bold;">
-            <p>Class Teacher Signature</p><p>Principal Signature</p>
+        <div class="promo-box" id="promoResult"></div>
+        <div style="margin-top:20px; padding:10px; border-left:5px solid var(--red); background:#fffde7;">
+            <strong>Remark:</strong> <span id="sRemark"></span>
         </div>
-        <button onclick="window.print()" style="margin-top:20px; background:#2e7d32; width:150px;">PRINT</button>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 60px; font-weight: bold;">
+            <p style="border-top:1px solid #000; width:180px; text-align:center;">Class Teacher</p>
+            <p style="border-top:1px solid #000; width:180px; text-align:center;">Principal Sign</p>
+        </div>
+        <button class="print-btn" onclick="window.print()" style="margin-top:20px; background:var(--green); color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">PRINT NOW</button>
     </div>
 
     <script>
-        // *** अपना Apps Script URL यहाँ डालें ***
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5gCxHzUfmMnl0sDw5zJ4Y8UM2eVHcxsIuAwX-G1M5hlhP7wUuJYimNH30ZPN29Sltmg/exec";
+        // *** 1. अपनी Google Sheet की ID यहाँ डालें ***
+        // ID आपके लिंक में /d/ और /edit के बीच होती है
+        const SHEET_ID = 'https://docs.google.com/spreadsheets/d/1-ov0K7k-uuCFHqQjGJ91tD8HOfkIxlcV0L4lBEcNevk/edit?usp=sharing';
+        const SHEET_NAME = 'database'; // अपनी शीट टैब का नाम यहाँ लिखें
 
-        async function fetchData() {
-            const val = document.getElementById("regInput").value.trim();
-            if(!val) return alert("Enter Reg No");
-            document.getElementById("loader").style.display = "block";
+        google.charts.load('current', { 'packages': ['corechart'] });
 
-            try {
-                const resp = await fetch(SCRIPT_URL);
-                const rows = await resp.json();
-                
-                // Registration No ढूँढना (Column H = Index 7)
-                const student = rows.find(r => r[7] && String(r[7]).trim() == val);
+        function fetchData() {
+            const regNo = document.getElementById("regInput").value.trim();
+            if (!regNo) return alert("Please enter Registration Number");
+            
+            document.getElementById("msg").innerText = "Searching Database...";
+            
+            // Google Query Language (SQL based) - Registration No H column (Col7) में ढूँढना
+            const query = encodeURIComponent(`SELECT * WHERE H = '${regNo}'`);
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}&tq=${query}`;
 
-                if(student) {
-                    renderSheet(student);
-                    document.getElementById("loader").style.display = "none";
-                    document.getElementById("marksheet").style.display = "block";
-                } else {
-                    alert("Not Found!");
-                    document.getElementById("loader").style.display = "none";
-                }
-            } catch(e) {
-                alert("Server Error! Check Apps Script Deployment.");
-            }
+            fetch(url)
+                .then(res => res.text())
+                .then(data => {
+                    const json = JSON.parse(data.substr(47).slice(0, -2));
+                    const rows = json.table.rows;
+
+                    if (rows.length > 0) {
+                        const d = rows[0].c.map(cell => cell ? (cell.v || cell.f || "") : "");
+                        renderSheet(d);
+                    } else {
+                        document.getElementById("msg").innerText = "Error: Registration No Not Found!";
+                    }
+                })
+                .catch(err => {
+                    document.getElementById("msg").innerText = "Connection Error! Check Sheet ID & Privacy.";
+                });
         }
 
         function getGr(o, m) {
+            if(!m || m == 0) return "-";
             let p = (o/m)*100;
             if(p >= 91) return "A1"; if(p >= 81) return "A2"; if(p >= 71) return "B1";
             if(p >= 61) return "B2"; if(p >= 51) return "C1"; if(p >= 33) return "D"; return "E";
@@ -94,29 +135,49 @@
         function renderSheet(d) {
             document.getElementById("sName").innerText = d[1];
             document.getElementById("sFather").innerText = d[2];
+            document.getElementById("sDob").innerText = d[4];
             document.getElementById("sClass").innerText = d[5];
             document.getElementById("sReg").innerText = d[7];
+            document.getElementById("sRoll").innerText = d[8];
+            document.getElementById("sRemark").innerText = d[235] || "Regular & Sincere Student.";
 
             const subs = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
                 {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
                 {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
                 {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
-                {n:"SST", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188}
+                {n:"SOCIAL SCIENCE", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188},
+                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:189, ano:190},
+                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
+                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194}
             ];
 
             let html = ""; let tO=0, tM=0;
             subs.forEach(s => {
-                let o1=d[s.f1o], m1=d[s.f1m], o2=d[s.hyo], m2=d[s.hym], o3=d[s.f2o], m3=d[s.f2m], o4=d[s.ano], m4=d[s.anm];
-                let sm=m1+m2+m3+m4, so=o1+o2+o3+o4;
-                tO+=so; tM+=sm;
-                html += `<tr><td style="text-align:left; font-weight:bold;">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td>${sm}</td><td>${so}</td><td>${getGr(so,sm)}</td></tr>`;
+                let o1=Number(d[s.f1o])||0, m1=Number(d[s.f1m])||0, o2=Number(d[s.hyo])||0, m2=Number(d[s.hym])||0;
+                let o3=Number(d[s.f2o])||0, m3=Number(d[s.f2m])||0, o4=Number(d[s.ano])||0, m4=Number(d[s.anm])||0;
+                let sm=m1+m2+m3+m4, so=o1+o2+o3+o4; tO+=so; tM+=sm;
+
+                html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td style="background:#fffde7"><b>${sm}</b></td><td style="background:#fffde7"><b>${so}</b></td><td style="background:#fffde7"><b>${getGr(so,sm)}</b></td></tr>`;
             });
             document.getElementById("marksBody").innerHTML = html;
 
             let p = (tO/tM)*100;
-            let msg = p >= 91 ? "Awesome!" : p >= 81 ? "Unique!" : p >= 71 ? "Good going!" : p >= 33 ? "Passed!" : "Fail!";
-            document.getElementById("promoMsg").innerHTML = `<h3>${msg} Your Child is promoted to Next Class. (${p.toFixed(2)}%)</h3>`;
+            let msg = "";
+            if(p >= 91) msg = "Awesome! Your Child is promoted to Next Class.";
+            else if(p >= 81) msg = "Unique! Your Child is promoted to Next Class.";
+            else if(p >= 71) msg = "Good going! Your Child is promoted to Next Class.";
+            else if(p >= 33) msg = "Congratulations! Your Child is promoted to Next Class.";
+            else msg = "<span style='color:red;'>Fail! Your Child is advised to repeat the same class.</span>";
+
+            document.getElementById("promoResult").innerHTML = `<strong>RESULT: ${p >= 33 ? "PASSED" : "FAILED"} (${p.toFixed(2)}%)</strong><br>${msg}`;
+
+            // Photo Logic
+            let pID = d[12] ? (d[12].includes("id=") ? d[12].split("id=")[1].split("&")[0] : (d[12].includes("/d/") ? d[12].split("/d/")[1].split("/")[0] : d[12])) : "";
+            document.getElementById("studentPhoto").innerHTML = pID.length > 5 ? `<img src="https://lh3.googleusercontent.com/d/${pID.trim()}">` : "NO PHOTO";
+
+            document.getElementById("msg").innerText = "";
+            document.getElementById("marksheet").style.display = "block";
         }
     </script>
 </body>
