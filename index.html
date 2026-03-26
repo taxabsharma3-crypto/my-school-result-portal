@@ -2,149 +2,91 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajni Public School - Result Fix</title>
+    <title>Rajni Public School - Final Result Portal</title>
     <style>
-        :root { --accent: #b71c1c; --border: #2c3e50; }
-        body { font-family: 'Times New Roman', serif; background: #eaeff2; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        /* सर्च बॉक्स */
-        .search-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--accent); margin-bottom: 30px; }
-        input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 16px; text-align: center; }
-        .btn-search { background: var(--accent); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 93%; font-weight: bold; font-size: 17px; }
-
-        /* मार्कशीट डिजाइन */
-        #marksheet { display: none; width: 1080px; background: #fff; padding: 40px; border: 4px double var(--border); box-shadow: 0 0 30px rgba(0,0,0,0.2); position: relative; }
-        .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
-        .school-name h1 { margin: 0; font-size: 40px; color: var(--accent); text-transform: uppercase; }
-        .st-photo { width: 120px; height: 145px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; background: #f1f5f9; overflow: hidden; }
-        .st-photo img { width: 100%; height: 100%; object-fit: cover; }
-
-        .info-table { width: 100%; border: 1px solid #000; padding: 15px; margin-bottom: 20px; display: grid; grid-template-columns: 1.5fr 1fr; font-size: 16px; line-height: 1.8; background: #fafafa; }
-        
-        table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; }
-        th, td { border: 1px solid #000; padding: 6px 3px; }
-        th { background: #f2f2f2; font-weight: bold; }
-        .sub-name { text-align: left; padding-left: 10px; font-weight: bold; }
-        .grand-col { background: #fff9c4; font-weight: bold; }
-
-        .promotion-box { margin-top: 25px; padding: 20px; border: 2px solid #2e7d32; background: #f1f8e9; border-radius: 10px; text-align: center; }
-        .remarks { margin-top: 15px; border-left: 6px solid var(--accent); padding: 12px 20px; background: #fff9c4; font-style: italic; font-size: 15px; text-align: left; }
-        .footer-sigs { display: flex; justify-content: space-between; margin-top: 60px; font-weight: bold; padding: 0 30px; }
-        .sig-line { border-top: 2px solid #000; width: 200px; text-align: center; padding-top: 8px; }
-
-        @media print { .search-container, .print-btn { display: none; } #marksheet { border: 2px solid #000; box-shadow: none; width: 100%; margin: 0; padding: 15px; } }
+        body { font-family: 'Times New Roman', serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .search-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 400px; text-align: center; border-top: 5px solid #d32f2f; }
+        input { width: 85%; padding: 12px; margin: 15px 0; border: 1px solid #ccc; border-radius: 6px; }
+        button { background: #d32f2f; color: white; padding: 12px; border: none; border-radius: 6px; cursor: pointer; width: 95%; font-weight: bold; }
+        #loader { display: none; color: #1a73e8; margin-top: 10px; font-weight: bold; }
+        #marksheet { display: none; width: 1050px; background: white; padding: 40px; border: 4px double #000; margin-top: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.2); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 6px; text-align: center; font-size: 13px; }
+        th { background: #f2f2f2; }
+        .promo-box { margin-top: 20px; padding: 15px; background: #f1f8e9; border: 2px solid #2e7d32; text-align: center; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-    <div class="search-container">
-        <h2 style="color:var(--accent); margin:0;">RAJNI PUBLIC SCHOOL</h2>
-        <p id="loadStatus">Enter Registration Number</p>
-        <input type="text" id="regInput" placeholder="Ex: 101">
-        <button class="btn-search" onclick="loadResult()">SHOW MARKSHEET</button>
+    <div class="search-box">
+        <h2 style="color:#d32f2f;">RAJNI PUBLIC SCHOOL</h2>
+        <input type="text" id="regInput" placeholder="Enter Registration No.">
+        <button onclick="fetchData()">GENERATE MARKSHEET</button>
+        <div id="loader">Connecting to Server...</div>
     </div>
 
     <div id="marksheet">
-        <div class="header">
-            <div style="font-weight:bold; font-size:20px;">LOGO</div>
-            <div style="text-align:center;">
-                <h1>RAJNI PUBLIC SCHOOL</h1>
-                <p style="margin:5px 0; font-weight:bold; font-size:18px;">SESSION: 2025-26 | REPORT CARD</p>
-            </div>
-            <div class="st-photo" id="photoArea">PHOTO</div>
+        <div style="text-align:center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
+            <h1 style="margin:0; color:#d32f2f; font-size: 36px;">RAJNI PUBLIC SCHOOL</h1>
+            <p style="font-weight:bold;">ANNUAL PROGRESS REPORT CARD | 2025-26</p>
         </div>
 
-        <div class="info-table">
-            <div>
-                <strong>Name:</strong> <span id="sName"></span><br>
-                <strong>Father:</strong> <span id="sFather"></span><br>
-                <strong>DOB:</strong> <span id="sDob"></span>
-            </div>
-            <div style="text-align: right;">
-                <strong>Reg No:</strong> <span id="sReg"></span><br>
-                <strong>Roll No:</strong> <span id="sRoll"></span> | <strong>Class:</strong> <span id="sClass"></span>
-            </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 20px; font-size: 16px;">
+            <div><strong>Name:</strong> <span id="sName"></span><br><strong>Father:</strong> <span id="sFather"></span></div>
+            <div style="text-align: right;"><strong>Reg No:</strong> <span id="sReg"></span> | <strong>Class:</strong> <span id="sClass"></span></div>
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th rowspan="2" width="150">SUBJECTS</th>
-                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th>
-                    <th colspan="3">FA-2</th><th colspan="3">ANNUAL EXAM</th>
-                    <th colspan="3" class="grand-col">GRAND TOTAL</th>
+                    <th rowspan="2">SUBJECTS</th>
+                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL</th><th colspan="3">TOTAL</th>
                 </tr>
                 <tr>
-                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th>
-                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th>
-                    <th class="grand-col">MM</th><th class="grand-col">OBT</th><th class="grand-col">GR</th>
+                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th>
                 </tr>
             </thead>
             <tbody id="marksBody"></tbody>
         </table>
 
-        <div class="promotion-box">
-            <h2 id="resStatus" style="margin:0;"></h2>
-            <p id="promoMsg" style="margin:10px 0; font-size:18px; color:#333;"></p>
+        <div class="promo-box" id="promoMsg"></div>
+        <div style="margin-top: 50px; display: flex; justify-content: space-between; font-weight: bold;">
+            <p>Class Teacher Signature</p><p>Principal Signature</p>
         </div>
-
-        <div class="remarks">
-            <strong>Remarks:</strong> <span id="sRemarks"></span>
-        </div>
-
-        <div class="footer-sigs">
-            <div class="sig-line">Class Teacher</div>
-            <div class="sig-line">Parent Signature</div>
-            <div class="sig-line">Principal Signature</div>
-        </div>
-        <button class="print-btn" onclick="window.print()" style="background:#2e7d32; color:white; padding:12px 40px; border:none; border-radius:8px; cursor:pointer; margin-top:30px;">PRINT NOW</button>
+        <button onclick="window.print()" style="margin-top:20px; background:#2e7d32; width:150px;">PRINT</button>
     </div>
 
     <script>
-        // *** 1. अपना CSV लिंक यहाँ डालें ***
-        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?gid=1253973170&single=true&output=csv";
+        // *** अपना Apps Script URL यहाँ डालें ***
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAEx1nhYPu47kWUloIPhfDSrXPWqZGvR2ur8c0BAfxrLET56eHIyi_MveUB_VctWdvbQ/exec";
 
-        async function loadResult() {
+        async function fetchData() {
             const val = document.getElementById("regInput").value.trim();
-            const status = document.getElementById("loadStatus");
-            if(!val) return alert("Please enter Registration Number");
-
-            status.innerText = "Connecting to Database...";
-            status.style.color = "blue";
+            if(!val) return alert("Enter Reg No");
+            document.getElementById("loader").style.display = "block";
 
             try {
-                // *** 2. AllOrigins Proxy का उपयोग - यह एरर खत्म कर देगा ***
-                const proxyUrl = "https://api.allorigins.win/raw?url=";
-                const finalUrl = proxyUrl + encodeURIComponent(CSV_URL + "&t=" + Date.now());
-
-                const resp = await fetch(finalUrl);
-                if (!resp.ok) throw new Error('Data Fetch Failed');
-                
-                const dataText = await resp.text();
-                const rows = dataText.split(/\r?\n/).filter(r => r.length > 5).map(r => r.split(","));
+                const resp = await fetch(SCRIPT_URL);
+                const rows = await resp.json();
                 
                 // Registration No ढूँढना (Column H = Index 7)
-                const student = rows.find(r => r[7] && r[7].trim() == val);
+                const student = rows.find(r => r[7] && String(r[7]).trim() == val);
 
-                if (student) {
-                    status.innerText = "Student Found!";
-                    status.style.color = "green";
+                if(student) {
                     renderSheet(student);
+                    document.getElementById("loader").style.display = "none";
+                    document.getElementById("marksheet").style.display = "block";
                 } else {
-                    status.innerText = "Error: Registration Number Not Found!";
-                    status.style.color = "red";
+                    alert("Not Found!");
+                    document.getElementById("loader").style.display = "none";
                 }
-            } catch (err) {
-                console.error(err);
-                status.innerText = "Database Connection Error! Check CSV Link.";
-                status.style.color = "red";
+            } catch(e) {
+                alert("Server Error! Check Apps Script Deployment.");
             }
         }
 
-        function getGr(obt, mm) {
-            if(!mm || mm == 0) return "-";
-            let p = (obt/mm)*100;
+        function getGr(o, m) {
+            let p = (o/m)*100;
             if(p >= 91) return "A1"; if(p >= 81) return "A2"; if(p >= 71) return "B1";
             if(p >= 61) return "B2"; if(p >= 51) return "C1"; if(p >= 33) return "D"; return "E";
         }
@@ -152,15 +94,30 @@
         function renderSheet(d) {
             document.getElementById("sName").innerText = d[1];
             document.getElementById("sFather").innerText = d[2];
-            document.getElementById("sDob").innerText = d[4];
             document.getElementById("sClass").innerText = d[5];
             document.getElementById("sReg").innerText = d[7];
-            document.getElementById("sRoll").innerText = d[8];
-            document.getElementById("sRemarks").innerText = d[235] || "Excellent Effort!";
 
-            const subjects = [
+            const subs = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
                 {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
-                {n:"MATHEMATICS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
+                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
                 {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
-                {n:"SOCIAL SCIENCE", f1m:42, f1o:43, hym:100, hyo:101
+                {n:"SST", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188}
+            ];
+
+            let html = ""; let tO=0, tM=0;
+            subs.forEach(s => {
+                let o1=d[s.f1o], m1=d[s.f1m], o2=d[s.hyo], m2=d[s.hym], o3=d[s.f2o], m3=d[s.f2m], o4=d[s.ano], m4=d[s.anm];
+                let sm=m1+m2+m3+m4, so=o1+o2+o3+o4;
+                tO+=so; tM+=sm;
+                html += `<tr><td style="text-align:left; font-weight:bold;">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td>${sm}</td><td>${so}</td><td>${getGr(so,sm)}</td></tr>`;
+            });
+            document.getElementById("marksBody").innerHTML = html;
+
+            let p = (tO/tM)*100;
+            let msg = p >= 91 ? "Awesome!" : p >= 81 ? "Unique!" : p >= 71 ? "Good going!" : p >= 33 ? "Passed!" : "Fail!";
+            document.getElementById("promoMsg").innerHTML = `<h3>${msg} Your Child is promoted to Next Class. (${p.toFixed(2)}%)</h3>`;
+        }
+    </script>
+</body>
+</html>
