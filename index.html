@@ -5,178 +5,185 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rajni Public School - Result 2026</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .search-box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid #d93025; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .search-panel { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid #1a73e8; }
         input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
-        button { background: #d93025; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 93%; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        button:hover { background: #b2221a; }
+        button { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 93%; font-weight: bold; font-size: 16px; }
+        
+        /* मार्कशीट डिजाइन */
+        #marksheetFull { display: none; width: 950px; background: white; padding: 30px; border: 2px solid #000; margin-top: 30px; }
+        .school-info { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+        .st-photo { width: 110px; height: 130px; border: 1px solid #000; float: right; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .st-photo img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .details-grid { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 14px; }
+        .details-grid td { padding: 5px; }
+        
+        .marks-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; }
+        .marks-table th, .marks-table td { border: 1px solid #000; padding: 5px; }
+        .header-row { background: #f2f2f2; font-weight: bold; }
+        .sub-name { text-align: left !important; padding-left: 10px !important; font-weight: bold; background: #fafafa; font-size: 12px; }
 
-        /* मार्कशीट स्टाइल */
-        #marksheetArea { display: none; width: 900px; background: white; padding: 40px; border: 2px solid #000; box-shadow: 0 0 25px rgba(0,0,0,0.2); margin-top: 30px; }
-        .school-info { text-align: center; border-bottom: 2px solid #000; margin-bottom: 15px; padding-bottom: 10px; }
-        .photo-frame { width: 110px; height: 130px; border: 1px solid #000; float: right; overflow: hidden; background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
-        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .summary { margin-top: 20px; display: flex; justify-content: space-around; background: #f8f9fa; padding: 10px; border: 1px solid #000; font-weight: bold; font-size: 15px; }
+        .footer { margin-top: 50px; display: flex; justify-content: space-between; font-weight: bold; }
         
-        .st-details { width: 100%; margin-bottom: 15px; font-size: 15px; border-collapse: collapse; }
-        .st-details td { padding: 4px 0; }
-        
-        .marks-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; text-align: center; }
-        .marks-table th, .marks-table td { border: 1px solid #000; padding: 7px; }
-        .bg-gray { background: #f1f3f4; font-weight: bold; }
-        .text-left { text-align: left !important; padding-left: 10px !important; font-weight: bold; }
-
-        .summary-box { margin-top: 20px; display: flex; justify-content: space-around; background: #f8f9fa; padding: 15px; border: 1px solid #000; font-weight: bold; font-size: 16px; }
-        .footer-sig { margin-top: 60px; display: flex; justify-content: space-between; font-weight: bold; }
-        
-        @media print { .search-box, .print-btn { display: none; } #marksheetArea { border: none; box-shadow: none; width: 100%; margin: 0; } }
+        @media print { .search-panel, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; margin: 0; } }
     </style>
 </head>
 <body>
 
-    <div class="search-box">
-        <h2 style="color:#d93025;">RAJNI PUBLIC SCHOOL</h2>
+    <div class="search-panel">
+        <h2 style="color:#1a73e8;">RAJNI PUBLIC SCHOOL</h2>
         <p>Annual Examination Portal 2026</p>
-        <input type="text" id="rollNo" placeholder="Enter Roll Number (e.g., 3)">
-        <button onclick="getStudentResult()">View Report Card</button>
+        <input type="text" id="rollVal" placeholder="Enter Roll Number (e.g., 3)">
+        <button onclick="searchResult()">Show Report Card</button>
     </div>
 
-    <div id="marksheetArea">
-        <div class="photo-frame" id="stPhoto">PHOTO</div>
+    <div id="marksheetFull">
+        <div class="st-photo" id="photoArea">PHOTO</div>
         <div class="school-info">
-            <h1 style="margin:0; font-size: 30px;">RAJNI PUBLIC SCHOOL</h1>
-            <p style="margin:5px 0;">Affiliated to State Board | Session: <span id="outSession"></span></p>
-            <h3 style="text-decoration: underline;">ANNUAL PROGRESS REPORT</h3>
+            <h1 style="margin:0; font-size: 28px;">RAJNI PUBLIC SCHOOL</h1>
+            <p style="margin:5px 0;">School Report Card | Session: <span id="sSession"></span></p>
+            <h3 style="text-decoration: underline;">DETAILED PROGRESS REPORT</h3>
         </div>
 
-        <table class="st-details">
+        <table class="details-grid">
             <tr>
-                <td width="55%"><strong>Student Name:</strong> <span id="outName"></span></td>
-                <td><strong>Roll No:</strong> <span id="outRoll"></span></td>
+                <td width="50%"><strong>Student Name:</strong> <span id="sName"></span></td>
+                <td><strong>Roll No:</strong> <span id="sRoll"></span></td>
             </tr>
             <tr>
-                <td><strong>Father's Name:</strong> <span id="outFather"></span></td>
-                <td><strong>Class:</strong> <span id="outClass"></span></td>
+                <td><strong>Father's Name:</strong> <span id="sFather"></span></td>
+                <td><strong>Class:</strong> <span id="sClass"></span></td>
             </tr>
             <tr>
-                <td><strong>Registration No:</strong> <span id="outReg"></span></td>
-                <td><strong>DOB:</strong> <span id="outDob"></span></td>
+                <td><strong>Registration No:</strong> <span id="sReg"></span></td>
+                <td><strong>Date of Birth:</strong> <span id="sDob"></span></td>
             </tr>
         </table>
 
         <table class="marks-table">
             <thead>
-                <tr class="bg-gray">
-                    <th rowspan="2">SCHOLASTIC SUBJECTS</th>
-                    <th colspan="2">FA-1 Exam</th>
+                <tr class="header-row">
+                    <th rowspan="2">SUBJECTS</th>
+                    <th colspan="2">FA-2 EXAM</th>
                     <th colspan="2">HALF YEARLY</th>
                     <th colspan="2">ANNUAL EXAM</th>
-                    <th rowspan="2">FINAL GRADE</th>
+                    <th rowspan="2">TOTAL</th>
+                    <th rowspan="2">GRADE</th>
                 </tr>
-                <tr class="bg-gray">
-                    <th>MM</th><th>Obt.</th>
-                    <th>Marks</th><th>Grade</th>
-                    <th>Marks</th><th>Grade</th>
+                <tr class="header-row">
+                    <th>MM</th><th>Obt</th>
+                    <th>MM</th><th>Obt</th>
+                    <th>MM</th><th>Obt</th>
                 </tr>
             </thead>
             <tbody id="marksBody">
                 </tbody>
         </table>
 
-        <div class="summary-box">
-            <div>TOTAL OBTAINED: <span id="totalObt"></span> / 500</div>
-            <div>PERCENTAGE: <span id="perc"></span>%</div>
-            <div>RESULT: <span id="resStatus"></span></div>
+        <div class="summary">
+            <div>GRAND TOTAL: <span id="grandTot"></span></div>
+            <div>PERCENTAGE: <span id="grandPerc"></span>%</div>
+            <div>RESULT: <span id="grandRes"></span></div>
         </div>
 
-        <div style="margin-top:15px;"><strong>Attendance:</strong> <span id="outAtten"></span> | <strong>Issue Date:</strong> <span id="outIssue"></span></div>
+        <div style="margin-top:15px; font-size: 13px;"><strong>Attendance:</strong> <span id="sAtten"></span> | <strong>Issue Date:</strong> <span id="sIssue"></span></div>
 
-        <div class="footer-sig">
+        <div class="footer">
             <p>Class Teacher</p>
             <p>Parent's Sign</p>
             <p>Principal Signature</p>
         </div>
-        <button class="print-btn" onclick="window.print()" style="margin-top:20px; background:#1a73e8; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">Print Marksheet</button>
+        <button class="print-btn" onclick="window.print()" style="margin-top:20px; background:#28a745; color:white; padding:10px 25px; border:none; border-radius:5px; cursor:pointer;">Print Result</button>
     </div>
 
     <script>
-        // *** अपनी Sheet3 (database) का CSV लिंक यहाँ पेस्ट करें ***
-        const CSV_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?gid=1253973170&single=true&output=csv";
+        // *** अपना CSV लिंक यहाँ डालें ***
+        const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?gid=1253973170&single=true&output=csv";
 
-        async function getStudentResult() {
-            const rollInput = document.getElementById("rollNo").value.trim();
-            if(!rollInput) return alert("Please enter Roll Number");
+        async function searchResult() {
+            const roll = document.getElementById("rollVal").value.trim();
+            if(!roll) return alert("Please enter Roll Number");
 
             try {
-                const resp = await fetch(CSV_LINK);
-                const text = await resp.text();
+                const response = await fetch(SHEET_CSV);
+                const text = await response.text();
                 const rows = text.split("\n").map(r => r.split(","));
 
-                let found = null;
+                let student = null;
                 for (let i = 1; i < rows.length; i++) {
-                    if (rows[i][8] && rows[i][8].toString().trim() == rollInput) {
-                        found = rows[i];
+                    if (rows[i][8] && rows[i][8].toString().trim() == roll) {
+                        student = rows[i];
                         break;
                     }
                 }
 
-                if (found) { displayData(found); } 
-                else { alert("Roll Number " + rollInput + " not found!"); }
-            } catch (e) { alert("Database Connection Error!"); }
+                if (student) { displayMarks(student); } 
+                else { alert("Roll Number " + roll + " not found!"); }
+            } catch (e) { alert("Error connecting to sheet!"); }
         }
 
-        function displayData(d) {
-            document.getElementById("outName").innerText = d[1];
-            document.getElementById("outFather").innerText = d[2];
-            document.getElementById("outDob").innerText = d[4];
-            document.getElementById("outClass").innerText = d[5];
-            document.getElementById("outReg").innerText = d[7];
-            document.getElementById("outRoll").innerText = d[8];
-            document.getElementById("outSession").innerText = d[9];
-            document.getElementById("outAtten").innerText = d[10];
-            document.getElementById("outIssue").innerText = d[11];
+        function displayMarks(d) {
+            // Basic Fields
+            document.getElementById("sName").innerText = d[1];
+            document.getElementById("sFather").innerText = d[2];
+            document.getElementById("sDob").innerText = d[4];
+            document.getElementById("sClass").innerText = d[5];
+            document.getElementById("sReg").innerText = d[7];
+            document.getElementById("sRoll").innerText = d[8];
+            document.getElementById("sSession").innerText = d[9];
+            document.getElementById("sAtten").innerText = d[10];
+            document.getElementById("sIssue").innerText = d[11];
 
-            // Subjects Mapping
-            const subjects = [
-                { name: "HINDI", faM: 34, faO: 35, hyM: 92, hyG: 208, anM: 179, anG: 224 },
-                { name: "ENGLISH", faM: 36, faO: 37, hyM: 93, hyG: 209, anM: 180, anG: 225 },
-                { name: "MATHEMATICS", faM: 38, faO: 39, hyM: 94, hyG: 210, anM: 181, anG: 226 },
-                { name: "SCIENCE", faM: 40, faO: 41, hyM: 95, hyG: 211, anM: 182, anG: 227 },
-                { name: "EVS / SST", faM: 42, faO: 43, hyM: 96, hyG: 212, anM: 183, anG: 228 }
+            // Subject Configuration (Index = Column Letter Position - 1)
+            // FA2 starts DR(121), DS(122)...
+            // HY starts CO(92), CP(93)...
+            // AN starts FX(179), FY(180)...
+            const subjectList = [
+                { name: "HINDI", faM: 121, faO: 122, hyM: 92, hyO: 93, anM: 179, anO: 180, gCol: 224 },
+                { name: "ENGLISH", faM: 123, faO: 124, hyM: 94, hyO: 95, anM: 181, anO: 182, gCol: 225 },
+                { name: "MATHS", faM: 125, faO: 126, hyM: 96, hyO: 97, anM: 183, anO: 184, gCol: 226 },
+                { name: "SCIENCE", faM: 127, faO: 128, hyM: 98, hyO: 99, anM: 185, anO: 186, gCol: 227 },
+                { name: "EVS/SST", faM: 129, faO: 130, hyM: 100, hyO: 101, anM: 187, anO: 188, gCol: 228 },
+                { name: "COMPUTER", faM: 131, faO: 132, hyM: 102, hyO: 103, anM: 189, anO: 190, gCol: 229 },
+                { name: "G.K.", faM: 133, faO: 134, hyM: 104, hyO: 105, anM: 191, anO: 192, gCol: 230 }
             ];
 
-            let tableRows = "";
-            let totalObtained = 0;
+            let html = "";
+            let grandObt = 0;
+            let grandMax = 0;
 
-            subjects.forEach(s => {
-                const annualMarks = parseFloat(d[s.anM]) || 0;
-                totalObtained += annualMarks;
-                
-                tableRows += `<tr>
-                    <td class="text-left">${s.name}</td>
-                    <td>${d[s.faM] || '-'}</td>
-                    <td>${d[s.faO] || '-'}</td>
-                    <td>${d[s.hyM] || '-'}</td>
-                    <td>${d[s.hyG] || '-'}</td>
-                    <td>${d[s.anM] || '-'}</td>
-                    <td>${d[s.anG] || '-'}</td>
-                    <td><strong>${d[s.anG] || '-'}</strong></td>
+            subjectList.forEach(s => {
+                let obt = parseFloat(d[s.anO]) || 0;
+                let max = parseFloat(d[s.anM]) || 100;
+                grandObt += obt;
+                grandMax += max;
+
+                html += `<tr>
+                    <td class="sub-name">${s.name}</td>
+                    <td>${d[s.faM] || '-'}</td><td>${d[s.faO] || '-'}</td>
+                    <td>${d[s.hyM] || '-'}</td><td>${d[s.hyO] || '-'}</td>
+                    <td>${d[s.anM] || '-'}</td><td>${d[s.anO] || '-'}</td>
+                    <td><strong>${obt}</strong></td>
+                    <td>${d[s.gCol] || '-'}</td>
                 </tr>`;
             });
 
-            document.getElementById("marksBody").innerHTML = tableRows;
-            document.getElementById("totalObt").innerText = totalObtained;
+            document.getElementById("marksBody").innerHTML = html;
+            document.getElementById("grandTot").innerText = grandObt + " / " + grandMax;
             
-            const percentage = (totalObtained / 500) * 100;
-            document.getElementById("perc").innerText = percentage.toFixed(2);
-            document.getElementById("resStatus").innerText = percentage >= 33 ? "PASSED" : "PROMOTED";
+            let perc = (grandObt / grandMax) * 100;
+            document.getElementById("grandPerc").innerText = perc.toFixed(2);
+            document.getElementById("grandRes").innerText = perc >= 33 ? "PASSED" : "PROMOTED";
 
-            // Photo Logic
-            const driveID = d[12] ? d[12].trim() : "";
-            if(driveID.length > 5) {
-                document.getElementById("stPhoto").innerHTML = `<img src="https://lh3.googleusercontent.com/u/0/d/${driveID}">`;
-            } else { document.getElementById("stPhoto").innerHTML = "NO PHOTO"; }
+            // Photo (Col M = 12)
+            const pID = d[12] ? d[12].trim() : "";
+            if(pID.length > 5) {
+                document.getElementById("photoArea").innerHTML = `<img src="https://lh3.googleusercontent.com/u/0/d/${pID}">`;
+            } else { document.getElementById("photoArea").innerHTML = "NO PHOTO"; }
 
-            document.getElementById("marksheetArea").style.display = "block";
+            document.getElementById("marksheetFull").style.display = "block";
         }
     </script>
 </body>
