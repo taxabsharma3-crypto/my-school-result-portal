@@ -101,8 +101,40 @@
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?gid=1253973170&single=true&output=csv";
 
         async function fetchResult() {
-            const roll = document.getElementById("rollSearch").value.trim();
-            if(!roll) return alert("Please enter Roll or Reg Number");
+    const roll = document.getElementById("rollSearch").value.trim();
+    if(!roll) return alert("Please enter Roll or Reg Number");
+
+    // Loading मैसेज दिखाएँ
+    document.getElementById("rollSearch").placeholder = "Loading... Please wait";
+
+    try {
+        // 1. AllOrigins Proxy का इस्तेमाल करें (CORS Error Fix)
+        const proxyUrl = "https://api.allorigins.win/raw?url=";
+        const finalUrl = proxyUrl + encodeURIComponent(CSV_URL + "&t=" + Date.now());
+
+        const resp = await fetch(finalUrl);
+        
+        if (!resp.ok) throw new Error('Could not fetch data');
+        
+        const dataText = await resp.text();
+        
+        // 2. CSV को पंक्तियों में बदलें
+        const rows = dataText.split(/\r?\n/).filter(r => r.trim() !== "").map(r => r.split(","));
+        
+        // 3. डेटा सर्च करें (H या I कॉलम में)
+        const student = rows.find(r => (r[7] && r[7].trim() == roll) || (r[8] && r[8].trim() == roll));
+        
+        if (student) {
+            renderSheet(student);
+            document.getElementById("rollSearch").placeholder = "Enter Roll No";
+        } else {
+            alert("Record not found! कृपया रजिस्ट्रेशन नंबर चेक करें।");
+        }
+    } catch (err) {
+        console.error("Detailed Error:", err);
+        alert("Database Connection Error!\n\nसमाधान:\n1. सुनिश्चित करें कि Sheet 'Publish to Web' है।\n2. 'Comma-separated values (.csv)' फॉर्मेट चुना है।");
+    }
+}
 
             try {
                 const fetchUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(CSV_URL + "&t=" + Date.now())}`;
