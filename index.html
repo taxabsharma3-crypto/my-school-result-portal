@@ -1,6 +1,50 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+    <style>
+        /* (यहाँ आपका पुराना CSS पेस्ट करें) */
+        /* बस इमेज के लिए यह छोटा सा हिस्सा जोड़ लें ताकि फोटो सही दिखे */
+        .st-photo img, .school-logo, .sig-box img { max-width: 100%; height: auto; display: block; }
+    </style>
+</head>
+<body>
+    <script>
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV1h6s0ZZ1ryGa112nhw3eeTXl_iR3hHmMg-JKJoyGb2s0cFO9b6YLH6i1uo4A4m9kfBHSTE9JRfiN/pub?gid=1253973170&single=true&output=csv";
+
+        // ... (findResult और getGr फंक्शन पुराने ही रहेंगे) ...
+
+        function showMarksheet(d) {
+            // ... (आपका पुराना डेटा मैपिंग) ...
+
+            // --- सुधरा हुआ फोटो लॉजिक (AUTO-PHOTO) ---
+            let pID = d[12]?.trim(); // Column M
+            let photoArea = document.getElementById("photoArea");
+
+            if(pID && pID.length > 5) {
+                // ID निकालने का सही तरीका
+                let cleanID = "";
+                if(pID.includes("id=")) {
+                    cleanID = pID.split("id=")[1].split("&")[0];
+                } else if(pID.includes("/d/")) {
+                    cleanID = pID.split("/d/")[1].split("/")[0];
+                } else {
+                    cleanID = pID;
+                }
+                
+                // ब्राउज़र में फोटो दिखाने का सबसे सही लिंक फॉर्मेट
+                photoArea.innerHTML = `<img src="https://lh3.googleusercontent.com/d/${cleanID}" alt="Student Photo">`;
+            } else {
+                photoArea.innerHTML = "<strong>NO PHOTO</strong>";
+            }
+
+            document.getElementById("marksheetFull").style.display = "block";
+            window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
+        }
+    </script>
+</body>
+</html>
+<html lang="hi">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rajni Public School - Professional Marksheet 2026</title>
