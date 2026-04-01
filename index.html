@@ -203,19 +203,22 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-            // --- PHOTO LOGIC (Column M / Index 12) ---
-            let pID_raw = d[12]?.trim();
-            let photoArea = document.getElementById("photoArea");
+           // --- PHOTO LOGIC (Column M / Index 12) ---
+let pID_raw = d[12]?.trim();
+let photoArea = document.getElementById("photoArea");
 
-            if(pID_raw && pID_raw.length > 5) {
-                let cleanID = pID_raw.includes("id=") ? pID_raw.split("id=")[1].split("&")[0] : (pID_raw.includes("/d/") ? pID_raw.split("/d/")[1].split("/")[0] : pID_raw);
-                photoArea.innerHTML = `<img src="https://lh3.googleusercontent.com/d/$${cleanID}" alt="Student">`;
-            } else {
-                photoArea.innerText = "NO PHOTO";
-            }
+if(pID_raw && pID_raw.length > 5) {
+    // ID nikalne ka logic (Sahi hai)
+    let cleanID = pID_raw.includes("id=") ? pID_raw.split("id=")[1].split("&")[0] : (pID_raw.includes("/d/") ? pID_raw.split("/d/")[1].split("/")[0] : pID_raw);
+    
+    // Fix: Yahan ${cleanID} use karein aur Google Drive ka direct link use karein
+    photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${cleanID}" alt="Student" style="width:150px; height:auto; border:1px solid #ccc;">`;
+} else {
+    photoArea.innerText = "NO PHOTO";
+}
 
-            document.getElementById("marksheetFull").style.display = "block";
-            window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
+document.getElementById("marksheetFull").style.display = "block";
+window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
         }
     </script>
 </body>
