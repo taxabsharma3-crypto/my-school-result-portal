@@ -203,20 +203,29 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-          // --- PHOTO LOGIC (Column M / Index 12) ---
-let pID_raw = d[12]?.trim();
+         // --- PHOTO LOGIC (Column M / Index 12) ---
+let pID_raw = d[12] ? d[12].toString().trim() : ""; 
 let photoArea = document.getElementById("photoArea");
 
 if(pID_raw && pID_raw.length > 5) {
-    // ID nikalne ka logic
-    let cleanID = pID_raw.includes("id=") ? pID_raw.split("id=")[1].split("&")[0] : (pID_raw.includes("/d/") ? pID_raw.split("/d/")[1].split("/")[0] : pID_raw);
+    // ID nikalne ka sabse safe tarika
+    let cleanID = "";
+    if(pID_raw.includes("id=")) {
+        cleanID = pID_raw.split("id=")[1].split("&")[0];
+    } else if(pID_raw.includes("/d/")) {
+        cleanID = pID_raw.split("/d/")[1].split("/")[0];
+    } else {
+        cleanID = pID_raw; // Agar sirf ID likhi ho
+    }
     
-    // SABSE ZAROORI FIX: Yahan ${cleanID} se pehle $ hona chahiye 
-    // Aur link ke aage &v=1 ya &export=view hona chahiye
-    photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${cleanID}" alt="Student" style="width:120px; height:150px; border:1px solid #000; object-fit: cover;">`;
+    // Yahan Backticks ( ` ) aur ${} ka sahi use hai
+    photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${cleanID}" alt="Student Photo" style="width:120px; height:150px; border:1px solid #000; object-fit:cover;">`;
 } else {
-    photoArea.innerHTML = `<div style="width:120px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center;">NO PHOTO</div>`;
+    // Agar photo na ho toh box dikhega
+    photoArea.innerHTML = `<div style="width:120px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#f9f9f9;">NO PHOTO</div>`;
 }
-    </script>
-</body>
+
+// Marksheet dikhane wala part
+document.getElementById("marksheetFull").style.display = "block";
+window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
 </html>
