@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajni Public School - Final Result 2026</title>
+    <title>Rajni Public School - Professional Marksheet 2026</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #d93025; margin-bottom: 30px; }
@@ -11,26 +11,29 @@
         .btn-search { background: #d93025; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 92%; font-weight: bold; font-size: 16px; transition: 0.3s; }
         .btn-search:hover { background: #b0261b; }
 
-        /* मार्कशीट डिजाइन */
-        #marksheetFull { display: none; width: 1100px; background: white; padding: 40px; border: 2px solid #000; box-shadow: 0 0 30px rgba(0,0,0,0.2); position: relative; color: #000; }
+        /* मार्कशीट मेन कंटेनर */
+        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); position: relative; color: #000; }
         
+        /* हेडर सेक्शन */
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #000; padding-bottom: 15px; margin-bottom: 20px; }
         .school-logo { width: 110px; height: 110px; object-fit: contain; }
         .st-photo { width: 120px; height: 145px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
         .st-photo img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* टेबल स्टाइल */
         .marks-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
         .marks-table th, .marks-table td { border: 1px solid #000; padding: 8px; }
-        .bg-head { background: #f2f2f2; font-weight: bold; }
+        .bg-head { background: #f0f0f0; font-weight: bold; }
         .sub-name { text-align: left !important; padding-left: 12px !important; font-weight: bold; background: #fafafa; }
         .total-row { background: #e3f2fd; font-weight: bold; font-size: 14px; }
 
+        /* समरी और सिग्नेचर */
         .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #000; padding: 15px; font-weight: bold; background: #f9f9f9; font-size: 16px; }
         .remarks { margin-top: 15px; padding: 10px; border: 1px dashed #444; background: #fffde7; font-style: italic; font-size: 14px; }
         
-        .sig-section { display: flex; justify-content: space-between; margin-top: 80px; padding: 0 40px; }
-        .sig-box { text-align: center; width: 220px; position: relative; }
-        .sig-box img { position: absolute; top: -55px; left: 50%; transform: translateX(-50%); width: 150px; height: auto; }
+        .sig-section { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 40px; }
+        .sig-box { text-align: center; width: 200px; position: relative; }
+        .sig-box img { position: absolute; top: -55px; left: 50%; transform: translateX(-50%); width: 140px; height: auto; }
         .sig-line { border-top: 2px solid #000; padding-top: 5px; font-weight: bold; }
 
         @media print { 
@@ -44,19 +47,19 @@
 
     <div class="search-card">
         <h2 style="color:#d93025; margin:0;">RAJNI PUBLIC SCHOOL</h2>
-        <p style="font-size: 14px; color: #555; margin-top: 5px;">Student Marksheet Portal 2025-26</p>
-        <input type="text" id="searchInput" placeholder="Roll No / Reg No">
-        <button class="btn-search" onclick="findResult()">Search Result</button>
+        <p style="font-size: 14px; color: #555; margin-top: 5px;">Annual Result Portal 2025-26</p>
+        <input type="text" id="searchInput" placeholder="Enter Roll No or Registration No">
+        <button class="btn-search" onclick="findResult()">Generate Marksheet</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header-main">
-            <img src="https://via.placeholder.com/110?text=LOGO" class="school-logo" id="schoolLogo" alt="School Logo">
+            <img src="https://via.placeholder.com/110?text=SCHOOL+LOGO" class="school-logo" alt="Logo">
             
             <div style="text-align:center;">
-                <h1 style="margin:0; font-size: 38px; color: #d93025; font-weight: 900;">RAJNI PUBLIC SCHOOL</h1>
-                <p style="margin:5px 0; font-size: 15px; font-weight: 600;">Affiliated to CBSE Board | School Code: 123456</p>
-                <div style="margin-top:10px; background: #000; color: #fff; padding: 5px 25px; display: inline-block; border-radius: 4px; font-weight: bold; letter-spacing: 1px;">
+                <h1 style="margin:0; font-size: 36px; color: #d93025; font-weight: 800;">RAJNI PUBLIC SCHOOL</h1>
+                <p style="margin:5px 0; font-size: 14px; font-weight: 600;">Affiliated to CBSE Board | School Code: XXXX</p>
+                <div style="margin-top:10px; background: #000; color: #fff; padding: 4px 20px; display: inline-block; border-radius: 4px; font-weight: bold;">
                     ANNUAL PROGRESS REPORT CARD (2025-26)
                 </div>
             </div>
@@ -64,7 +67,7 @@
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 17px; padding: 10px; border-bottom: 1px solid #ddd;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 16px; border: 1px solid #eee; padding: 10px;">
             <div>
                 <strong>Student Name:</strong> <span id="sName" style="text-transform: uppercase;"></span><br>
                 <strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span>
@@ -78,7 +81,7 @@
         <table class="marks-table">
             <thead>
                 <tr class="bg-head">
-                    <th rowspan="2" style="width: 220px;">SUBJECT NAME</th>
+                    <th rowspan="2" style="width: 200px;">SUBJECT NAME</th>
                     <th colspan="3">FA-1</th>
                     <th colspan="3">HALF YEARLY</th>
                     <th colspan="3">FA-2</th>
@@ -99,12 +102,12 @@
 
         <div class="final-summary">
             <div>PERCENTAGE: <span id="resPerc"></span>%</div>
-            <div>OVERALL GRADE: <span id="resGrade"></span></div>
+            <div>GRADE: <span id="resGrade"></span></div>
             <div>STATUS: <span id="resStatus"></span></div>
             <div>ATTENDANCE: <span id="resAtten"></span></div>
         </div>
 
-        <div class="remarks"><strong>Remarks:</strong> <span id="resComment"></span></div>
+        <div class="remarks"><strong>Class Teacher's Remarks:</strong> <span id="resComment"></span></div>
 
         <div class="sig-section">
             <div class="sig-box">
@@ -114,13 +117,13 @@
                 <p class="sig-line">Exam Controller</p>
             </div>
             <div class="sig-box">
-                <img src="https://via.placeholder.com/150x50?text=Sign" id="prinSign" alt="Principal Sign">
-                <p class="sig-line">Principal Signature</p>
+                <img src="https://via.placeholder.com/140x50?text=Signature" alt="Principal Signature">
+                <p class="sig-line">Principal</p>
             </div>
         </div>
 
         <div style="text-align: center; margin-top: 40px;">
-            <button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 40px; border:none; border-radius:8px; cursor:pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">Print Marksheet</button>
+            <button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold; font-size: 16px;">Download Marksheet</button>
         </div>
     </div>
 
@@ -130,11 +133,105 @@
 
         async function findResult() {
             const val = document.getElementById("searchInput").value.trim();
-            if(!val) return alert("Please enter Roll No / Reg No");
+            if(!val) return alert("Please enter Roll Number!");
             
             try {
                 const resp = await fetch(SHEET_URL);
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
                 
-                // Roll No (
+                // Roll Number (Column 8) में सर्च करें
+                const student = rows.find(r => r[8]?.trim() == val);
+                
+                if(student) showMarksheet(student); 
+                else alert("Student Record Not Found!");
+            } catch (e) {
+                alert("Error connecting to database. Please check your internet.");
+            }
+        }
+
+        function getGr(obt, mm) {
+            if(!mm || mm == 0) return "-";
+            let p = (obt/mm)*100;
+            if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
+            if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
+        }
+
+        function showMarksheet(d) {
+            document.getElementById("sName").innerText = d[1];
+            document.getElementById("sFather").innerText = d[2];
+            document.getElementById("sRoll").innerText = d[8];
+            document.getElementById("sClass").innerText = d[5];
+            document.getElementById("resAtten").innerText = d[10] || "N/A";
+            document.getElementById("resComment").innerText = d[235] || "Excellent Performance!";
+
+            // सब्जेक्ट मैपिंग (आपके द्वारा दिए गए इंडेक्स के अनुसार)
+            const subjects = [
+                {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
+                {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
+                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
+                {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
+                {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188},
+                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:189, ano:190},
+                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
+                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194}
+            ];
+
+            let html = "";
+            let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
+
+            subjects.forEach(s => {
+                let m1=parseFloat(d[s.f1m])||0, o1=parseFloat(d[s.f1o])||0;
+                let m2=parseFloat(d[s.hym])||0, o2=parseFloat(d[s.hyo])||0;
+                let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
+                let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
+                
+                tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
+
+                let rowMM = m1+m2+m3+m4; 
+                let rowObt = o1+o2+o3+o4;
+
+                html += `<tr><td class="sub-name">${s.n}</td>
+                    <td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td>
+                    <td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td>
+                    <td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td>
+                    <td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td>
+                    <td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rowMM)}</td>
+                </tr>`;
+            });
+
+            document.getElementById("marksBody").innerHTML = html;
+
+            // ग्रैंड टोटल कैलकुलेशन
+            let totalMM = tF1m + tHYm + tF2m + tANm;
+            let totalObt = tF1o + tHYo + tF2o + tANo;
+            
+            document.getElementById("totalRow").innerHTML = `<tr class="total-row"><td class="sub-name">GRAND TOTAL</td>
+                <td>${tF1m}</td><td>${tF1o}</td><td>-</td>
+                <td>${tHYm}</td><td>${tHYo}</td><td>-</td>
+                <td>${tF2m}</td><td>${tF2o}</td><td>-</td>
+                <td>${tANm}</td><td>${tANo}</td><td>-</td>
+                <td>${totalMM}</td><td>${totalObt}</td><td>${getGr(totalObt, totalMM)}</td></tr>`;
+
+            let finalPer = ((totalObt/totalMM)*100).toFixed(2);
+            document.getElementById("resPerc").innerText = finalPer;
+            document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
+            document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
+            document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
+
+            // AUTO-PHOTO LOGIC: अगर शीट में केवल Photo ID है
+            let pID = d[12]?.trim();
+            if(pID && pID.length > 5) {
+                // गूगल ड्राइव डायरेक्ट लिंक क्लीनअप
+                let cleanID = pID.includes("id=") ? pID.split("id=")[1].split("&")[0] : (pID.includes("/d/") ? pID.split("/d/")[1].split("/")[0] : pID);
+                document.getElementById("photoArea").innerHTML = `<img src="https://lh3.googleusercontent.com/d/${cleanID}" alt="Student">`;
+            } else {
+                document.getElementById("photoArea").innerText = "NO PHOTO";
+            }
+
+            document.getElementById("marksheetFull").style.display = "block";
+            window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
+        }
+    </script>
+</body>
+</html>
