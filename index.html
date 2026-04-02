@@ -10,7 +10,6 @@
         input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
         .btn-search { background: #d93025; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 92%; font-weight: bold; font-size: 16px; }
 
-        /* Marksheet Design */
         #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); color: #000; position: relative; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #000; padding-bottom: 15px; margin-bottom: 20px; }
         .st-photo { width: 125px; height: 150px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
@@ -34,8 +33,8 @@
 
     <div class="search-card">
         <h2 style="color:#d93025; margin:0;">RAJNI PUBLIC SCHOOL</h2>
-        <p style="margin:5px 0; color:#666;">Annual Result Portal 2025-26</p>
-        <input type="text" id="searchInput" placeholder="Enter Registration No. (H Column)">
+        <p style="margin:5px 0; color:#666;">Enter Admission Number to View Result</p>
+        <input type="text" id="searchInput" placeholder="Admission No. (e.g. 137)">
         <button class="btn-search" onclick="findResult()">Generate Marksheet</button>
     </div>
 
@@ -55,7 +54,8 @@
                 <strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span>
             </div>
             <div style="text-align:right;">
-                <strong>Reg No:</strong> <span id="sRoll"></span> | <strong>Class:</strong> <span id="sClass"></span>
+                <strong>Adm No:</strong> <span id="sAdm"></span> | <strong>Class:</strong> <span id="sClass"></span><br>
+                <strong>Reg No:</strong> <span id="sReg"></span>
             </div>
         </div>
 
@@ -94,26 +94,25 @@
     </div>
 
     <script>
-        // Google Sheet CSV Link
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         async function findResult() {
             const val = document.getElementById("searchInput").value.trim();
-            if(!val) return alert("Please enter Registration Number!");
+            if(!val) return alert("Please enter Admission Number!");
             
             try {
-                // Cache buster lagaya hai taaki naya data turant dikhe
-                const resp = await fetch(SHEET_URL + "&cache=" + new Date().getTime());
+                // Cache buster for real-time updates
+                const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
                 
-                // H Column (Index 7) mein registration number search
-                const student = rows.find(r => r[7]?.trim() === val);
+                // Admission No Column A (Index 0) mein search
+                const student = rows.find(r => r[0] && r[0].toString().trim() === val);
                 
                 if(student) {
                     showMarksheet(student); 
                 } else {
-                    alert("Student Record '" + val + "' Not Found! Please check Registration No. in Column H.");
+                    alert("Admission Number '" + val + "' Not Found! Please check Column A in Google Sheet.");
                 }
             } catch (e) {
                 alert("Database Connection Error!");
@@ -128,14 +127,14 @@
         }
 
         function showMarksheet(d) {
-            // Mapping details from your column list
             document.getElementById("sName").innerText = d[1] || ""; // B
             document.getElementById("sFather").innerText = d[2] || ""; // C
-            document.getElementById("sRoll").innerText = d[7] || ""; // H (Registration No)
+            document.getElementById("sAdm").innerText = d[0] || ""; // A
+            document.getElementById("sReg").innerText = d[7] || ""; // H
             document.getElementById("sClass").innerText = d[5] || ""; // F
             document.getElementById("resAtten").innerText = d[10] || "N/A"; // K
 
-            // Subjects Index Mapping (As per your cell addresses AI, AJ, CO, CP, DR, DS, FX, FY)
+            // Column Indexes mapping
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
                 {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
@@ -156,7 +155,7 @@
                 let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
                 let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
 
-                // Auto-fix for swapped MM/Obt data (Reg 137 issue)
+                // Auto-fix for swapped MM/Obt data
                 if(o1 > m1 && m1 > 0) [m1, o1] = [o1, m1];
                 if(o2 > m2 && m2 > 0) [m2, o2] = [o2, m2];
                 if(o3 > m3 && m3 > 0) [m3, o3] = [o3, m3];
@@ -189,7 +188,7 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-            // Photo Logic (M Column - Index 12)
+            // Photo Logic (Column M - Index 12)
             let pID_raw = d[12] ? d[12].trim() : "";
             let photoArea = document.getElementById("photoArea");
             if(pID_raw && pID_raw.length > 5) {
@@ -199,7 +198,6 @@
                 photoArea.innerText = "NO PHOTO";
             }
 
-            // Display results
             document.getElementById("marksheetFull").style.display = "block";
             window.scrollTo({ top: document.getElementById("marksheetFull").offsetTop, behavior: 'smooth' });
         }
