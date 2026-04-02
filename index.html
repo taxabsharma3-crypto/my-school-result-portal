@@ -10,7 +10,6 @@
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #1a73e8; }
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
         .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .btn-search:hover { background: #1557b0; }
         #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
         .st-photo { width: 125px; height: 150px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
@@ -98,7 +97,7 @@
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().includes(selectedClass));
                 if(student) showMarksheet(student);
                 else alert("Record match nahi hua!");
-            } catch (e) { alert("Data load error!"); }
+            } catch (e) { alert("Data error!"); }
         }
 
         function getGr(obt, mm) {
@@ -116,7 +115,6 @@
             document.getElementById("sClass").innerText = d[5];
             document.getElementById("resAtten").innerText = d[10] || "N/A";
 
-            // SARI SUBJECTS LIST (Including Art and PT/Game)
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
                 {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
@@ -127,7 +125,7 @@
                 {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
                 {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194},
                 {n:"ART", f1m:50, f1o:51, hym:108, hyo:109, f2m:137, f2o:138, anm:195, ano:196},
-                {n:"PT/GAME", f1m:52, f1o:53, hym:110, hyo:111, f2m:139, f2o:140, anm:197, ano:198}
+                {n:"PT/GAME", f1m:52, f1o:53, hym:110, hyo:111, f2m:139, f2o:140, anm:197, ano:198, type:"gradeOnly"}
             ];
 
             let html = ""; let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
@@ -136,7 +134,6 @@
                 function getFix(mIdx, oIdx) {
                     let m = parseFloat(d[mIdx]?.trim()) || 0;
                     let o = parseFloat(d[oIdx]?.trim()) || 0;
-                    // Auto-fix for Adm No. 60+ data shift
                     if((m === 0 && o > 0) || (o > m && m > 0)) {
                         m = parseFloat(d[oIdx]?.trim()) || 0; 
                         o = parseFloat(d[oIdx + 1]?.trim()) || 0; 
@@ -149,9 +146,24 @@
                 let [m3, o3] = getFix(s.f2m, s.f2o);
                 let [m4, o4] = getFix(s.anm, s.ano);
 
-                tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
+                // Total marks calculation (Sirf numeric subjects ke liye)
+                if(s.type !== "gradeOnly") {
+                    tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
+                }
+
                 let rowMM = m1+m2+m3+m4, rowObt = o1+o2+o3+o4;
-                html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rowMM)}</td></tr>`;
+                let gr1 = getGr(o1, m1), gr2 = getGr(o2, m2), gr3 = getGr(o3, m3), gr4 = getGr(o4, m4), grTot = getGr(rowObt, rowMM);
+
+                // If PT/GAME, hide numbers
+                if(s.type === "gradeOnly") {
+                    html += `<tr><td class="sub-name">${s.n}</td>
+                    <td>-</td><td>-</td><td>${gr1}</td><td>-</td><td>-</td><td>${gr2}</td><td>-</td><td>-</td><td>${gr3}</td><td>-</td><td>-</td><td>${gr4}</td>
+                    <td class="total-row">-</td><td class="total-row">-</td><td class="total-row">${grTot}</td></tr>`;
+                } else {
+                    html += `<tr><td class="sub-name">${s.n}</td>
+                    <td>${m1}</td><td>${o1}</td><td>${gr1}</td><td>${m2}</td><td>${o2}</td><td>${gr2}</td><td>${m3}</td><td>${o3}</td><td>${gr3}</td><td>${m4}</td><td>${o4}</td><td>${gr4}</td>
+                    <td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${grTot}</td></tr>`;
+                }
             });
 
             document.getElementById("marksBody").innerHTML = html;
