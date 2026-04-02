@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Bells Convent School - Result Portal</title>
+    <title>Blue Bells Convent School - Final Portal</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .admin-box { background: #fff3cd; border: 2px dashed #856404; padding: 15px; border-radius: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; text-align: center; }
@@ -97,7 +97,7 @@
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().includes(selectedClass));
                 if(student) showMarksheet(student);
                 else alert("Record match nahi hua!");
-            } catch (e) { alert("Data error!"); }
+            } catch (e) { alert("Data load error!"); }
         }
 
         function getGr(obt, mm) {
@@ -113,7 +113,11 @@
             document.getElementById("sAdm").innerText = d[0];
             document.getElementById("sReg").innerText = d[7];
             document.getElementById("sClass").innerText = d[5];
-            document.getElementById("resAtten").innerText = d[10] || "N/A";
+
+            // --- ATTENDANCE FIX (K Column = Index 10 or 11 based on shift) ---
+            let attVal = d[10]?.trim();
+            if(!attVal || attVal.includes("202")) { attVal = d[11]?.trim(); } // Agar shift hua hai toh agla column check karein
+            document.getElementById("resAtten").innerText = attVal || "N/A";
 
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
@@ -134,6 +138,7 @@
                 function getFix(mIdx, oIdx) {
                     let m = parseFloat(d[mIdx]?.trim()) || 0;
                     let o = parseFloat(d[oIdx]?.trim()) || 0;
+                    // Auto-fix logic for data shift
                     if((m === 0 && o > 0) || (o > m && m > 0)) {
                         m = parseFloat(d[oIdx]?.trim()) || 0; 
                         o = parseFloat(d[oIdx + 1]?.trim()) || 0; 
@@ -146,7 +151,6 @@
                 let [m3, o3] = getFix(s.f2m, s.f2o);
                 let [m4, o4] = getFix(s.anm, s.ano);
 
-                // Total marks calculation (Sirf numeric subjects ke liye)
                 if(s.type !== "gradeOnly") {
                     tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                 }
@@ -154,15 +158,10 @@
                 let rowMM = m1+m2+m3+m4, rowObt = o1+o2+o3+o4;
                 let gr1 = getGr(o1, m1), gr2 = getGr(o2, m2), gr3 = getGr(o3, m3), gr4 = getGr(o4, m4), grTot = getGr(rowObt, rowMM);
 
-                // If PT/GAME, hide numbers
                 if(s.type === "gradeOnly") {
-                    html += `<tr><td class="sub-name">${s.n}</td>
-                    <td>-</td><td>-</td><td>${gr1}</td><td>-</td><td>-</td><td>${gr2}</td><td>-</td><td>-</td><td>${gr3}</td><td>-</td><td>-</td><td>${gr4}</td>
-                    <td class="total-row">-</td><td class="total-row">-</td><td class="total-row">${grTot}</td></tr>`;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>-</td><td>${gr1}</td><td>-</td><td>-</td><td>${gr2}</td><td>-</td><td>-</td><td>${gr3}</td><td>-</td><td>-</td><td>${gr4}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">${grTot}</td></tr>`;
                 } else {
-                    html += `<tr><td class="sub-name">${s.n}</td>
-                    <td>${m1}</td><td>${o1}</td><td>${gr1}</td><td>${m2}</td><td>${o2}</td><td>${gr2}</td><td>${m3}</td><td>${o3}</td><td>${gr3}</td><td>${m4}</td><td>${o4}</td><td>${gr4}</td>
-                    <td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${grTot}</td></tr>`;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${gr1}</td><td>${m2}</td><td>${o2}</td><td>${gr2}</td><td>${m3}</td><td>${o3}</td><td>${gr3}</td><td>${m4}</td><td>${o4}</td><td>${gr4}</td><td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${grTot}</td></tr>`;
                 }
             });
 
