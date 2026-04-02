@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rajni Public School - Result Portal</title>
+    <title>Rajni Public School - Result Portal 2026</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #d93025; margin-bottom: 30px; }
@@ -26,7 +26,7 @@
 
     <div class="search-card">
         <h2 style="color:#d93025; margin:0;">RAJNI PUBLIC SCHOOL</h2>
-        <input type="text" id="searchInput" placeholder="Enter Admission No. (Column A)">
+        <input type="text" id="searchInput" placeholder="Admission Number (Col A) Daalein">
         <button class="btn-search" onclick="findResult()">Generate Marksheet</button>
     </div>
 
@@ -95,7 +95,7 @@
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
-                // Admission No Column A (Index 0) mein search
+                // Search in Column A (Index 0)
                 const student = rows.find(r => r[0] && r[0].toString().trim() === val);
                 if(student) showMarksheet(student); 
                 else alert("Admission Number '" + val + "' Not Found!");
@@ -115,10 +115,9 @@
             document.getElementById("sAdm").innerText = d[0] || "";
             document.getElementById("sReg").innerText = d[7] || "";
             document.getElementById("sClass").innerText = d[5] || "";
-            document.getElementById("resAtten").innerText = d[10] || "N/A";
+            document.getElementById("resAtten").innerText = d[10] || "N/A"; // Attendance K Column (Index 10)
 
-            // --- INDEX RE-CALCULATION FOR HINDI ---
-            // Aapne bataya: AI=34, AJ=35, CO=92, CP=93, DR=121, DS=122, FX=179, FY=180
+            // --- EXACT COLUMN MAPPING FOR HINDI & OTHERS ---
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
                 {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
@@ -134,13 +133,12 @@
             let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
 
             subjects.forEach(s => {
-                // Number nikalte waqt trim() zaroori hai taaki space error na ho
-                let m1=parseFloat(d[s.f1m]?.trim())||0, o1=parseFloat(d[s.f1o]?.trim())||0;
-                let m2=parseFloat(d[s.hym]?.trim())||0, o2=parseFloat(d[s.hyo]?.trim())||0;
-                let m3=parseFloat(d[s.f2m]?.trim())||0, o3=parseFloat(d[s.f2o]?.trim())||0;
-                let m4=parseFloat(d[s.anm]?.trim())||0, o4=parseFloat(d[s.ano]?.trim())||0;
+                let m1=parseFloat(d[s.f1m])||0, o1=parseFloat(d[s.f1o])||0;
+                let m2=parseFloat(d[s.hym])||0, o2=parseFloat(d[s.hyo])||0;
+                let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
+                let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
 
-                // Auto-fix for swapped MM/Obt data (If Obtained > Max Marks)
+                // Auto-fix for swapped data
                 if(o1 > m1 && m1 > 0) [m1, o1] = [o1, m1];
                 if(o2 > m2 && m2 > 0) [m2, o2] = [o2, m2];
                 if(o3 > m3 && m3 > 0) [m3, o3] = [o3, m3];
@@ -169,7 +167,7 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-            // Photo Logic (M Column - Index 12)
+            // Photo Logic (Column M - Index 12)
             let pID_raw = d[12] ? d[12].trim() : "";
             let photoArea = document.getElementById("photoArea");
             if(pID_raw && pID_raw.length > 5) {
