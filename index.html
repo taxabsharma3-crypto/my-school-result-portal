@@ -9,28 +9,22 @@
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #d93025; margin-bottom: 30px; }
         input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
         .btn-search { background: #d93025; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 92%; font-weight: bold; font-size: 16px; }
-
         #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); position: relative; color: #000; }
-        
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #000; padding-bottom: 15px; margin-bottom: 20px; }
         .school-logo { width: 110px; height: 110px; object-fit: contain; }
         .st-photo { width: 125px; height: 150px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
         .st-photo img { width: 100%; height: 100%; object-fit: cover; }
-
         .marks-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
         .marks-table th, .marks-table td { border: 1px solid #000; padding: 8px; }
         .bg-head { background: #f0f0f0; font-weight: bold; }
         .sub-name { text-align: left !important; padding-left: 12px !important; font-weight: bold; }
         .total-row { background: #e3f2fd; font-weight: bold; font-size: 14px; }
-
         .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #000; padding: 15px; font-weight: bold; background: #f9f9f9; font-size: 16px; }
         .remarks { margin-top: 15px; padding: 10px; border: 1px dashed #444; background: #fffde7; font-style: italic; font-size: 14px; }
-        
         .sig-section { display: flex; justify-content: space-between; margin-top: 75px; padding: 0 40px; }
         .sig-box { text-align: center; width: 200px; position: relative; }
         .sig-box img { position: absolute; top: -55px; left: 50%; transform: translateX(-50%); width: 140px; height: auto; }
         .sig-line { border-top: 2px solid #000; padding-top: 5px; font-weight: bold; }
-
         @media print { .search-card, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
     </style>
 </head>
@@ -131,30 +125,25 @@
         }
 
         function showMarksheet(d) {
-            // Basic Info
             document.getElementById("sName").innerText = d[1];
             document.getElementById("sFather").innerText = d[2];
             document.getElementById("sRoll").innerText = d[8];
             document.getElementById("sClass").innerText = d[5];
             
-            // Attendance Fix: Agar d[10] par session aa raha hai, toh check karein d[9] ya d[11]
-            // Maine yahan check lagaya hai taaki "2025-26" jaisa text na aaye
-            let attendance = d[10] ? d[10].trim() : "N/A";
-            document.getElementById("resAtten").innerText = attendance.includes("-") ? "N/A" : attendance;
-            
+            // Attendance - Index 10 (K Column)
+            document.getElementById("resAtten").innerText = d[10] || "N/A";
             document.getElementById("resComment").innerText = d[235] || "Keep it up!";
 
-            // --- SUBJECT LOGIC (HINDI Fix) ---
-            // Yahan indexes ko check karein. Agar Hindi nahi aa raha toh column numbers check karein.
+            // Naye Columns ke hisaab se indexes
             const subjects = [
-                {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
-                {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
-                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
-                {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
-                {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188},
-                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:189, ano:190},
-                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
-                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194}
+                {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:173, ano:174}, // Yahan Index update kiya hai
+                {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:175, ano:176},
+                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:177, ano:178},
+                {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:179, ano:180},
+                {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:181, ano:182},
+                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:183, ano:184},
+                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:185, ano:186},
+                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:187, ano:188}
             ];
 
             let html = "";
@@ -166,7 +155,7 @@
                 let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
                 let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
                 
-                // Swap Logic for Reg No 137 issues
+                // Swap logic
                 if(o1 > m1 && m1 > 0) [m1, o1] = [o1, m1];
                 if(o2 > m2 && m2 > 0) [m2, o2] = [o2, m2];
                 if(o3 > m3 && m3 > 0) [m3, o3] = [o3, m3];
@@ -199,7 +188,6 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-            // Photo Logic
             let pID_raw = d[12] ? d[12].trim() : "";
             let photoArea = document.getElementById("photoArea");
             if(pID_raw && pID_raw.length > 5) {
