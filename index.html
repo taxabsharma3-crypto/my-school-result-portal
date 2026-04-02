@@ -126,7 +126,7 @@
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
                 
-                // Roll No (Col 8) में सर्च करें
+                // Registration No (Col 8) में सर्च करें
                 const student = rows.find(r => r[8]?.trim() == val);
                 
                 if(student) showMarksheet(student); 
