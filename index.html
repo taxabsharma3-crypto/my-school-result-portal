@@ -30,15 +30,12 @@
         <strong style="color: #856404;">ADMIN CONTROL: Result Switch</strong><br>
         <select id="activeClassControl" style="width: 70%; padding: 5px; margin-top: 5px; border-color: #856404;">
             <option value="ALL">Sabka Result Open Karein (All)</option>
-            <option value="8">Class 8</option>
-            <option value="7">Class 7</option>
-            <option value="6">Class 6</option>
-            <option value="5">Class 5</option>
+            <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option>
         </select>
     </div>
 
     <div class="search-card">
-        <h2 style="color:#1a73e8; margin:0;">BLUE BELLS CONVENT SCHOOL</h2>
+        <h2 style="color:#1a73e8; margin:0; font-size: 22px;">BLUE BELLS CONVENT SCHOOL</h2>
         <select id="studentClassSelect">
             <option value="">-- Choose Your Class --</option>
             <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option>
@@ -91,8 +88,8 @@
             const selectedClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
             const activeAdminClass = document.getElementById("activeClassControl").value;
-            if(!selectedClass || !admNo) return alert("Details bhariye!");
-            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) return alert("Result abhi open nahi hai!");
+            if(!selectedClass || !admNo) return alert("Class aur Admission No. bhariye!");
+            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) return alert("Is class ka result abhi open nahi hai!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
@@ -101,11 +98,11 @@
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().includes(selectedClass));
                 if(student) showMarksheet(student);
                 else alert("Record match nahi hua!");
-            } catch (e) { alert("Error connecting!"); }
+            } catch (e) { alert("Data load error!"); }
         }
 
         function getGr(obt, mm) {
-            if(!mm || mm == 0) return "-";
+            if(!mm || mm <= 0) return "-";
             let p = (obt/mm)*100;
             if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
             if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
@@ -131,19 +128,22 @@
             let html = ""; let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
 
             subjects.forEach(s => {
-                let m1=parseFloat(d[s.f1m])||0, o1=parseFloat(d[s.f1o])||0;
-                let m2=parseFloat(d[s.hym])||0, o2=parseFloat(d[s.hyo])||0;
-                let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
-                let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
-
-                // --- SPECIAL FIX FOR CLASS 8 HINDI (Swap detection) ---
-                if(s.n === "HINDI" && m1 === 0 && o1 > 0) { 
-                    // Agar MM 0 hai aur OBT mein number hai, toh assume karo ki data khisak gaya hai
-                    // Column AI ki jagah AJ aur AK check karo
-                    m1 = parseFloat(d[s.f1o])||0; // AJ ko MM bana do
-                    o1 = parseFloat(d[s.f1o + 1])||0; // AK ko OBT bana do
+                // Function to get corrected MM and Obt
+                function getFix(mIdx, oIdx) {
+                    let m = parseFloat(d[mIdx]?.trim()) || 0;
+                    let o = parseFloat(d[oIdx]?.trim()) || 0;
+                    // Logic: Agar MM 0 hai aur Obt 0 se bada hai, ya MM, OBT se chhota hai, toh data khiska hai
+                    if((m === 0 && o > 0) || (o > m && m > 0)) {
+                        m = parseFloat(d[oIdx]?.trim()) || 0; // OBT column wala MM hai
+                        o = parseFloat(d[oIdx + 1]?.trim()) || 0; // Agla column asli OBT hai
+                    }
+                    return [m, o];
                 }
-                // --- END FIX ---
+
+                let [m1, o1] = getFix(s.f1m, s.f1o);
+                let [m2, o2] = getFix(s.hym, s.hyo);
+                let [m3, o3] = getFix(s.f2m, s.f2o);
+                let [m4, o4] = getFix(s.anm, s.ano);
 
                 tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                 let rowMM = m1+m2+m3+m4, rowObt = o1+o2+o3+o4;
@@ -158,6 +158,7 @@
             document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
             document.getElementById("marksheetFull").style.display = "block";
+            window.scrollTo({ top: document.getElementById("marksheetFull").offsetTop, behavior: 'smooth' });
         }
     </script>
 </body>
