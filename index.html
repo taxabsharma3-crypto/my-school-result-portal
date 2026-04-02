@@ -10,7 +10,6 @@
         input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
         .btn-search { background: #d93025; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 92%; font-weight: bold; font-size: 16px; }
 
-        /* मार्कशीट डिजाइन */
         #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); position: relative; color: #000; }
         
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #000; padding-bottom: 15px; margin-bottom: 20px; }
@@ -49,12 +48,10 @@
     <div id="marksheetFull">
         <div class="header-main">
             <img src="https://via.placeholder.com/110?text=LOGO" class="school-logo" alt="School Logo">
-            
             <div style="text-align:center;">
                 <h1 style="margin:0; font-size: 36px; color: #d93025; font-weight: 800;">RAJNI PUBLIC SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
-            
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
@@ -64,7 +61,7 @@
                 <strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span>
             </div>
             <div style="text-align:right;">
-                <strong>Roll No:</strong> <span id="sRoll"></span> | <strong>Class:</strong> <span id="sClass"></span>
+                <strong>Reg No:</strong> <span id="sRoll"></span> | <strong>Class:</strong> <span id="sClass"></span>
             </div>
         </div>
 
@@ -87,7 +84,7 @@
                 </tr>
             </thead>
             <tbody id="marksBody"></tbody>
-            <tfoot id="totalRow" class="total-row"></tfoot>
+            <tfoot id="totalRow"></tfoot>
         </table>
 
         <div class="final-summary">
@@ -114,7 +111,6 @@
     </div>
 
     <script>
-        // 1. अपनी Google Sheet का CSV Link यहाँ डालें
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         async function findResult() {
@@ -125,8 +121,6 @@
                 const resp = await fetch(SHEET_URL);
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
-                
-                // Registration No (Col 8) में सर्च करें
                 const student = rows.find(r => r[8]?.trim() == val);
                 
                 if(student) showMarksheet(student); 
@@ -151,6 +145,7 @@
             document.getElementById("resAtten").innerText = d[10] || "N/A";
             document.getElementById("resComment").innerText = d[235] || "Keep it up!";
 
+            // Index Check: f1m = Max Marks Index, f1o = Obtained Marks Index
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
                 {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
@@ -203,13 +198,14 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-            // --- PHOTO LOGIC (Column M / Index 12) ---
-            let pID_raw = d[12]?.trim();
+            // --- PHOTO LOGIC FIXED ---
+            let pID_raw = d[12] ? d[12].trim() : "";
             let photoArea = document.getElementById("photoArea");
 
             if(pID_raw && pID_raw.length > 5) {
                 let cleanID = pID_raw.includes("id=") ? pID_raw.split("id=")[1].split("&")[0] : (pID_raw.includes("/d/") ? pID_raw.split("/d/")[1].split("/")[0] : pID_raw);
-                photoArea.innerHTML = `<img src="https://lh3.googleusercontent.com/d/$${cleanID}" alt="Student">`;
+                // Backticks ( ` ) aur ${} ka use kiya gaya hai
+                photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${cleanID}" alt="Student">`;
             } else {
                 photoArea.innerText = "NO PHOTO";
             }
