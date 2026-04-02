@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Bells Convent School - Result Portal 2026</title>
+    <title>Rajni Public School - Result Portal 2026</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #d93025; margin-bottom: 30px; }
@@ -41,7 +41,7 @@
 <body>
 
     <div class="search-card">
-        <h2 style="color:#d93025; margin:0;">BLUE BELLS CONVENT SCHOOL</h2>
+        <h2 style="color:#d93025; margin:0;">RAJNI PUBLIC SCHOOL</h2>
         <input type="text" id="searchInput" placeholder="Roll No / Reg No">
         <button class="btn-search" onclick="findResult()">Generate Marksheet</button>
     </div>
@@ -51,7 +51,7 @@
             <img src="https://via.placeholder.com/110?text=LOGO" class="school-logo" alt="School Logo">
             
             <div style="text-align:center;">
-                <h1 style="margin:0; font-size: 36px; color: #d93025; font-weight: 800;">BLUE BELLS CONVENT SCHOOL</h1>
+                <h1 style="margin:0; font-size: 36px; color: #d93025; font-weight: 800;">RAJNI PUBLIC SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
             
@@ -203,29 +203,20 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-         // --- PHOTO LOGIC (Column M / Index 12) ---
-let pID_raw = d[12] ? d[12].toString().trim() : ""; 
-let photoArea = document.getElementById("photoArea");
+            // --- PHOTO LOGIC (Column M / Index 12) ---
+            let pID_raw = d[12]?.trim();
+            let photoArea = document.getElementById("photoArea");
 
-if(pID_raw && pID_raw.length > 5) {
-    // ID nikalne ka sabse safe tarika
-    let cleanID = "";
-    if(pID_raw.includes("id=")) {
-        cleanID = pID_raw.split("id=")[1].split("&")[0];
-    } else if(pID_raw.includes("/d/")) {
-        cleanID = pID_raw.split("/d/")[1].split("/")[0];
-    } else {
-        cleanID = pID_raw; // Agar sirf ID likhi ho
-    }
-    
-    // Yahan Backticks ( ` ) aur ${} ka sahi use hai
-    photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${cleanID}" alt="Student Photo" style="width:120px; height:150px; border:1px solid #000; object-fit:cover;">`;
-} else {
-    // Agar photo na ho toh box dikhega
-    photoArea.innerHTML = `<div style="width:120px; height:150px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; background:#f9f9f9;">NO PHOTO</div>`;
-}
+            if(pID_raw && pID_raw.length > 5) {
+                let cleanID = pID_raw.includes("id=") ? pID_raw.split("id=")[1].split("&")[0] : (pID_raw.includes("/d/") ? pID_raw.split("/d/")[1].split("/")[0] : pID_raw);
+                photoArea.innerHTML = `<img src="https://lh3.googleusercontent.com/d/$${cleanID}" alt="Student">`;
+            } else {
+                photoArea.innerText = "NO PHOTO";
+            }
 
-// Marksheet dikhane wala part
-document.getElementById("marksheetFull").style.display = "block";
-window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
+            document.getElementById("marksheetFull").style.display = "block";
+            window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
+        }
+    </script>
+</body>
 </html>
