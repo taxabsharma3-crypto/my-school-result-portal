@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Bells Convent School - Result Control Panel</title>
+    <title>Blue Bells Convent School - Result Portal</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Master Control Box (For School Authority) */
+        /* Admin Master Control (Isse Result Open/Close hoga) */
         .admin-box { background: #fff3cd; border: 2px dashed #856404; padding: 15px; border-radius: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; text-align: center; }
         
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #1a73e8; }
         
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
+        select:focus, input:focus { border-color: #1a73e8; }
         
-        .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; }
+        .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
         .btn-search:hover { background: #1557b0; }
 
-        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; }
+        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
         .st-photo { width: 125px; height: 150px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
         .st-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -36,10 +37,10 @@
 <body>
 
     <div class="admin-box">
-        <strong style="color: #856404;">MASTER CONTROL (Admin Only)</strong><br>
-        <span style="font-size: 12px;">Kaun si class ka result dikhana hai?</span><br>
-        <select id="activeClassControl" style="width: 60%; padding: 5px; margin-top: 5px; border-color: #856404;">
-            <option value="ALL">All Classes (Sabka)</option>
+        <strong style="color: #856404;">ADMIN CONTROL: Result Switch</strong><br>
+        <span style="font-size: 12px;">Kaun si class ka result live (Open) karna hai?</span><br>
+        <select id="activeClassControl" style="width: 70%; padding: 5px; margin-top: 5px; border-color: #856404;">
+            <option value="ALL">Sabka Result Open Karein (All)</option>
             <option value="Nursery">Nursery</option>
             <option value="LKG">LKG</option>
             <option value="UKG">UKG</option>
@@ -56,9 +57,25 @@
 
     <div class="search-card">
         <h2 style="color:#1a73e8; margin:0;">BLUE BELLS CONVENT SCHOOL</h2>
-        <p style="font-size: 14px; color: #555;">Result Search Panel</p>
-        <input type="text" id="searchInput" placeholder="Enter Admission No. (Index 0)">
-        <button class="btn-search" onclick="findResult()">Show My Result</button>
+        <p style="font-size: 14px; color: #555; margin-bottom: 10px;">Select Class and Enter Admission No.</p>
+        
+        <select id="studentClassSelect">
+            <option value="">-- Choose Your Class --</option>
+            <option value="Nursery">Nursery</option>
+            <option value="LKG">LKG</option>
+            <option value="UKG">UKG</option>
+            <option value="1">Class 1</option>
+            <option value="2">Class 2</option>
+            <option value="3">Class 3</option>
+            <option value="4">Class 4</option>
+            <option value="5">Class 5</option>
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+        </select>
+
+        <input type="text" id="admInput" placeholder="Enter Admission No.">
+        <button class="btn-search" onclick="findResult()">Show Marksheet</button>
     </div>
 
     <div id="marksheetFull">
@@ -77,7 +94,8 @@
                 <strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span>
             </div>
             <div style="text-align:right;">
-                <strong>Adm No:</strong> <span id="sAdm" style="color: #1557b0;"></span> | <strong>Class:</strong> <span id="sClass"></span>
+                <strong>Adm No:</strong> <span id="sAdm" style="color: #1557b0;"></span> | <strong>Class:</strong> <span id="sClass"></span><br>
+                <strong>Reg No:</strong> <span id="sReg"></span>
             </div>
         </div>
 
@@ -111,7 +129,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 40px;">
-            <button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download PDF</button>
+            <button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download Marksheet</button>
         </div>
     </div>
 
@@ -119,31 +137,33 @@
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         async function findResult() {
-            const admNo = document.getElementById("searchInput").value.trim();
-            const allowedClass = document.getElementById("activeClassControl").value;
+            const selectedClass = document.getElementById("studentClassSelect").value;
+            const admNo = document.getElementById("admInput").value.trim();
+            const activeAdminClass = document.getElementById("activeClassControl").value;
             
-            if(!admNo) return alert("Please enter Admission Number!");
+            if(!selectedClass) return alert("Apni Class Select Karein!");
+            if(!admNo) return alert("Admission Number Daalein!");
+
+            // --- CHECK: Kya Admin ne is class ka result open kiya hai? ---
+            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) {
+                return alert("Kripya Pratiksha Karein! Class " + selectedClass + " ka result abhi open nahi kiya gaya hai.");
+            }
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
                 
-                // 1. Pehle student ko dhoondo Admission No. se
-                const student = rows.find(r => r[0]?.trim() === admNo);
+                // Student dhoondo: Adm No (Index 0) aur Class (Index 5) dono match hone chahiye
+                const student = rows.find(r => 
+                    r[0]?.trim() === admNo && 
+                    r[5]?.trim().toLowerCase() === selectedClass.toLowerCase()
+                );
 
                 if(student) {
-                    const studentClass = student[5]?.trim(); // Column F = Index 5 (Class)
-
-                    // 2. MASTER SWITCH CHECK:
-                    // Agar Admin ne "ALL" rakha hai ya phir student ki class match hoti hai
-                    if(allowedClass === "ALL" || studentClass === allowedClass) {
-                        showMarksheet(student);
-                    } else {
-                        alert("Class " + studentClass + " ka result abhi ghoshit nahi hua hai. Kripya Pradhanacharya se sampark karein.");
-                    }
+                    showMarksheet(student);
                 } else {
-                    alert("Admission Number '" + admNo + "' Not Found!");
+                    alert("Record Match Nahi Hua! Kripya Class aur Admission Number check karein.");
                 }
             } catch (e) { alert("Error connecting to database."); }
         }
@@ -159,21 +179,22 @@
             document.getElementById("sName").innerText = d[1] || "";
             document.getElementById("sFather").innerText = d[2] || "";
             document.getElementById("sAdm").innerText = d[0] || "";
+            document.getElementById("sReg").innerText = d[7] || "";
             document.getElementById("sClass").innerText = d[5] || "";
             
             let attRaw = d[10] ? d[10].trim() : "N/A";
             document.getElementById("resAtten").innerText = attRaw.includes("202") ? "N/A" : attRaw;
 
-            // Updated Index Mapping (AI=35, AJ=36 etc as discussed before)
+            // Updated Mapping for Hindi & Others
             const subjects = [
-                {n:"HINDI", f1m:35, f1o:36, hym:93, hyo:94, f2m:122, f2o:123, anm:180, ano:181},
-                {n:"ENGLISH", f1m:37, f1o:38, hym:95, hyo:96, f2m:124, f2o:125, anm:182, ano:183},
-                {n:"MATHS", f1m:39, f1o:40, hym:97, hyo:98, f2m:126, f2o:127, anm:184, ano:185},
-                {n:"SCIENCE", f1m:41, f1o:42, hym:99, hyo:100, f2m:128, f2o:129, anm:186, ano:187},
-                {n:"SST / EVS", f1m:43, f1o:44, hym:101, hyo:102, f2m:130, f2o:131, anm:188, ano:189},
-                {n:"COMPUTER", f1m:45, f1o:46, hym:103, hyo:104, f2m:132, f2o:133, anm:190, ano:191},
-                {n:"G.K.", f1m:47, f1o:48, hym:105, hyo:106, f2m:134, f2o:135, anm:192, ano:193},
-                {n:"SANSKRIT", f1m:49, f1o:50, hym:107, hyo:108, f2m:136, f2o:137, anm:194, ano:195}
+                {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
+                {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
+                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
+                {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
+                {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188},
+                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:189, ano:190},
+                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
+                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194}
             ];
 
             let html = "";
