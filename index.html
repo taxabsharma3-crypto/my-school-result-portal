@@ -26,7 +26,7 @@
 
     <div class="search-card">
         <h2 style="color:#d93025; margin:0;">RAJNI PUBLIC SCHOOL</h2>
-        <input type="text" id="searchInput" placeholder="Enter Admission No. (Col A)">
+        <input type="text" id="searchInput" placeholder="Enter Admission No. (Column A)">
         <button class="btn-search" onclick="findResult()">Generate Marksheet</button>
     </div>
 
@@ -114,22 +114,18 @@
             document.getElementById("sAdm").innerText = d[0] || "";
             document.getElementById("sReg").innerText = d[7] || "";
             document.getElementById("sClass").innerText = d[5] || "";
-            
-            // ATTENDANCE LOGIC (K Column = Index 10)
-            let attRaw = d[10] ? d[10].trim() : "N/A";
-            // Agar "2025" likha aaye toh matlab galat column hai, use N/A dikhao
-            document.getElementById("resAtten").innerText = attRaw.includes("202") ? "N/A" : attRaw;
+            document.getElementById("resAtten").innerText = d[10] || "N/A";
 
-            // --- EXACT COLUMN MAPPING (AI=34, AJ=35 ...) ---
+            // --- HINDI INDEX SHIFTED BY +1 TO MATCH AI, AJ, CO, CP, DR, DS, FX, FY ---
             const subjects = [
-                {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
-                {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
-                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
-                {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
-                {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188},
-                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:189, ano:190},
-                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
-                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194}
+                {n:"HINDI", f1m:35, f1o:36, hym:93, hyo:94, f2m:122, f2o:123, anm:180, ano:181},
+                {n:"ENGLISH", f1m:37, f1o:38, hym:95, hyo:96, f2m:124, f2o:125, anm:182, ano:183},
+                {n:"MATHS", f1m:39, f1o:40, hym:97, hyo:98, f2m:126, f2o:127, anm:184, ano:185},
+                {n:"SCIENCE", f1m:41, f1o:42, hym:99, hyo:100, f2m:128, f2o:129, anm:186, ano:187},
+                {n:"SST / EVS", f1m:43, f1o:44, hym:101, hyo:102, f2m:130, f2o:131, anm:188, ano:189},
+                {n:"COMPUTER", f1m:45, f1o:46, hym:103, hyo:104, f2m:132, f2o:133, anm:190, ano:191},
+                {n:"G.K.", f1m:47, f1o:48, hym:105, hyo:106, f2m:134, f2o:135, anm:192, ano:193},
+                {n:"SANSKRIT", f1m:49, f1o:50, hym:107, hyo:108, f2m:136, f2o:137, anm:194, ano:195}
             ];
 
             let html = "";
@@ -140,9 +136,6 @@
                 let m2=parseFloat(d[s.hym])||0, o2=parseFloat(d[s.hyo])||0;
                 let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
                 let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
-
-                // Simple Check: Agar Marks, MM se bade hain toh swap kar do (Just in case)
-                if(o1 > m1 && m1 > 0 && m1 < 50) { let temp=m1; m1=o1; o1=temp; }
 
                 tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                 let rowMM = m1+m2+m3+m4; let rowObt = o1+o2+o3+o4;
@@ -167,7 +160,6 @@
             document.getElementById("resStatus").innerText = finalPer >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = finalPer >= 33 ? "green" : "red";
 
-            // Photo Logic
             let pID_raw = d[12] ? d[12].trim() : "";
             let photoArea = document.getElementById("photoArea");
             if(pID_raw && pID_raw.length > 5) {
