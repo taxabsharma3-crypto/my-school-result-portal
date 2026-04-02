@@ -3,51 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Bells Convent School - Result Portal 2026</title>
+    <title>Blue Bells Convent School - Result Control Panel</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #d93025; margin-bottom: 30px; }
-        input { width: 85%; padding: 12px; margin: 15px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
-        .btn-search { background: #d93025; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 92%; font-weight: bold; font-size: 16px; }
-        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); color: #000; }
-        .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #000; padding-bottom: 15px; margin-bottom: 20px; }
-        .st-photo { width: 125px; height: 150px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Master Control Box (For School Authority) */
+        .admin-box { background: #fff3cd; border: 2px dashed #856404; padding: 15px; border-radius: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; text-align: center; }
+        
+        .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #1a73e8; }
+        
+        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
+        
+        .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; }
+        .btn-search:hover { background: #1557b0; }
+
+        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; }
+        .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
+        .st-photo { width: 125px; height: 150px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
         .st-photo img { width: 100%; height: 100%; object-fit: cover; }
+
         .marks-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
-        .marks-table th, .marks-table td { border: 1px solid #000; padding: 8px; }
-        .bg-head { background: #f0f0f0; font-weight: bold; }
+        .marks-table th, .marks-table td { border: 1px solid #1a73e8; padding: 8px; }
+        .bg-head { background: #e8f0fe; color: #1a73e8; font-weight: bold; }
         .sub-name { text-align: left !important; padding-left: 12px !important; font-weight: bold; }
-        .total-row { background: #e3f2fd; font-weight: bold; font-size: 14px; }
-        .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #000; padding: 15px; font-weight: bold; background: #f9f9f9; font-size: 16px; }
-        @media print { .search-card, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
+        .total-row { background: #d2e3fc; font-weight: bold; font-size: 14px; color: #1557b0; }
+
+        .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 15px; font-weight: bold; background: #f8fbff; font-size: 16px; color: #1557b0; }
+        
+        @media print { .search-card, .admin-box, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
     </style>
 </head>
 <body>
 
+    <div class="admin-box">
+        <strong style="color: #856404;">MASTER CONTROL (Admin Only)</strong><br>
+        <span style="font-size: 12px;">Kaun si class ka result dikhana hai?</span><br>
+        <select id="activeClassControl" style="width: 60%; padding: 5px; margin-top: 5px; border-color: #856404;">
+            <option value="ALL">All Classes (Sabka)</option>
+            <option value="Nursery">Nursery</option>
+            <option value="LKG">LKG</option>
+            <option value="UKG">UKG</option>
+            <option value="1">Class 1</option>
+            <option value="2">Class 2</option>
+            <option value="3">Class 3</option>
+            <option value="4">Class 4</option>
+            <option value="5">Class 5</option>
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+        </select>
+    </div>
+
     <div class="search-card">
-        <h2 style="color:#d93025; margin:0;">BLUE BELLS CONVENT SCHOOL</h2>
-        <input type="text" id="searchInput" placeholder="Enter Admission No. (Column A)">
-        <button class="btn-search" onclick="findResult()">Generate Marksheet</button>
+        <h2 style="color:#1a73e8; margin:0;">BLUE BELLS CONVENT SCHOOL</h2>
+        <p style="font-size: 14px; color: #555;">Result Search Panel</p>
+        <input type="text" id="searchInput" placeholder="Enter Admission No. (Index 0)">
+        <button class="btn-search" onclick="findResult()">Show My Result</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header-main">
-            <img src="https://via.placeholder.com/110?text=LOGO" style="width:110px;" alt="School Logo">
+            <img src="https://via.placeholder.com/110/1a73e8/ffffff?text=BBCS" style="width:110px;">
             <div style="text-align:center;">
-                <h1 style="margin:0; font-size: 36px; color: #d93025; font-weight: 800;">BLUE BELLS CONVENT SCHOOL</h1>
+                <h1 style="margin:0; font-size: 36px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 16px; border: 1px solid #eee; padding: 10px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 16px; border: 1px solid #d2e3fc; padding: 10px; background: #f8fbff;">
             <div>
-                <strong>Student Name:</strong> <span id="sName" style="text-transform: uppercase;"></span><br>
+                <strong>Student Name:</strong> <span id="sName" style="text-transform: uppercase; color: #1557b0;"></span><br>
                 <strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span>
             </div>
             <div style="text-align:right;">
-                <strong>Adm No:</strong> <span id="sAdm"></span> | <strong>Class:</strong> <span id="sClass"></span><br>
-                <strong>Reg No:</strong> <span id="sReg"></span>
+                <strong>Adm No:</strong> <span id="sAdm" style="color: #1557b0;"></span> | <strong>Class:</strong> <span id="sClass"></span>
             </div>
         </div>
 
@@ -81,7 +111,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 40px;">
-            <button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Print Marksheet</button>
+            <button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download PDF</button>
         </div>
     </div>
 
@@ -89,15 +119,32 @@
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         async function findResult() {
-            const val = document.getElementById("searchInput").value.trim();
-            if(!val) return alert("Please enter Admission Number!");
+            const admNo = document.getElementById("searchInput").value.trim();
+            const allowedClass = document.getElementById("activeClassControl").value;
+            
+            if(!admNo) return alert("Please enter Admission Number!");
+
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
-                const student = rows.find(r => r[0] && r[0].toString().trim() === val);
-                if(student) showMarksheet(student); 
-                else alert("Admission Number '" + val + "' Not Found!");
+                
+                // 1. Pehle student ko dhoondo Admission No. se
+                const student = rows.find(r => r[0]?.trim() === admNo);
+
+                if(student) {
+                    const studentClass = student[5]?.trim(); // Column F = Index 5 (Class)
+
+                    // 2. MASTER SWITCH CHECK:
+                    // Agar Admin ne "ALL" rakha hai ya phir student ki class match hoti hai
+                    if(allowedClass === "ALL" || studentClass === allowedClass) {
+                        showMarksheet(student);
+                    } else {
+                        alert("Class " + studentClass + " ka result abhi ghoshit nahi hua hai. Kripya Pradhanacharya se sampark karein.");
+                    }
+                } else {
+                    alert("Admission Number '" + admNo + "' Not Found!");
+                }
             } catch (e) { alert("Error connecting to database."); }
         }
 
@@ -112,11 +159,12 @@
             document.getElementById("sName").innerText = d[1] || "";
             document.getElementById("sFather").innerText = d[2] || "";
             document.getElementById("sAdm").innerText = d[0] || "";
-            document.getElementById("sReg").innerText = d[7] || "";
             document.getElementById("sClass").innerText = d[5] || "";
-            document.getElementById("resAtten").innerText = d[10] || "N/A";
+            
+            let attRaw = d[10] ? d[10].trim() : "N/A";
+            document.getElementById("resAtten").innerText = attRaw.includes("202") ? "N/A" : attRaw;
 
-            // --- HINDI INDEX SHIFTED BY +1 TO MATCH AI, AJ, CO, CP, DR, DS, FX, FY ---
+            // Updated Index Mapping (AI=35, AJ=36 etc as discussed before)
             const subjects = [
                 {n:"HINDI", f1m:35, f1o:36, hym:93, hyo:94, f2m:122, f2o:123, anm:180, ano:181},
                 {n:"ENGLISH", f1m:37, f1o:38, hym:95, hyo:96, f2m:124, f2o:125, anm:182, ano:183},
@@ -136,24 +184,14 @@
                 let m2=parseFloat(d[s.hym])||0, o2=parseFloat(d[s.hyo])||0;
                 let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
                 let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
-
                 tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
-                let rowMM = m1+m2+m3+m4; let rowObt = o1+o2+o3+o4;
-
-                html += `<tr><td class="sub-name">${s.n}</td>
-                    <td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td>
-                    <td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td>
-                    <td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td>
-                    <td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td>
-                    <td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rowMM)}</td>
-                </tr>`;
+                let rowMM = m1+m2+m3+m4, rowObt = o1+o2+o3+o4;
+                html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rowMM)}</td></tr>`;
             });
 
             document.getElementById("marksBody").innerHTML = html;
-            let totalMM = tF1m + tHYm + tF2m + tANm;
-            let totalObt = tF1o + tHYo + tF2o + tANo;
+            let totalMM = tF1m + tHYm + tF2m + tANm, totalObt = tF1o + tHYo + tF2o + tANo;
             document.getElementById("totalRow").innerHTML = `<tr class="total-row"><td class="sub-name">TOTAL</td><td>${tF1m}</td><td>${tF1o}</td><td>-</td><td>${tHYm}</td><td>${tHYo}</td><td>-</td><td>${tF2m}</td><td>${tF2o}</td><td>-</td><td>${tANm}</td><td>${tANo}</td><td>-</td><td>${totalMM}</td><td>${totalObt}</td><td>-</td></tr>`;
-
             let finalPer = totalMM > 0 ? ((totalObt/totalMM)*100).toFixed(2) : 0;
             document.getElementById("resPerc").innerText = finalPer;
             document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
@@ -164,9 +202,8 @@
             let photoArea = document.getElementById("photoArea");
             if(pID_raw && pID_raw.length > 5) {
                 let cleanID = pID_raw.includes("id=") ? pID_raw.split("id=")[1].split("&")[0] : (pID_raw.includes("/d/") ? pID_raw.split("/d/")[1].split("/")[0] : pID_raw);
-                photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${cleanID}" alt="Student Photo">`;
+                photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${cleanID}">`;
             } else { photoArea.innerText = "NO PHOTO"; }
-
             document.getElementById("marksheetFull").style.display = "block";
         }
     </script>
