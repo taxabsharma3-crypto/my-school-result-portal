@@ -137,7 +137,6 @@
             let attRaw = d[10] ? d[10].trim() : "N/A";
             document.getElementById("resAtten").innerText = attRaw.includes("202") ? "N/A" : attRaw;
 
-            // Mapping columns as per your sheet details
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
                 {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
@@ -158,7 +157,6 @@
                 let m3=parseFloat(d[s.f2m])||0, o3=parseFloat(d[s.f2o])||0;
                 let m4=parseFloat(d[s.anm])||0, o4=parseFloat(d[s.ano])||0;
 
-                // Simple auto-swap fix
                 if(o1 > m1 && m1 > 0 && m1 < 50) { let temp=m1; m1=o1; o1=temp; }
 
                 tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
