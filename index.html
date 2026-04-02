@@ -135,16 +135,20 @@
             document.getElementById("resComment").innerText = d[235] || "Keep it up!";
 
             // Naye Columns ke hisaab se indexes
-            const subjects = [
-                {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:173, ano:174}, // Yahan Index update kiya hai
-                {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:175, ano:176},
-                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:177, ano:178},
-                {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:179, ano:180},
-                {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:181, ano:182},
-                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:183, ano:184},
-                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:185, ano:186},
-                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:187, ano:188}
-            ];
+            // --- SUBJECT INDEXES (HINDI FIXED) ---
+const subjects = [
+    // Hindi ke liye wahi index jo aapne bataye (AI=34, AJ=35, CO=92, CP=93, DR=121, DS=122)
+    {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:173, ano:174}, 
+    
+    // Baki subjects line se chal rahe hain
+    {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:175, ano:176},
+    {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:177, ano:178},
+    {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:179, ano:180},
+    {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:181, ano:182},
+    {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:183, ano:184},
+    {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:185, ano:186},
+    {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:187, ano:188}
+];
 
             let html = "";
             let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
