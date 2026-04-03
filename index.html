@@ -3,47 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Bells Convent School - Result Portal 2026</title>
+    <title>Blue Bells Convent School - Result Portal</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .admin-box { background: #fff3cd; border: 2px dashed #856404; padding: 15px; border-radius: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; text-align: center; }
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #1a73e8; }
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
-        .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; }
+        
+        /* Marksheet Styling */
         #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
-        .st-photo { width: 125px; height: 150px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
+        
+        /* Photo Box */
+        .st-photo { width: 125px; height: 150px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; font-weight: bold; color: #ccc; }
         .st-photo img { width: 100%; height: 100%; object-fit: cover; }
+
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
         .marks-table th, .marks-table td { border: 1px solid #1a73e8; padding: 6px; }
         .bg-head { background: #e8f0fe; color: #1a73e8; font-weight: bold; }
         .sub-name { text-align: left !important; padding-left: 10px !important; font-weight: bold; }
         .total-row { background: #d2e3fc; font-weight: bold; font-size: 13px; color: #1557b0; }
         .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 15px; font-weight: bold; background: #f8fbff; font-size: 16px; color: #1557b0; }
+        
         @media print { .search-card, .admin-box, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
     </style>
 </head>
 <body>
 
     <div class="admin-box">
-        <strong style="color: #856404;">ADMIN CONTROL: Result Switch</strong><br>
-        <select id="activeClassControl" style="width: 70%; padding: 5px; margin-top: 5px; border-color: #856404;">
-            <option value="ALL">Sabka Result Open Karein (All)</option>
-            <option value="8">Class 8</option>
-            <option value="7">Class 7</option>
-            <option value="6">Class 6</option>
-            <option value="5">Class 5</option>
+        <strong>ADMIN CONTROL</strong><br>
+        <select id="activeClassControl" style="width: 70%; padding: 5px; margin-top: 5px;">
+            <option value="ALL">All Classes Open</option>
+            <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
         </select>
     </div>
 
     <div class="search-card">
-        <h2 style="color:#1a73e8; margin:0; font-size: 22px;">BLUE BELLS CONVENT SCHOOL</h2>
+        <h2 style="color:#1a73e8; margin:0;">BLUE BELLS CONVENT SCHOOL</h2>
         <select id="studentClassSelect">
             <option value="">-- Choose Your Class --</option>
-            <option value="8">Class 8</option>
-            <option value="7">Class 7</option>
-            <option value="6">Class 6</option>
-            <option value="5">Class 5</option>
+            <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
         </select>
         <input type="text" id="admInput" placeholder="Enter Admission No.">
         <button class="btn-search" onclick="findResult()">Show Marksheet</button>
@@ -51,11 +51,15 @@
 
     <div id="marksheetFull">
         <div class="header-main">
-            <img src="https://via.placeholder.com/110/1a73e8/ffffff?text=BBCS" style="width:110px;">
+            <div id="schoolLogoArea">
+                <img src="https://via.placeholder.com/110/1a73e8/ffffff?text=BBCS" style="width:110px;" alt="School Logo">
+            </div>
+            
             <div style="text-align:center;">
                 <h1 style="margin:0; font-size: 32px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
+
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
@@ -94,7 +98,7 @@
             const admNo = document.getElementById("admInput").value.trim();
             const activeAdminClass = document.getElementById("activeClassControl").value;
             if(!selectedClass || !admNo) return alert("Details bhariye!");
-            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) return alert("Result abhi open nahi hai!");
+            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) return alert("Result abhi close hai!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
@@ -102,7 +106,7 @@
                 const rows = data.split("\n").map(r => r.split(","));
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().includes(selectedClass));
                 if(student) showMarksheet(student);
-                else alert("Record match nahi hua!");
+                else alert("Record not found!");
             } catch (e) { alert("Data error!"); }
         }
 
@@ -120,9 +124,29 @@
             document.getElementById("sReg").innerText = d[7];
             document.getElementById("sClass").innerText = d[5];
 
+            // Attendance
             let attVal = d[10]?.trim();
-            if(!attVal || attVal.includes("202")) { attVal = d[11]?.trim(); }
+            if(!attVal || attVal.includes("202")) attVal = d[11]?.trim();
             document.getElementById("resAtten").innerText = attVal || "N/A";
+
+            // Photo Extractor (Column M / Index 12)
+            let photoArea = document.getElementById("photoArea");
+            let pLink = d[12] ? d[12].trim() : "";
+            
+            if(pLink && pLink.length > 10) {
+                // Extracting ID from various Drive link formats
+                let driveId = "";
+                if(pLink.includes("id=")) {
+                    driveId = pLink.split("id=")[1].split("&")[0];
+                } else if(pLink.includes("/d/")) {
+                    driveId = pLink.split("/d/")[1].split("/")[0];
+                } else {
+                    driveId = pLink; // Assuming it's already an ID
+                }
+                photoArea.innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${driveId}" alt="Student Photo">`;
+            } else {
+                photoArea.innerText = "NO PHOTO";
+            }
 
             const subjects = [
                 {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
@@ -140,33 +164,24 @@
             let html = ""; let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
 
             subjects.forEach(s => {
-                function getFix(mIdx, oIdx) {
-                    let m_raw = d[mIdx]?.trim() || "";
-                    let o_raw = d[oIdx]?.trim() || "";
-                    let m = parseFloat(m_raw) || 0;
-                    let o = parseFloat(o_raw) || 0;
-                    if((m === 0 && o_raw.length > 0) || (o > m && m > 0)) {
-                        m = parseFloat(d[oIdx]?.trim()) || 0; 
-                        o = parseFloat(d[oIdx+1]?.trim()) || 0;
-                        return [m, o, d[oIdx+1]?.trim()];
-                    }
-                    return [m, o, o_raw];
-                }
+                function getVal(idx) { return d[idx] ? d[idx].trim() : ""; }
+                let r1 = getVal(s.f1o), r2 = getVal(s.hyo), r3 = getVal(s.f2o), r4 = getVal(s.ano);
+                let m1 = parseFloat(getVal(s.f1m))||0, m2 = parseFloat(getVal(s.hym))||0, m3 = parseFloat(getVal(s.f2m))||0, m4 = parseFloat(getVal(s.anm))||0;
+                let o1 = parseFloat(r1)||0, o2 = parseFloat(r2)||0, o3 = parseFloat(r3)||0, o4 = parseFloat(r4)||0;
 
-                let [m1, o1, r1] = getFix(s.f1m, s.f1o);
-                let [m2, o2, r2] = getFix(s.hym, s.hyo);
-                let [m3, o3, r3] = getFix(s.f2m, s.f2o);
-                let [m4, o4, r4] = getFix(s.anm, s.ano);
+                if(m1 === 0 && r1.length > 0 && !isNaN(r1)) {
+                    m1 = parseFloat(r1); o1 = parseFloat(getVal(s.f1o+1))||0; r1 = getVal(s.f1o+1);
+                    m2 = parseFloat(r2); o2 = parseFloat(getVal(s.hyo+1))||0; r2 = getVal(s.hyo+1);
+                    m3 = parseFloat(r3); o3 = parseFloat(getVal(s.f2o+1))||0; r3 = getVal(s.f2o+1);
+                    m4 = parseFloat(r4); o4 = parseFloat(getVal(s.ano+1))||0; r4 = getVal(s.ano+1);
+                }
 
                 if(s.type !== "gradeOnly") {
                     tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
-                }
-
-                let rowMM = m1+m2+m3+m4, rowObt = o1+o2+o3+o4;
-                if(s.type === "gradeOnly") {
-                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${r1||"-"}</td><td>${r1||"-"}</td><td>-</td><td>${r2||"-"}</td><td>${r2||"-"}</td><td>-</td><td>${r3||"-"}</td><td>${r3||"-"}</td><td>-</td><td>${r4||"-"}</td><td>${r4||"-"}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
-                } else {
+                    let rowMM = m1+m2+m3+m4, rowObt = o1+o2+o3+o4;
                     html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rowMM)}</td></tr>`;
+                } else {
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${r1||"-"}</td><td>${r1||"-"}</td><td>-</td><td>${r2||"-"}</td><td>${r2||"-"}</td><td>-</td><td>${r3||"-"}</td><td>${r3||"-"}</td><td>-</td><td>${r4||"-"}</td><td>${r4||"-"}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
                 }
             });
 
