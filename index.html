@@ -11,19 +11,23 @@
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
         .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
         
-        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
+        #marksheetFull { display: none; width: 1000px; background: white; padding: 40px; border: 2px solid #1a73e8; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
         
-        .st-photo { width: 125px; height: 150px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; font-weight: bold; color: #ccc; }
-        .st-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .st-photo { width: 120px; height: 140px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; position: relative; }
+        .st-photo img { width: 100%; height: 100%; object-fit: cover; z-index: 2; position: relative; }
 
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
         .marks-table th, .marks-table td { border: 1px solid #1a73e8; padding: 6px; }
         .bg-head { background: #e8f0fe; color: #1a73e8; font-weight: bold; }
         .sub-name { text-align: left !important; padding-left: 10px !important; font-weight: bold; }
         .total-row { background: #d2e3fc; font-weight: bold; font-size: 13px; color: #1557b0; }
-        .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 15px; font-weight: bold; background: #f8fbff; font-size: 16px; color: #1557b0; }
         
+        .final-summary { margin-top: 15px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 12px; font-weight: bold; background: #f8fbff; font-size: 16px; color: #1557b0; }
+        
+        .sig-container { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 20px; }
+        .sig-box { text-align: center; width: 200px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; font-size: 14px; }
+
         @media print { .search-card, .admin-box, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
     </style>
 </head>
@@ -44,20 +48,16 @@
             <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
         </select>
         <input type="text" id="admInput" placeholder="Enter Admission No.">
-        <button class="btn-search" onclick="findResult()">Show Marksheet</button>
+        <button class="btn-search" onclick="findResult()">GET RESULT</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header-main">
-            <div id="logoContainer">
-                <img id="schoolLogo" src="https://drive.google.com/uc?export=view&id=1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad" style="width:110px;" alt="Logo" onerror="this.src='https://via.placeholder.com/110/1a73e8/ffffff?text=BBCS+LOGO'">
-            </div>
-            
+            <img src="https://drive.google.com/uc?export=view&id=1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad" style="width:110px;" alt="Logo">
             <div style="text-align:center;">
                 <h1 style="margin:0; font-size: 32px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
-
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
@@ -85,6 +85,12 @@
             <div>ATTENDANCE: <span id="resAtten"></span></div>
         </div>
 
+        <div class="sig-container">
+            <div class="sig-box">Parent's Signature</div>
+            <div class="sig-box">Class Teacher</div>
+            <div class="sig-box">Principal Signature</div>
+        </div>
+
         <div style="text-align: center; margin-top: 40px;"><button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download Marksheet</button></div>
     </div>
 
@@ -92,20 +98,20 @@
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         async function findResult() {
-            const selectedClass = document.getElementById("studentClassSelect").value;
+            const sClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
-            const activeAdminClass = document.getElementById("activeClassControl").value;
-            if(!selectedClass || !admNo) return alert("Fill Class and Admission No!");
-            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) return alert("Result is not open for this class!");
+            const activeAdmin = document.getElementById("activeClassControl").value;
+            if(!sClass || !admNo) return alert("Fill details!");
+            if(activeAdmin !== "ALL" && sClass !== activeAdmin) return alert("Result closed!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split("\n").map(r => r.split(","));
-                const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(selectedClass));
+                const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(sClass));
                 if(student) showMarksheet(student);
-                else alert("Student Record Not Found!");
-            } catch (e) { alert("Error connecting to database!"); }
+                else alert("Student Not Found!");
+            } catch (e) { alert("Error! Check Internet."); }
         }
 
         function getGr(obt, mm) {
@@ -116,18 +122,15 @@
         }
 
         function showMarksheet(d) {
-            // Student Info
             document.getElementById("sName").innerText = d[1];
             document.getElementById("sFather").innerText = d[2];
             document.getElementById("sAdm").innerText = d[0];
             document.getElementById("sReg").innerText = d[7];
             document.getElementById("sClass").innerText = d[5];
 
-            // Attendance Shift Logic (60+ check)
             const adm = parseInt(d[0]);
             document.getElementById("resAtten").innerText = (adm >= 60) ? (d[11] || "N/A") : (d[10] || "N/A");
 
-            // Photo Logic
             let pLink = d[12]?.trim();
             if(pLink) {
                 let id = pLink.includes("id=") ? pLink.split("id=")[1].split("&")[0] : (pLink.includes("/d/") ? pLink.split("/d/")[1].split("/")[0] : pLink);
@@ -151,64 +154,34 @@
             let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
 
             subjects.forEach(s => {
-                // SMART VALUE EXTRACTOR: MM aur OBT ko pehchan'ne ke liye
-                function getValues(startIdx) {
-                    let off = (adm >= 60) ? 1 : 0;
-                    let v1 = d[startIdx + off]?.trim();
-                    let v2 = d[startIdx + off + 1]?.trim();
-                    
-                    let n1 = parseFloat(v1) || 0;
-                    let n2 = parseFloat(v2) || 0;
+                let off = (adm >= 60) ? 1 : 0;
+                let m1 = parseFloat(d[s.f1+off])||0, o1 = parseFloat(d[s.f1+off+1])||0;
+                let m2 = parseFloat(d[s.hy+off])||0, o2 = parseFloat(d[s.hy+off+1])||0;
+                let m3 = parseFloat(d[s.f2+off])||0, o3 = parseFloat(d[s.f2+off+1])||0;
+                let m4 = parseFloat(d[s.an+off])||0, o4 = parseFloat(d[s.an+off+1])||0;
 
-                    // Agar v1 chota hai v2 se (Matlab v1 OBT hai aur v2 MM), toh swap karo
-                    // Kyunki MM hamesha bada hota hai (20, 50, 100)
-                    if (n1 > 0 && n2 > n1 && n2 >= 20) {
-                        return { mm: n2, obt: n1, rawObt: v1 };
-                    }
-                    return { mm: n1, obt: n2, rawObt: v2 };
-                }
-
-                let d1 = getValues(s.f1), d2 = getValues(s.hy), d3 = getValues(s.f2), d4 = getValues(s.an);
+                if (o1 > m1 && m1 > 0) { let t=m1; m1=o1; o1=t; }
+                if (o2 > m2 && m2 > 0) { let t=m2; m2=o2; o2=t; }
+                if (o3 > m3 && m3 > 0) { let t=m3; m3=o3; o3=t; }
+                if (o4 > m4 && m4 > 0) { let t=m4; m4=o4; o4=t; }
 
                 if(s.type !== "grade") {
-                    tF1m+=d1.mm; tF1o+=d1.obt; tHYm+=d2.mm; tHYo+=d2.obt;
-                    tF2m+=d3.mm; tF2o+=d3.obt; tANm+=d4.mm; tANo+=d4.obt;
-
-                    let rowMM = d1.mm + d2.mm + d3.mm + d4.mm;
-                    let rowObt = d1.obt + d2.obt + d3.obt + d4.obt;
-
-                    html += `<tr><td class="sub-name">${s.n}</td>
-                        <td>${d1.mm}</td><td>${d1.obt}</td><td>${getGr(d1.obt, d1.mm)}</td>
-                        <td>${d2.mm}</td><td>${d2.obt}</td><td>${getGr(d2.obt, d2.mm)}</td>
-                        <td>${d3.mm}</td><td>${d3.obt}</td><td>${getGr(d3.obt, d3.mm)}</td>
-                        <td>${d4.mm}</td><td>${d4.obt}</td><td>${getGr(d4.obt, d4.mm)}</td>
-                        <td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt, rowMM)}</td></tr>`;
+                    tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
+                    let rMM = m1+m2+m3+m4, rObt = o1+o2+o3+o4;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rMM}</td><td class="total-row">${rObt}</td><td class="total-row">${getGr(rObt,rMM)}</td></tr>`;
                 } else {
-                    // PT/GAME Logic: Directly show whatever text is in the OBT column
-                    html += `<tr><td class="sub-name">${s.n}</td>
-                        <td>-</td><td>${d1.rawObt}</td><td>${d1.rawObt}</td>
-                        <td>-</td><td>${d2.rawObt}</td><td>${d2.rawObt}</td>
-                        <td>-</td><td>${d3.rawObt}</td><td>${d3.rawObt}</td>
-                        <td>-</td><td>${d4.rawObt}</td><td>${d4.rawObt}</td>
-                        <td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
+                    let r1=d[s.f1+off+1], r2=d[s.hy+off+1], r3=d[s.f2+off+1], r4=d[s.an+off+1];
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${r1}</td><td>${r1}</td><td>-</td><td>${r2}</td><td>${r2}</td><td>-</td><td>${r3}</td><td>${r3}</td><td>-</td><td>${r4}</td><td>${r4}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
                 }
             });
 
             document.getElementById("marksBody").innerHTML = html;
+            let finMM = tF1m+tHYm+tF2m+tANm, finObt = tF1o+tHYo+tF2o+tANo;
+            document.getElementById("totalRow").innerHTML = `<tr class="total-row"><td class="sub-name">TOTAL</td><td>${tF1m}</td><td>${tF1o}</td><td>-</td><td>${tHYm}</td><td>${tHYo}</td><td>-</td><td>${tF2m}</td><td>${tF2o}</td><td>-</td><td>${tANm}</td><td>${tANo}</td><td>-</td><td>${finMM}</td><td>${finObt}</td><td>-</td></tr>`;
 
-            let finalMM = tF1m + tHYm + tF2m + tANm;
-            let finalObt = tF1o + tHYo + tF2o + tANo;
-
-            document.getElementById("totalRow").innerHTML = `<tr class="total-row"><td class="sub-name">TOTAL</td>
-                <td>${tF1m}</td><td>${tF1o}</td><td>-</td>
-                <td>${tHYm}</td><td>${tHYo}</td><td>-</td>
-                <td>${tF2m}</td><td>${tF2o}</td><td>-</td>
-                <td>${tANm}</td><td>${tANo}</td><td>-</td>
-                <td>${finalMM}</td><td>${finalObt}</td><td>-</td></tr>`;
-
-            let p = finalMM > 0 ? ((finalObt/finalMM)*100).toFixed(2) : 0;
+            let p = finMM > 0 ? ((finObt/finMM)*100).toFixed(2) : 0;
             document.getElementById("resPerc").innerText = p;
-            document.getElementById("resGrade").innerText = getGr(finalObt, finalMM);
+            document.getElementById("resGrade").innerText = getGr(finObt, finMM);
             document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
             document.getElementById("marksheetFull").style.display = "block";
