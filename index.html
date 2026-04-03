@@ -51,10 +51,26 @@
 
     <div id="marksheetFull">
         <div class="header-main">
-            <div id="schoolLogoArea">
-                <img src="https://drive.google.com/file/d/1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad/view?usp=sharing" style="width:110px;" alt="School Logo">
-            </div>
-            
+           <div id="schoolLogoArea">
+    <img id="mainSchoolLogo" src="https://drive.google.com/file/d/1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad/view?usp=sharing" style="width:110px; height:auto;" alt="School Logo" onerror="fixDriveLogo(this)">
+</div>
+
+<script>
+    // Ye function check karega ki agar link Google Drive ka hai toh use sahi kar dega
+    function fixDriveLogo(img) {
+        let url = img.src;
+        if(url.includes("drive.google.com")) {
+            let id = "";
+            if(url.includes("id=")) { id = url.split("id=")[1].split("&")[0]; }
+            else if(url.includes("/d/")) { id = url.split("/d/")[1].split("/")[0]; }
+            if(id) img.src = "https://drive.google.com/uc?export=view&id=" + id;
+        }
+    }
+    // Page load hote hi logo ko check karega
+    window.onload = function() {
+        fixDriveLogo(document.getElementById("mainSchoolLogo"));
+    };
+</script> 
             <div style="text-align:center;">
                 <h1 style="margin:0; font-size: 32px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
