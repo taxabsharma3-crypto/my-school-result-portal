@@ -2,67 +2,34 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BBCS Official Result Portal 2026</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        /* Search Box */
         .search-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 30px; }
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; transition: 0.3s; }
-        .btn-view:hover { background: var(--dark); }
-
-        /* Marksheet Main Container */
+        .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
         #marksheetFull { display: none; width: 1150px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); margin-bottom: 50px; border-radius: 8px; }
-        
-        /* Professional Watermark */
-        #marksheetFull::after {
-            content: "BLUE BELLS CONVENT SCHOOL";
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
-            font-size: 80px; color: rgba(26, 115, 232, 0.04); font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
-        }
-
-        .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 15px; margin-bottom: 30px; position: relative; z-index: 1; }
-        .header h1 { margin: 0; font-size: 45px; color: var(--main); letter-spacing: 1px; }
-
-        /* Student Info Section - ADDRESS FULL FIX */
-        .info-wrapper { border: 2px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); width: 100%; }
+        .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 15px; margin-bottom: 30px; }
+        .header h1 { margin: 0; font-size: 45px; color: var(--main); }
+        .info-wrapper { border: 2px solid var(--main); margin-bottom: 25px; background: var(--light); width: 100%; }
         .info-row { display: flex; width: 100%; border-bottom: 1px solid #dce4f2; }
         .info-box { width: 50%; padding: 12px 15px; font-size: 16px; border-right: 1px solid #dce4f2; box-sizing: border-box; }
-        .info-box:last-child { border-right: none; }
-        .info-box b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; vertical-align: top; }
-
-        /* Address Row Logic - No Cutting */
-        .address-full-row { width: 100%; background: #fff; padding: 15px; border-top: 2px solid var(--main); display: block !important; min-height: 60px; height: auto !important; box-sizing: border-box; overflow: visible !important; }
+        .info-box b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
+        .address-full-row { width: 100%; background: #fff; padding: 15px; border-top: 2px solid var(--main); display: block; min-height: 60px; height: auto; box-sizing: border-box; }
         .address-full-row b { color: var(--dark); font-size: 16px; margin-right: 10px; float: left; width: 140px; }
-        .addr-content { display: block; margin-left: 150px; font-size: 16px; color: #333; font-weight: 500; line-height: 1.6; white-space: normal !important; word-wrap: break-word !important; text-align: left; }
-
-        /* Table Styling */
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; position: relative; z-index: 1; }
+        .addr-content { display: block; margin-left: 150px; font-size: 16px; color: #333; line-height: 1.6; word-wrap: break-word; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; }
         th, td { border: 1px solid var(--main); padding: 10px; }
-        .thead-main { background: var(--main); color: white; font-weight: bold; text-transform: uppercase; }
+        .thead-main { background: var(--main); color: white; font-weight: bold; }
         .thead-sub { background: #f1f6ff; color: var(--main); font-weight: bold; }
-        .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; background: #fafafa; }
-        .grand-total-cell { background: #d2e3fc; font-weight: bold; color: var(--dark); font-size: 14px; }
-
-        /* Summary Bar */
-        .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 20px; border-radius: 12px; font-size: 22px; font-weight: bold; position: relative; z-index: 1; }
-        
-        /* Footer & Signatures */
-        .footer-info { margin-top: 25px; display: flex; justify-content: space-between; font-weight: bold; color: #333; position: relative; z-index: 1; }
-        .sig-row { display: flex; justify-content: space-between; margin-top: 100px; position: relative; z-index: 1; padding: 0 20px; }
-        .sig-box { text-align: center; width: 220px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
-
-        @media print {
-            .search-container, .btn-print { display: none; }
-            #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 10px; border-radius: 0; }
-        }
+        .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; }
+        .grand-total-cell { background: #d2e3fc; font-weight: bold; color: var(--dark); }
+        .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 20px; border-radius: 12px; font-size: 22px; font-weight: bold; }
+        @media print { .search-container, .btn-print { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 10px; } }
     </style>
 </head>
 <body>
-
     <div class="search-container">
         <h2>BBCS RESULT PORTAL</h2>
         <select id="selClass">
@@ -83,11 +50,10 @@
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
             <p>ANNUAL PROGRESS REPORT CARD (2025-26)</p>
         </div>
-
         <div class="info-wrapper">
             <div class="info-row">
                 <div class="info-box"><b>Student Name:</b> <span id="rName" style="text-transform:uppercase"></span></div>
-                <div class="info-box"><b>Admission No:</b> <span id="rAdm" style="font-weight:bold;"></span></div>
+                <div class="info-box"><b>Admission No:</b> <span id="rAdm"></span></div>
             </div>
             <div class="info-row">
                 <div class="info-box"><b>Mother's Name:</b> <span id="rMom" style="text-transform:uppercase"></span></div>
@@ -101,7 +67,6 @@
                 <b>Full Address:</b> <span id="rAddr" class="addr-content"></span>
             </div>
         </div>
-
         <table>
             <thead>
                 <tr class="thead-main">
@@ -115,25 +80,21 @@
             <tbody id="mBody"></tbody>
             <tfoot id="mFoot"></tfoot>
         </table>
-
         <div class="result-bar">
             <span>PERCENTAGE: <span id="rPer"></span>%</span>
             <span>GRADE: <span id="rGrd"></span></span>
             <span>STATUS: <span id="rStat"></span></span>
         </div>
-
-        <div class="footer-info">
-            <span>Result Release Date: 30.03.2026</span>
-            <span>Student Attendance: <span id="rAtt"></span></span>
+        <div style="margin-top:20px; display:flex; justify-content:space-between; font-weight:bold;">
+            <span>Release Date: 30.03.2026</span>
+            <span>Attendance: <span id="rAtt"></span></span>
         </div>
-
-        <div class="sig-row">
-            <div class="sig-box">Parent's Signature</div>
-            <div class="sig-box">Class Teacher</div>
-            <div class="sig-box">Principal Signature</div>
+        <div style="display:flex; justify-content:space-between; margin-top:100px;">
+            <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Parent's Signature</div>
+            <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Class Teacher</div>
+            <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Principal Signature</div>
         </div>
-        
-        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:50px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download Result (PDF)</button></center>
+        <center><button class="btn-view" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Print / PDF</button></center>
     </div>
 
     <script>
@@ -142,7 +103,6 @@
         function getGr(obt, mm) {
             let o = parseFloat(obt);
             let m = parseFloat(mm);
-            // Agar Grade (A, B) pehle se hai toh wahi dikhao
             if (isNaN(o) && (obt+"").trim().length > 0) return obt;
             if (!m || m <= 0 || isNaN(o)) return "-";
             let p = (o/m)*100;
@@ -153,7 +113,7 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("कृपया Admission No और Class भरें!");
+            if(!adm || !cls) return alert("Details bhariye!");
 
             try {
                 const res = await fetch(CSV_LINK + "&v=" + Date.now());
@@ -168,13 +128,11 @@
                     document.getElementById("rAdm").innerText = student[0];
                     document.getElementById("rName").innerText = student[1];
                     document.getElementById("rDad").innerText = student[2];
-                    document.getElementById("rMom").innerText = student[3] || "N/A";
-                    document.getElementById("rDOB").innerText = student[4] || "N/A";
+                    document.getElementById("rMom").innerText = student[3];
+                    document.getElementById("rDOB").innerText = student[4];
                     document.getElementById("rCls").innerText = student[5];
-                    
-                    // Address Fix: Har case mein Column 6 ya 7 handle kiya
-                    document.getElementById("rAddr").innerText = shift ? student[7] : student[6];
-                    document.getElementById("rAtt").innerText = shift ? student[11] : student[10];
+                    document.getElementById("rAddr").innerText = (shift === 1) ? student[7] : student[6];
+                    document.getElementById("rAtt").innerText = (shift === 1) ? student[11] : student[10];
 
                     const subjects = [
                         {n:"HINDI", c:[34,35, 92,93, 121,122, 179,180]},
@@ -191,44 +149,40 @@
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach((s) => {
-                        let m1=student[s.c[0]+shift], o1=student[s.c[1]+shift];
-                        let m2=student[s.c[2]+shift], o2=student[s.c[3]+shift];
-                        let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
-                        let m4=student[s.c[6]+shift], o4=student[s.c[7]+shift];
+                        let m1 = student[s.c[0]+shift], o1 = student[s.c[1]+shift];
+                        let m2 = student[s.c[2]+shift], o2 = student[s.c[3]+shift];
+                        let m3 = student[s.c[4]+shift], o3 = student[s.c[5]+shift];
+                        let m4 = student[s.c[6]+shift], o4 = student[s.c[7]+shift];
 
-                        // MM/Obt Swap Fix Logic
-                        function check(m, o) {
-                            let mm = parseFloat(m)||0, obt = parseFloat(o)||0;
-                            if(obt > mm && mm > 0) return {mm:obt, obt:mm};
-                            return {mm:m, obt:o};
-                        }
-
-                        let d1=check(m1,o1), d2=check(m2,o2), d3=check(m3,o3), d4=check(m4,o4);
+                        // MM/Obt Swap Fix
+                        let d1 = (parseFloat(o1) > parseFloat(m1)) ? {mm:o1, obt:m1} : {mm:m1, obt:o1};
+                        let d2 = (parseFloat(o2) > parseFloat(m2)) ? {mm:o2, obt:m2} : {mm:m2, obt:o2};
+                        let d3 = (parseFloat(o3) > parseFloat(m3)) ? {mm:o3, obt:m3} : {mm:m3, obt:o3};
+                        let d4 = (parseFloat(o4) > parseFloat(m4)) ? {mm:o4, obt:m4} : {mm:m4, obt:o4};
                         
-                        let rowMM = (parseFloat(d1.mm)||0)+(parseFloat(d2.mm)||0)+(parseFloat(d3.mm)||0)+(parseFloat(d4.mm)||0);
-                        let rowOB = (parseFloat(d1.obt)||0)+(parseFloat(d2.obt)||0)+(parseFloat(d3.obt)||0)+(parseFloat(d4.obt)||0);
+                        let rMM = (parseFloat(d1.mm)||0)+(parseFloat(d2.mm)||0)+(parseFloat(d3.mm)||0)+(parseFloat(d4.mm)||0);
+                        let rOB = (parseFloat(d1.obt)||0)+(parseFloat(d2.obt)||0)+(parseFloat(d3.obt)||0)+(parseFloat(d4.obt)||0);
                         
-                        tMM += rowMM; tOB += rowOB;
+                        tMM += rMM; tOB += rOB;
 
                         html += `<tr><td class='sub-name'>${s.n}</td>
                             <td>${d1.mm}</td><td>${d1.obt}</td><td>${getGr(d1.obt,d1.mm)}</td>
                             <td>${d2.mm}</td><td>${d2.obt}</td><td>${getGr(d2.obt,d2.mm)}</td>
                             <td>${d3.mm}</td><td>${d3.obt}</td><td>${getGr(d3.obt,d3.mm)}</td>
                             <td>${d4.mm}</td><td>${d4.obt}</td><td>${getGr(d4.obt,d4.mm)}</td>
-                            <td class='grand-total-cell'>${rowMM}</td><td class='grand-total-cell'>${rowOB}</td>
-                            <td class='grand-total-cell'>${getGr(rowOB,rowMM)}</td></tr>`;
+                            <td class='grand-total-cell'>${rMM}</td><td class='grand-total-cell'>${rOB}</td>
+                            <td class='grand-total-cell'>${getGr(rOB,rMM)}</td></tr>`;
                     });
 
                     document.getElementById("mBody").innerHTML = html;
                     document.getElementById("mFoot").innerHTML = `<tr class='grand-total-cell'><td colspan='13' style='text-align:right; padding-right:20px'>OVERALL GRAND TOTAL</td><td>${tMM}</td><td>${tOB}</td><td>${getGr(tOB,tMM)}</td></tr>`;
-                    let perc = ((tOB/tMM)*100).toFixed(2);
-                    document.getElementById("rPer").innerText = perc;
+                    let p = ((tOB/tMM)*100).toFixed(2);
+                    document.getElementById("rPer").innerText = p;
                     document.getElementById("rGrd").innerText = getGr(tOB,tMM);
-                    document.getElementById("rStat").innerText = perc >= 33 ? "PASSED" : "FAILED";
+                    document.getElementById("rStat").innerText = p >= 33 ? "PASSED" : "FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
-                    window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
-                } else { alert("रिकॉर्ड नहीं मिला! कृपया Admission No और Class सही चुनें।"); }
-            } catch(e) { alert("शीत से कनेक्ट करने में समस्या हुई!"); }
+                } else { alert("Record not found!"); }
+            } catch(e) { alert("Error connecting to sheet!"); }
         }
     </script>
 </body>
