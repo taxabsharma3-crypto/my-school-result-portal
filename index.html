@@ -2,33 +2,55 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Result Portal - Final Precise Fix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBCS Result Portal - Final Sequence</title>
     <style>
-        :root { --primary: #2e86c1; --accent: #5dade2; --lite-blue: #f4f9fd; --border: #d5dbdb; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #fcfcfc; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
+        :root { --primary: #2e86c1; --accent: #85c1e9; --lite-blue: #ebf5fb; --border: #d5dbdb; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
+        
         .search-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 450px; text-align: center; border-top: 5px solid var(--accent); margin-bottom: 30px; }
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 8px; outline: none; background: #fafafa; }
         .btn-search { background: var(--primary); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; }
-        #marksheetFull { display: none; width: 1080px; background: white; padding: 40px; border: 1px solid var(--border); box-shadow: 0 0 30px rgba(0,0,0,0.02); }
-        .header-box { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        .header-box h1 { margin: 0; font-size: 34px; color: var(--primary); letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
-        .report-title { margin-top: 10px; font-weight: 600; color: #5d6d7e; border: 1px solid var(--lite-blue); display: inline-block; padding: 5px 20px; border-radius: 20px; background: var(--lite-blue); font-size: 14px; }
-        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--lite-blue); margin-bottom: 25px; background: #fff; }
+
+        #marksheetFull { display: none; width: 1080px; background: white; padding: 40px; border: 1px solid var(--border); position: relative; }
+        
+        .header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--lite-blue); padding-bottom: 20px; }
+        .header-box h1 { margin: 0; font-size: 38px; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; }
+        .school-meta { font-size: 14px; color: #5d6d7e; margin-top: 8px; font-weight: 600; }
+        .report-title { margin-top: 15px; font-weight: 700; color: #fff; display: inline-block; padding: 6px 25px; border-radius: 50px; background: var(--primary); font-size: 16px; letter-spacing: 1px; }
+
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1.5px solid var(--lite-blue); margin-bottom: 25px; background: #fff; }
         .info-cell { padding: 12px 20px; border: 0.5px solid var(--lite-blue); font-size: 14px; display: flex; align-items: center; }
-        .info-cell b { color: #7f8c8d; font-size: 11px; text-transform: uppercase; width: 140px; display: inline-block; }
+        .info-cell b { color: #5d6d7e; font-size: 11px; text-transform: uppercase; width: 150px; display: inline-block; letter-spacing: 0.5px; }
         .info-cell span { font-weight: 700; color: #2c3e50; text-transform: uppercase; }
+        .full-width { grid-column: span 2; }
+
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
         .marks-table th, .marks-table td { border: 1px solid #eef2f6; padding: 10px; text-align: center; }
         .thead-main th { background: var(--lite-blue); color: #2e86c1; font-weight: 700; text-transform: uppercase; font-size: 11px; }
+        .thead-sub th { background: #fcfdfe; color: #7f8c8d; font-weight: 600; font-size: 10px; }
         .sub-name { text-align: left !important; padding-left: 15px !important; font-weight: 600; color: #34495e; background: #fdfdfd; border-left: 5px solid var(--accent) !important; }
         .grand-total-cell { background: #f4f9fd; font-weight: bold; color: var(--primary); }
-        .summary-wrapper { display: flex; justify-content: space-around; background: var(--lite-blue); padding: 20px; border-radius: 10px; margin-top: 25px; border: 1px solid #d6eaf8; }
+
+        .summary-wrapper { display: flex; justify-content: space-around; background: #f8fafc; padding: 20px; border-radius: 10px; margin-top: 25px; border: 1px solid #d6eaf8; }
         .sum-item { text-align: center; }
         .sum-item div { font-size: 11px; color: #5d6d7e; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
         .sum-item span { font-size: 20px; font-weight: bold; color: #2c3e50; }
-        .sig-container { display: flex; justify-content: space-between; margin-top: 90px; padding: 0 40px; }
-        .sig-box { text-align: center; width: 220px; border-top: 1px solid var(--primary); padding-top: 10px; color: #2c3e50; font-weight: 700; font-size: 14px; }
-        @media print { .search-card, .btn-print { display: none; } body { padding: 0; background: white; } #marksheetFull { border: 1px solid #eee; width: 100%; box-shadow: none; } }
+
+        /* SHORT MESSAGE SECTION */
+        .msg-box { margin-top: 20px; padding: 15px; border: 1px solid var(--lite-blue); background: #fcfdfe; text-align: center; }
+        #shortMsg { font-weight: 600; color: #2c3e50; font-style: italic; font-size: 15px; }
+        #promStatus { font-weight: 800; color: #27ae60; margin-top: 5px; font-size: 16px; }
+
+        .sig-container { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 40px; }
+        .sig-box { text-align: center; width: 220px; border-top: 2px solid var(--primary); padding-top: 10px; color: #2c3e50; font-weight: 700; font-size: 14px; }
+
+        @media print {
+            .search-card, .btn-print { display: none; }
+            body { padding: 0; background: white; }
+            #marksheetFull { display: block !important; border: 1px solid #eee; width: 100%; box-shadow: none; }
+            .thead-main th { background: #ebf5fb !important; -webkit-print-color-adjust: exact; }
+        }
     </style>
 </head>
 <body>
@@ -37,8 +59,10 @@
         <h2 style="color:var(--primary); margin:0 0 15px 0;">BBCS RESULT PORTAL</h2>
         <select id="studentClassSelect">
             <option value="">-- Choose Class --</option>
-            <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
-            <option value="LKG">LKG</option><option value="UKG">UKG</option>
+            <option value="PRE-NURSERY">Pre-Nursery</option>
+            <option value="NURSERY">Nursery</option>
+            <option value="LKG">LKG</option>
+            <option value="UKG">UKG</option>
             <option value="1">Class 1</option><option value="2">Class 2</option>
             <option value="3">Class 3</option><option value="4">Class 4</option>
             <option value="5">Class 5</option><option value="6">Class 6</option>
@@ -51,7 +75,7 @@
     <div id="marksheetFull">
         <div class="header-box">
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
-            <div class="school-meta" style="font-size:14px; font-weight:600; color:#5d6d7e; margin-top:8px;">Agra, Uttar Pradesh | Session: 2025-26</div>
+            <div class="school-meta">Agra, Uttar Pradesh | Session: 2025-26</div>
             <div class="report-title">ANNUAL PROGRESS REPORT CARD</div>
         </div>
 
@@ -62,7 +86,7 @@
             <div class="info-cell"><b>Class / Section:</b><span id="sClass"></span></div>
             <div class="info-cell"><b>Mother's Name:</b><span id="sMother"></span></div>
             <div class="info-cell"><b>Date of Birth:</b><span id="sDOB"></span></div>
-            <div class="info-cell" style="grid-column: span 2;"><b>Address:</b><span id="sAddr"></span></div>
+            <div class="info-cell full-width"><b>Full Address:</b><span id="sAddr"></span></div>
         </div>
 
         <table class="marks-table">
@@ -71,7 +95,7 @@
                     <th rowspan="2" style="width: 200px;">SUBJECT NAME</th>
                     <th colspan="3">FA-I</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-II</th><th colspan="3">ANNUAL EXAM</th><th colspan="3">GRAND TOTAL</th>
                 </tr>
-                <tr class="thead-main">
+                <tr class="thead-sub">
                     <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th class="grand-total-cell">MM</th><th class="grand-total-cell">OBT</th><th class="grand-total-cell">GR</th>
                 </tr>
             </thead>
@@ -85,12 +109,18 @@
             <div class="sum-item"><div>Result Status</div><span id="resStatus"></span></div>
         </div>
 
+        <div class="msg-box">
+            <div id="shortMsg"></div>
+            <div id="promStatus"></div>
+        </div>
+
         <div class="sig-container">
             <div class="sig-box">Parent's Signature</div>
-            <div class="sig-box">Class Teacher</div>
-            <div class="sig-box">Principal Signature</div>
+            <div class="sig-box">Class Teacher's Sign</div>
+            <div class="sig-box">Principal's Signature</div>
         </div>
-        <center><button onclick="window.print()" class="btn-search btn-print" style="margin-top:30px; width:200px; background:#2ecc71;">Download PDF</button></center>
+
+        <center style="margin-top: 40px;"><button onclick="window.print()" class="btn-search" style="width: 200px; background: #2ecc71;">Download PDF</button></center>
     </div>
 
     <script>
@@ -105,77 +135,81 @@
         }
 
         async function findResult() {
-            const admNo = document.getElementById("admInput").value.trim();
             const selectedClass = document.getElementById("studentClassSelect").value;
-            
+            const admNo = document.getElementById("admInput").value.trim();
+            if(!selectedClass || !admNo) return alert("Details bhariye!");
+
             try {
-                const resp = await fetch(SHEET_URL + "&v=" + Date.now());
+                const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().toUpperCase().includes(selectedClass.toUpperCase()));
+                if(student) showMarksheet(student); else alert("Data nahi mila!");
+            } catch (e) { alert("Sheet Error!"); }
+        }
 
-                if(student) {
-                    const adm = parseInt(student[0]);
-                    const s = (adm >= 60) ? 1 : 0; 
+        function showMarksheet(d) {
+            document.getElementById("sName").innerText = d[1];
+            document.getElementById("sFather").innerText = d[2];
+            document.getElementById("sMother").innerText = d[3] || "N/A";
+            document.getElementById("sDOB").innerText = d[4] || "N/A";
+            document.getElementById("sAddr").innerText = d[6] || "N/A";
+            document.getElementById("sAdm").innerText = d[0];
+            document.getElementById("sClass").innerText = d[5];
 
-                    document.getElementById("sName").innerText = student[1].toUpperCase();
-                    document.getElementById("sFather").innerText = student[2].toUpperCase();
-                    document.getElementById("sMother").innerText = (student[3] || "N/A").toUpperCase();
-                    document.getElementById("sDOB").innerText = student[4] || "N/A";
-                    document.getElementById("sAdm").innerText = student[0];
-                    document.getElementById("sClass").innerText = student[5];
-                    document.getElementById("sAddr").innerText = (s === 1) ? student[7] : student[6];
-                    document.getElementById("resAtten").innerText = (s === 1) ? student[11] : student[10];
+            let attVal = d[10]?.trim();
+            if(!attVal || attVal.includes("202")) attVal = d[11]?.trim();
+            document.getElementById("resAtten").innerText = attVal || "N/A";
 
-                    const subjects = [
-                        {n:"HINDI", c:[34,35, 92,93, 121,122, 179,180]},
-                        {n:"ENGLISH", c:[36,37, 94,95, 123,124, 181,182]},
-                        {n:"MATHS", c:[38,39, 96,97, 125,126, 183,184]},
-                        {n:"SCIENCE", c:[40,41, 98,99, 127,128, 185,186]},
-                        {n:"SST / EVS", c:[42,43, 100,101, 129,130, 187,188]},
-                        {n:"COMPUTER", c:[44,45, 102,103, 131,132, 189,190]},
-                        {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
-                        {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
-                        {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT/GAME", c:[52,53, 110,111, 139,140, 197,198], isPT: true}
-                    ];
+            const subjects = [
+                {n:"HINDI", f1m:34, f1o:35, hym:92, hyo:93, f2m:121, f2o:122, anm:179, ano:180},
+                {n:"ENGLISH", f1m:36, f1o:37, hym:94, hyo:95, f2m:123, f2o:124, anm:181, ano:182},
+                {n:"MATHS", f1m:38, f1o:39, hym:96, hyo:97, f2m:125, f2o:126, anm:183, ano:184},
+                {n:"SCIENCE", f1m:40, f1o:41, hym:98, hyo:99, f2m:127, f2o:128, anm:185, ano:186},
+                {n:"SST / EVS", f1m:42, f1o:43, hym:100, hyo:101, f2m:129, f2o:130, anm:187, ano:188},
+                {n:"COMPUTER", f1m:44, f1o:45, hym:102, hyo:103, f2m:131, f2o:132, anm:189, ano:190},
+                {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
+                {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194},
+                {n:"ART", f1m:50, f1o:51, hym:108, hyo:109, f2m:137, f2o:138, anm:195, ano:196},
+                {n:"PT/GAME", f1m:52, f1o:53, hym:110, hyo:111, f2m:139, f2o:140, anm:197, ano:198, isPT: true}
+            ];
 
-                    let html = "", tMM=0, tOB=0;
-                    subjects.forEach(sb => {
-                        // PRECISE DATA PICKER
-                        function getSafeVal(idx1, idx2) {
-                            let mRaw = student[idx1+s], oRaw = student[idx2+s];
-                            let mm = parseFloat(mRaw) || 0, obt = parseFloat(oRaw) || 0;
+            let html = ""; let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
 
-                            // 137 Fix: If obtained marks moved to MM column
-                            if(obt > mm && mm > 0) return { m: obt, o: mm };
-                            // If MM is missing but Obt has data, assume MM from regular pattern (e.g. 100)
-                            if(mm === 0 && oRaw !== "") return { m: obt, o: 0 }; 
-                            
-                            return { m: mRaw, o: oRaw };
-                        }
+            subjects.forEach(s => {
+                let m1 = parseFloat(d[s.f1m]) || 0; let o1 = parseFloat(d[s.f1o]) || 0;
+                let m2 = parseFloat(d[s.hym]) || 0; let o2 = parseFloat(d[s.hyo]) || 0;
+                let m3 = parseFloat(d[s.f2m]) || 0; let o3 = parseFloat(d[s.f2o]) || 0;
+                let m4 = parseFloat(d[s.anm]) || 0; let o4 = parseFloat(d[s.ano]) || 0;
 
-                        let f1=getSafeVal(sb.c[0],sb.c[1]), f2=getSafeVal(sb.c[2],sb.c[3]), f3=getSafeVal(sb.c[4],sb.c[5]), f4=getSafeVal(sb.c[6],sb.c[7]);
-                        
-                        if(sb.isPT) {
-                            let gFinal = f4.o || f2.o || f1.o || "-";
-                            html += `<tr><td class="sub-name">${sb.n}</td><td>-</td><td>${f1.o}</td><td>${f1.o}</td><td>-</td><td>${f2.o}</td><td>${f2.o}</td><td>-</td><td>${f3.o}</td><td>${f3.o}</td><td>-</td><td>${f4.o}</td><td>${f4.o}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${gFinal}</td><td class="grand-total-cell">${gFinal}</td></tr>`;
-                        } else {
-                            let rMM = (parseFloat(f1.m)||0)+(parseFloat(f2.m)||0)+(parseFloat(f3.m)||0)+(parseFloat(f4.m)||0);
-                            let rOB = (parseFloat(f1.o)||0)+(parseFloat(f2.o)||0)+(parseFloat(f3.o)||0)+(parseFloat(f4.o)||0);
-                            tMM += rMM; tOB += rOB;
-                            html += `<tr><td class="sub-name">${sb.n}</td><td>${f1.m}</td><td>${f1.o}</td><td>${getGr(f1.o,f1.m)}</td><td>${f2.m}</td><td>${f2.o}</td><td>${getGr(f2.o,f2.m)}</td><td>${f3.m}</td><td>${f3.o}</td><td>${getGr(f3.o,f3.m)}</td><td>${f4.m}</td><td>${f4.o}</td><td>${getGr(f4.o,f4.m)}</td><td class="grand-total-cell">${rMM}</td><td class="grand-total-cell">${rOB}</td><td class="grand-total-cell">${getGr(rOB,rMM)}</td></tr>`;
-                        }
-                    });
+                if(s.isPT){
+                    let finalG = d[s.ano] || d[s.hyo] || d[s.f2o] || d[s.f1o] || "-";
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${o1||"-"}</td><td>${o1||"-"}</td><td>-</td><td>${o2||"-"}</td><td>${o2||"-"}</td><td>-</td><td>${o3||"-"}</td><td>${o3||"-"}</td><td>-</td><td>${o4||"-"}</td><td>${o4||"-"}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${finalG}</td><td class="grand-total-cell">${finalG}</td></tr>`;
+                } else {
+                    tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
+                    let rMM = m1+m2+m3+m4; let rObt = o1+o2+o3+o4;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="grand-total-cell">${rMM}</td><td class="grand-total-cell">${rObt}</td><td class="grand-total-cell">${getGr(rObt,rMM)}</td></tr>`;
+                }
+            });
 
-                    document.getElementById("marksBody").innerHTML = html;
-                    let p = tMM > 0 ? ((tOB/tMM)*100).toFixed(2) : 0;
-                    document.getElementById("resPerc").innerText = p;
-                    document.getElementById("resGrade").innerText = getGr(tOB, tMM);
-                    document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
-                    document.getElementById("marksheetFull").style.display = "block";
-                } else alert("Details check karein, Record nahi mila!");
-            } catch(e) { alert("Sheet Connection Error!"); }
+            document.getElementById("marksBody").innerHTML = html;
+            let totalMM = tF1m+tHYm+tF2m+tANm, totalObt = tF1o+tHYo+tF2o+tANo;
+            let p = totalMM > 0 ? ((totalObt/totalMM)*100).toFixed(2) : 0;
+            document.getElementById("resPerc").innerText = p;
+            document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
+            document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
+            document.getElementById("resStatus").style.color = p >= 33 ? "#27ae60" : "#e74c3c";
+
+            // --- SHORT MESSAGE LOGIC ---
+            let msg = ""; let promo = "";
+            if(p >= 75) { msg = "Excellent performance! Keep it up."; promo = "Result: Promoted to the next class."; }
+            else if(p >= 33) { msg = "Good attempt. Work hard for better results."; promo = "Result: Promoted to the next class."; }
+            else { msg = "Needs lot of improvement. Better luck next time."; promo = "Result: Not promoted."; document.getElementById("promStatus").style.color = "red"; }
+            
+            document.getElementById("shortMsg").innerText = "Message: " + msg;
+            document.getElementById("promStatus").innerText = promo;
+
+            document.getElementById("marksheetFull").style.display = "block";
         }
     </script>
 </body>
