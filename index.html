@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal</title>
+    <title>BBCS Result Portal 2026 - Master Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -11,7 +11,6 @@
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
 
-        /* Marksheet Container */
         #marksheetFull { display: none; width: 1080px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
         
         /* Watermark */
@@ -21,27 +20,28 @@
             font-size: 70px; color: rgba(26, 115, 232, 0.04); font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
         }
 
-        .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
+        .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 15px; margin-bottom: 30px; position: relative; z-index: 1; }
         .header h1 { margin: 0; font-size: 42px; color: var(--main); letter-spacing: 1px; }
 
-        /* Student Info - ADDRESS WRAP FIX */
+        /* Address Full Wrap Fix */
         .info-grid { display: flex; flex-wrap: wrap; border: 1px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); }
         .info-item { padding: 12px 15px; border: 0.5px solid #dce4f2; font-size: 16px; box-sizing: border-box; }
         .w-50 { width: 50%; }
-        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; min-height: 50px; }
-        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
-        #rAddr { display: inline-block; vertical-align: top; width: calc(100% - 160px); white-space: normal; word-wrap: break-word; line-height: 1.4; }
+        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; min-height: 60px; height: auto !important; }
+        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; vertical-align: top; }
+        
+        /* Address Text Fix */
+        .addr-val { display: inline-block; width: calc(100% - 160px); word-wrap: break-word; white-space: normal; line-height: 1.5; color: #333; font-weight: 500; }
 
-        /* Table */
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; position: relative; z-index: 1; }
         th, td { border: 1px solid var(--main); padding: 9px; }
         .thead-main { background: var(--main); color: white; font-weight: bold; text-transform: uppercase; }
         .thead-sub { background: #f1f6ff; color: var(--main); font-weight: bold; }
         .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; background: #fafafa; }
-        .grand-total { background: #d2e3fc; font-weight: bold; color: var(--dark); font-size: 14px; }
+        .grand-total { background: #d2e3fc; font-weight: bold; color: var(--dark); }
 
         .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 18px; border-radius: 10px; font-size: 22px; font-weight: bold; position: relative; z-index: 1; }
-        .sig-row { display: flex; justify-content: space-between; margin-top: 100px; position: relative; z-index: 1; }
+        .sig-row { display: flex; justify-content: space-between; margin-top: 90px; position: relative; z-index: 1; }
         .sig-box { text-align: center; width: 220px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
 
         @media print {
@@ -55,8 +55,7 @@
 <body>
 
     <div class="search-container">
-        <h2 style="margin-bottom:5px;">BBCS RESULT PORTAL</h2>
-        <p style="margin-bottom:15px; color:#666; font-size:14px;">Annual Examination 2025-26</p>
+        <h2>BBCS RESULT PORTAL</h2>
         <select id="selClass">
             <option value="">-- Select Class --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
@@ -66,7 +65,7 @@
             <option value="5">Class 5</option><option value="6">Class 6</option>
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
-        <input type="text" id="inpAdm" placeholder="Enter Admission No.">
+        <input type="text" id="inpAdm" placeholder="Admission No.">
         <button class="btn-view" onclick="findResult()">VIEW RESULT</button>
     </div>
 
@@ -78,12 +77,12 @@
 
         <div class="info-grid">
             <div class="info-item w-50"><b>Student Name:</b> <span id="rName" style="text-transform:uppercase"></span></div>
-            <div class="info-item w-50"><b>Admission No:</b> <span id="rAdm" style="font-weight:bold"></span></div>
+            <div class="info-item w-50"><b>Admission No:</b> <span id="rAdm"></span></div>
             <div class="info-item w-50"><b>Mother's Name:</b> <span id="rMom" style="text-transform:uppercase"></span></div>
             <div class="info-item w-50"><b>Class:</b> <span id="rCls"></span></div>
             <div class="info-item w-50"><b>Father's Name:</b> <span id="rDad" style="text-transform:uppercase"></span></div>
             <div class="info-item w-50"><b>Date of Birth:</b> <span id="rDOB"></span></div>
-            <div class="info-item w-100"><b>Full Address:</b> <span id="rAddr"></span></div>
+            <div class="info-item w-100"><b>Full Address:</b> <span id="rAddr" class="addr-val"></span></div>
         </div>
 
         <table>
@@ -117,14 +116,20 @@
             <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download PDF</button></center>
+        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download Result</button></center>
     </div>
 
     <script>
         const CSV_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
-        function calcGr(o, m) {
-            if (!m || m <= 0) return "-";
+        function getGr(obt, mm) {
+            // Agar pehle se Grade (A, B, C) likha hai toh wahi return karein
+            if (isNaN(obt) && obt.length > 0) return obt;
+            
+            let o = parseFloat(obt);
+            let m = parseFloat(mm);
+            if (!m || m <= 0 || isNaN(o)) return "-";
+            
             let p = (o/m)*100;
             if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
             if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
@@ -133,7 +138,7 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("Details bhariye!");
+            if(!adm || !cls) return alert("Bhai, details bhariye!");
 
             try {
                 const res = await fetch(CSV_LINK + "&v=" + Date.now());
@@ -163,32 +168,33 @@
                         {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
                         {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
                         {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], pt:true}
+                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], isPT:true}
                     ];
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach(s => {
-                        let m1=parseInt(student[s.c[0]+shift])||0, o1=parseInt(student[s.c[1]+shift])||0;
-                        let m2=parseInt(student[s.c[2]+shift])||0, o2=parseInt(student[s.c[3]+shift])||0;
-                        let m3=parseInt(student[s.c[4]+shift])||0, o3=parseInt(student[s.c[5]+shift])||0;
-                        let m4=parseInt(student[s.c[6]+shift])||0, o4=parseInt(student[s.c[7]+shift])||0;
+                        let m1=student[s.c[0]+shift], o1=student[s.c[1]+shift];
+                        let m2=student[s.c[2]+shift], o2=student[s.c[3]+shift];
+                        let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
+                        let m4=student[s.c[6]+shift], o4=student[s.c[7]+shift];
                         
-                        if(!s.pt) {
-                            let sMM = m1+m2+m3+m4, sOB = o1+o2+o3+o4;
+                        if(!s.isPT) {
+                            let sMM = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
+                            let sOB = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
                             tMM+=sMM; tOB+=sOB;
-                            html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${calcGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${calcGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${calcGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${calcGr(o4,m4)}</td><td class='grand-total'>${sMM}</td><td class='grand-total'>${sOB}</td><td class='grand-total'>${calcGr(sOB,sMM)}</td></tr>`;
+                            html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class='grand-total'>${sMM}</td><td class='grand-total'>${sOB}</td><td class='grand-total'>${getGr(sOB,sMM)}</td></tr>`;
                         } else {
-                            // PT/GAME Grade Logic Updated
-                            let g1=calcGr(o1,m1), g2=calcGr(o2,m2), g3=calcGr(o3,m3), g4=calcGr(o4,m4);
-                            html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
+                            // PT/GAME Grade Logic
+                            let g1=getGr(o1,m1), g2=getGr(o2,m2), g3=getGr(o3,m3), g4=getGr(o4,m4);
+                            html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${o1}</td><td>${g1}</td><td>-</td><td>${o2}</td><td>${g2}</td><td>-</td><td>${o3}</td><td>${g3}</td><td>-</td><td>${o4}</td><td>${g4}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
                         }
                     });
 
                     document.getElementById("mBody").innerHTML = html;
-                    document.getElementById("mFoot").innerHTML = `<tr class='grand-total'><td colspan='13' style='text-align:right; padding-right:20px'>GRAND TOTAL</td><td>${tMM}</td><td>${tOB}</td><td>${calcGr(tOB,tMM)}</td></tr>`;
+                    document.getElementById("mFoot").innerHTML = `<tr class='grand-total'><td colspan='13' style='text-align:right; padding-right:20px'>GRAND TOTAL</td><td>${tMM}</td><td>${tOB}</td><td>${getGr(tOB,tMM)}</td></tr>`;
                     let perc = ((tOB/tMM)*100).toFixed(2);
                     document.getElementById("rPer").innerText = perc;
-                    document.getElementById("rGrd").innerText = calcGr(tOB,tMM);
+                    document.getElementById("rGrd").innerText = getGr(tOB,tMM);
                     document.getElementById("rStat").innerText = perc >= 33 ? "PASSED" : "FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
                     window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
