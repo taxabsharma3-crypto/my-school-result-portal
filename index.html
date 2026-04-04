@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Result Portal 2026 - Master Fix</title>
+    <title>BBCS Official Result Portal - Final Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -20,22 +20,22 @@
             font-size: 70px; color: rgba(26, 115, 232, 0.04); font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
         }
 
-        .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 15px; margin-bottom: 30px; position: relative; z-index: 1; }
-        .header h1 { margin: 0; font-size: 42px; color: var(--main); letter-spacing: 1px; }
+        .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
+        .header h1 { margin: 0; font-size: 42px; color: var(--main); }
 
-        /* Address Full Wrap Fix */
+        /* STUDENT INFO - ADDRESS FULL FIX */
         .info-grid { display: flex; flex-wrap: wrap; border: 1px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); }
         .info-item { padding: 12px 15px; border: 0.5px solid #dce4f2; font-size: 16px; box-sizing: border-box; }
         .w-50 { width: 50%; }
-        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; min-height: 60px; height: auto !important; }
-        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; vertical-align: top; }
+        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; height: auto !important; min-height: 60px; display: block; clear: both; }
+        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
         
-        /* Address Text Fix */
-        .addr-val { display: inline-block; width: calc(100% - 160px); word-wrap: break-word; white-space: normal; line-height: 1.5; color: #333; font-weight: 500; }
+        /* THE ADDRESS WRAP LOGIC */
+        .addr-text { display: block; margin-top: -24px; margin-left: 150px; word-wrap: break-word; white-space: normal; line-height: 1.5; color: #333; }
 
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; position: relative; z-index: 1; }
         th, td { border: 1px solid var(--main); padding: 9px; }
-        .thead-main { background: var(--main); color: white; font-weight: bold; text-transform: uppercase; }
+        .thead-main { background: var(--main); color: white; font-weight: bold; }
         .thead-sub { background: #f1f6ff; color: var(--main); font-weight: bold; }
         .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; background: #fafafa; }
         .grand-total { background: #d2e3fc; font-weight: bold; color: var(--dark); }
@@ -46,9 +46,7 @@
 
         @media print {
             .search-container, .btn-print { display: none; }
-            #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 20px; }
-            .info-grid { background: #f8fbff !important; -webkit-print-color-adjust: exact; }
-            .result-bar { background: #1a73e8 !important; -webkit-print-color-adjust: exact; }
+            #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 10px; }
         }
     </style>
 </head>
@@ -65,7 +63,7 @@
             <option value="5">Class 5</option><option value="6">Class 6</option>
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
-        <input type="text" id="inpAdm" placeholder="Admission No.">
+        <input type="text" id="inpAdm" placeholder="Enter Admission No.">
         <button class="btn-view" onclick="findResult()">VIEW RESULT</button>
     </div>
 
@@ -82,14 +80,14 @@
             <div class="info-item w-50"><b>Class:</b> <span id="rCls"></span></div>
             <div class="info-item w-50"><b>Father's Name:</b> <span id="rDad" style="text-transform:uppercase"></span></div>
             <div class="info-item w-50"><b>Date of Birth:</b> <span id="rDOB"></span></div>
-            <div class="info-item w-100"><b>Full Address:</b> <span id="rAddr" class="addr-val"></span></div>
+            <div class="info-item w-100"><b>Full Address:</b> <span id="rAddr" class="addr-text"></span></div>
         </div>
 
         <table>
             <thead>
                 <tr class="thead-main">
                     <th rowspan="2" style="width:200px">SUBJECT NAME</th>
-                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL</th><th colspan="3">TOTAL</th>
+                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL</th><th colspan="3">GRAND TOTAL</th>
                 </tr>
                 <tr class="thead-sub">
                     <th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th>
@@ -105,8 +103,8 @@
             <span>STATUS: <span id="rStat"></span></span>
         </div>
 
-        <div style="margin-top:25px; display:flex; justify-content:space-between; font-weight:bold; position:relative; z-index:1;">
-            <span>Release Date: 30.03.2026</span>
+        <div style="margin-top:20px; display:flex; justify-content:space-between; font-weight:bold; position:relative; z-index:1;">
+            <span>Result Date: 30.03.2026</span>
             <span>Attendance: <span id="rAtt"></span></span>
         </div>
 
@@ -116,20 +114,16 @@
             <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download Result</button></center>
+        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download PDF</button></center>
     </div>
 
     <script>
         const CSV_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         function getGr(obt, mm) {
-            // Agar pehle se Grade (A, B, C) likha hai toh wahi return karein
-            if (isNaN(obt) && obt.length > 0) return obt;
-            
             let o = parseFloat(obt);
             let m = parseFloat(mm);
             if (!m || m <= 0 || isNaN(o)) return "-";
-            
             let p = (o/m)*100;
             if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
             if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
@@ -138,13 +132,12 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("Bhai, details bhariye!");
+            if(!adm || !cls) return alert("Bhai, Admission No and Class fill karein!");
 
             try {
                 const res = await fetch(CSV_LINK + "&v=" + Date.now());
                 const data = await res.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
-                
                 const student = rows.find(r => r[0] && r[0].trim() == adm && r[5] && r[5].toUpperCase().includes(cls.toUpperCase()));
 
                 if(student) {
@@ -168,30 +161,30 @@
                         {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
                         {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
                         {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], isPT:true}
+                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], pt:true}
                     ];
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach(s => {
-                        let m1=student[s.c[0]+shift], o1=student[s.c[1]+shift];
-                        let m2=student[s.c[2]+shift], o2=student[s.c[3]+shift];
-                        let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
-                        let m4=student[s.c[6]+shift], o4=student[s.c[7]+shift];
+                        let m1=parseFloat(student[s.c[0]+shift])||0, o1=parseFloat(student[s.c[1]+shift])||0;
+                        let m2=parseFloat(student[s.c[2]+shift])||0, o2=parseFloat(student[s.c[3]+shift])||0;
+                        let m3=parseFloat(student[s.c[4]+shift])||0, o3=parseFloat(student[s.c[5]+shift])||0;
+                        let m4=parseFloat(student[s.c[6]+shift])||0, o4=parseFloat(student[s.c[7]+shift])||0;
                         
-                        if(!s.isPT) {
-                            let sMM = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
-                            let sOB = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
+                        let g1=getGr(o1,m1), g2=getGr(o2,m2), g3=getGr(o3,m3), g4=getGr(o4,m4);
+
+                        if(!s.pt) {
+                            let sMM = m1+m2+m3+m4, sOB = o1+o2+o3+o4;
                             tMM+=sMM; tOB+=sOB;
-                            html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class='grand-total'>${sMM}</td><td class='grand-total'>${sOB}</td><td class='grand-total'>${getGr(sOB,sMM)}</td></tr>`;
+                            html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${g1}</td><td>${m2}</td><td>${o2}</td><td>${g2}</td><td>${m3}</td><td>${o3}</td><td>${g3}</td><td>${m4}</td><td>${o4}</td><td>${g4}</td><td class='grand-total'>${sMM}</td><td class='grand-total'>${sOB}</td><td class='grand-total'>${getGr(sOB,sMM)}</td></tr>`;
                         } else {
-                            // PT/GAME Grade Logic
-                            let g1=getGr(o1,m1), g2=getGr(o2,m2), g3=getGr(o3,m3), g4=getGr(o4,m4);
+                            // PT Row with Grade calculation
                             html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${o1}</td><td>${g1}</td><td>-</td><td>${o2}</td><td>${g2}</td><td>-</td><td>${o3}</td><td>${g3}</td><td>-</td><td>${o4}</td><td>${g4}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
                         }
                     });
 
                     document.getElementById("mBody").innerHTML = html;
-                    document.getElementById("mFoot").innerHTML = `<tr class='grand-total'><td colspan='13' style='text-align:right; padding-right:20px'>GRAND TOTAL</td><td>${tMM}</td><td>${tOB}</td><td>${getGr(tOB,tMM)}</td></tr>`;
+                    document.getElementById("mFoot").innerHTML = `<tr class='grand-total'><td colspan='13' style='text-align:right; padding-right:20px'>OVERALL TOTAL</td><td>${tMM}</td><td>${tOB}</td><td>${getGr(tOB,tMM)}</td></tr>`;
                     let perc = ((tOB/tMM)*100).toFixed(2);
                     document.getElementById("rPer").innerText = perc;
                     document.getElementById("rGrd").innerText = getGr(tOB,tMM);
@@ -199,7 +192,7 @@
                     document.getElementById("marksheetFull").style.display = "block";
                     window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
                 } else { alert("Record not found!"); }
-            } catch(e) { alert("Error connecting to sheet!"); }
+            } catch(e) { alert("Sheet Connection Error!"); }
         }
     </script>
 </body>
