@@ -2,29 +2,39 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Result Portal 2026 - Final</title>
+    <title>BBCS Universal Result Portal 2026</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .search-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 8px solid #1a73e8; }
-        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .search-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #1a73e8; }
+        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
         .btn { background: #1a73e8; color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 18px; }
 
         #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 2px solid #1a73e8; margin-top: 30px; position: relative; overflow: hidden; }
-        #marksheetFull::before { content: "BLUE BELLS CONVENT SCHOOL"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 70px; color: rgba(26, 115, 232, 0.05); font-weight: bold; pointer-events: none; }
         
-        .header { text-align: center; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
+        /* Stylish Watermark */
+        #marksheetFull::before {
+            content: "BLUE BELLS CONVENT SCHOOL";
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 70px; color: rgba(26, 115, 232, 0.05);
+            white-space: nowrap; font-weight: bold; z-index: 0; pointer-events: none;
+        }
+
+        .header { text-align: center; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 1; }
         
-        /* Address Full Show Fix */
-        .student-info { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 15px; background: #f8fbff; border: 1px solid #d2e3fc; font-size: 16px; line-height: 1.6; }
-        .address-text { word-wrap: break-word; white-space: normal; max-width: 450px; display: block; }
-        
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 12px; }
+        /* Address Full Width Fix */
+        .student-info { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 25px; padding: 15px; background: #f8fbff; border: 1px solid #d2e3fc; font-size: 16px; line-height: 1.8; position: relative; z-index: 1; }
+        .info-left { width: 60%; }
+        .info-right { width: 35%; text-align: right; }
+        .full-address { width: 100%; margin-top: 5px; border-top: 1px dashed #d2e3fc; padding-top: 5px; }
+
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 12px; position: relative; z-index: 1; background: rgba(255,255,255,0.9); }
         th, td { border: 1px solid #1a73e8; padding: 6px; }
         .bg-head { background: #e8f0fe; color: #1a73e8; font-weight: bold; }
         .total-row { background: #d2e3fc; font-weight: bold; color: #1557b0; }
 
-        .summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 15px; font-weight: bold; font-size: 18px; background: #f8fbff; color: #1557b0; }
-        .sig { display: flex; justify-content: space-between; margin-top: 80px; }
+        .summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 15px; font-weight: bold; font-size: 18px; background: #f8fbff; color: #1557b0; position: relative; z-index: 1; }
+        .sig { display: flex; justify-content: space-between; margin-top: 80px; position: relative; z-index: 1; }
         .sig-box { text-align: center; width: 200px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
 
         @media print { .search-card, .btn { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; } }
@@ -33,32 +43,48 @@
 <body>
 
     <div class="search-card">
-        <h2 style="color:#1a73e8;">BBCS RESULT PORTAL</h2>
+        <h2 style="color:#1a73e8; margin-bottom: 5px;">BBCS RESULT PORTAL</h2>
+        <p style="margin-bottom: 15px; color: #666; font-weight: bold;">(PRE-NURSERY TO 8TH)</p>
+        
         <select id="sCls">
-            <option value="">-- Class Chunye --</option>
-            <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
+            <option value="">-- अपनी क्लास चुनें --</option>
+            <option value="PRE-NURSERY">Pre-Nursery</option>
+            <option value="NURSERY">Nursery</option>
+            <option value="LKG">L.K.G.</option>
+            <option value="UKG">U.K.G.</option>
+            <option value="1">Class 1</option>
+            <option value="2">Class 2</option>
+            <option value="3">Class 3</option>
+            <option value="4">Class 4</option>
+            <option value="5">Class 5</option>
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
         </select>
-        <input type="text" id="sAdm" placeholder="Admission No.">
+        
+        <input type="text" id="sAdm" placeholder="Admission No. यहाँ लिखें">
         <button class="btn" onclick="findResult()">GET RESULT</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header">
-            <h1 style="color:#1a73e8; margin:0; font-size: 36px;">BLUE BELLS CONVENT SCHOOL</h1>
-            <p style="font-weight:bold; font-size: 18px;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
+            <h1 style="color:#1a73e8; margin:0; font-size: 38px;">BLUE BELLS CONVENT SCHOOL</h1>
+            <p style="font-weight:bold; font-size: 18px; margin-top: 5px;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
         </div>
 
         <div class="student-info">
-            <div style="width: 60%;">
+            <div class="info-left">
                 <strong>Student Name:</strong> <span id="outName" style="text-transform: uppercase;"></span><br>
                 <strong>Mother's Name:</strong> <span id="outMom" style="text-transform: uppercase;"></span><br>
-                <strong>Father's Name:</strong> <span id="outDad" style="text-transform: uppercase;"></span><br>
-                <strong>Address:</strong> <span id="outAddr" class="address-text"></span>
+                <strong>Father's Name:</strong> <span id="outDad" style="text-transform: uppercase;"></span>
             </div>
-            <div style="text-align:right; width: 40%;">
-                <strong>Adm No:</strong> <span id="outAdm"></span><br>
+            <div class="info-right">
+                <strong>Adm No:</strong> <span id="outAdm" style="font-weight:bold;"></span><br>
                 <strong>Class:</strong> <span id="outCls"></span><br>
                 <strong>Date of Birth:</strong> <span id="outDOB"></span>
+            </div>
+            <div class="full-address">
+                <strong>Full Address:</strong> <span id="outAddr"></span>
             </div>
         </div>
 
@@ -82,7 +108,7 @@
             <span>RESULT: <span id="outStat"></span></span>
         </div>
 
-        <p style="margin-top:20px; font-weight: bold;">Result Date: 30.03.2026 | Attendance: <span id="outAtt"></span></p>
+        <p style="margin-top:20px; font-weight: bold; position: relative; z-index: 1;">Result Date: 30.03.2026 | Attendance: <span id="outAtt"></span></p>
 
         <div class="sig">
             <div class="sig-box">Parent's Signature</div>
@@ -90,7 +116,7 @@
             <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn" style="width:200px; background:#28a745; margin-top:30px;" onclick="window.print()">PRINT / PDF</button></center>
+        <center><button class="btn" style="width:200px; background:#28a745; margin-top:30px;" onclick="window.print()">PRINT / DOWNLOAD PDF</button></center>
     </div>
 
     <script>
@@ -106,14 +132,15 @@
         async function findResult() {
             const adm = document.getElementById("sAdm").value.trim();
             const cls = document.getElementById("sCls").value;
-            if(!adm || !cls) return alert("Details bhariye!");
+            if(!adm || !cls) return alert("Bhai, Details aur Class dono bharo!");
 
             try {
                 const res = await fetch(CSV_URL + "&cb=" + Date.now());
                 const text = await res.text();
                 const rows = text.split(/\r?\n/).map(r => r.split(","));
                 
-                const d = rows.find(r => r[0] && r[0].trim() == adm && r[5] && r[5].trim().includes(cls));
+                // Flexible Search for all classes
+                const d = rows.find(r => r[0] && r[0].trim() == adm && r[5] && r[5].trim().toUpperCase().includes(cls.toUpperCase()));
 
                 if(d) {
                     const is60 = parseInt(d[0]) >= 60 ? 1 : 0;
@@ -151,7 +178,7 @@
                             tM+=sM; tO+=sO;
                             h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class='total-row'>${sM}</td><td class='total-row'>${sO}</td><td class='total-row'>${getGr(sO,sM)}</td></tr>`;
                         } else {
-                            // PT/GAME No Grades Shown (As requested)
+                            // PT/GAME Row empty
                             h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class='total-row'>-</td><td class='total-row'>-</td><td class='total-row'>-</td></tr>`;
                         }
                     });
@@ -163,8 +190,9 @@
                     document.getElementById("outGrd").innerText = getGr(tO,tM);
                     document.getElementById("outStat").innerText = p>=33?"PASSED":"FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
-                } else { alert("Record nahi mila! Sheet check karein."); }
-            } catch(e) { alert("Error! Sheet publish check karein."); }
+                    window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
+                } else { alert("Maaf karein! Ye Admission No. dhoondne mein galti hui. Sheet check karein."); }
+            } catch(e) { alert("Error! Network check karein."); }
         }
     </script>
 </body>
