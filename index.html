@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Final Fix</title>
+    <title>BBCS Official Result Portal - Exact Column Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -34,7 +34,7 @@
     <div class="search-container">
         <h2>BBCS RESULT PORTAL</h2>
         <select id="selClass">
-            <option value="">-- अपनी क्लास चुनें --</option>
+            <option value="">-- Class चुनें --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
             <option value="LKG">LKG</option><option value="UKG">UKG</option>
             <option value="1">Class 1</option><option value="2">Class 2</option>
@@ -43,7 +43,7 @@
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
         <input type="text" id="inpAdm" placeholder="Admission No. यहाँ लिखें">
-        <button class="btn-view" onclick="findResult()">रिजल्ट देखें</button>
+        <button class="btn-view" onclick="findResult()">VIEW RESULT</button>
     </div>
 
     <div id="marksheetFull">
@@ -114,7 +114,7 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("कृपया Admission No और Class चुनें!");
+            if(!adm || !cls) return alert("Details bhariye!");
 
             try {
                 const res = await fetch(CSV_LINK + "&v=" + Date.now());
@@ -133,17 +133,15 @@
                     document.getElementById("rDOB").innerText = student[4];
                     document.getElementById("rCls").innerText = student[5];
                     
-                    // Smart Address: Search specifically for text
+                    // Address Logic
                     let addr = "";
                     for(let i=6; i<=8; i++) {
-                        if(student[i] && isNaN(student[i]) && student[i].length > 5) {
-                            addr = student[i]; break;
-                        }
+                        if(student[i] && isNaN(student[i]) && student[i].length > 5) { addr = student[i]; break; }
                     }
                     document.getElementById("rAddr").innerText = addr || "N/A";
                     document.getElementById("rAtt").innerText = (s === 1) ? student[11] : student[10];
 
-                    // --- RE-MAPPING SUBJECTS TO FIX 137 SHIFT ---
+                    // Exact Mapping based on your provided columns (AY, AZ, DE, DF, EH, EI, GN, GO)
                     const subjects = [
                         {n:"HINDI", c:[34,35, 92,93, 121,122, 179,180]},
                         {n:"ENGLISH", c:[36,37, 94,95, 123,124, 181,182]},
@@ -153,46 +151,40 @@
                         {n:"COMPUTER", c:[44,45, 102,103, 131,132, 189,190]},
                         {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
                         {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
+                        // Mapping ART precisely for 137 case
                         {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
                         {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198]}
                     ];
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach((sb) => {
-                        function getFixedMarks(idx1, idx2) {
-                            // Target columns based on Shift (60+)
-                            let v1 = student[idx1+s];
-                            let v2 = student[idx2+s];
-                            
-                            let n1 = parseFloat(v1) || 0;
-                            let n2 = parseFloat(v2) || 0;
+                        let m1 = student[sb.c[0]+s], o1 = student[sb.c[1]+s];
+                        let m2 = student[sb.c[2]+s], o2 = student[sb.c[3]+s];
+                        let m3 = student[sb.c[4]+s], o3 = student[sb.c[5]+s];
+                        let m4 = student[sb.c[6]+s], o4 = student[sb.c[7]+s];
 
-                            // CRITICAL FIX: If ART/PT data is swapped or MM is missing
-                            // In 137 case, if obtained number comes in MM's place, move it.
-                            // Assuming FA MM is usually 10/20 and Annual is 100
-                            if (n2 > n1 && n1 > 0) return { m: n2, o: n1 };
-                            
-                            // If first is 0 but second has marks, it means marks khisak gaye hain
-                            if (n1 === 0 && n2 > 0) return { m: n2, o: 0 }; 
-                            
-                            return { m: v1, o: v2 };
+                        // Absolute Swap Fix for ART Columns (137)
+                        function check(mmVal, obtVal) {
+                            let m = parseFloat(mmVal)||0, o = parseFloat(obtVal)||0;
+                            // Agar obt MM se bada hai toh exchange karo
+                            if (o > m && m > 0) return {mm:o, obt:m};
+                            // Agar MM blank hai aur obt mein data hai
+                            if (m === 0 && o > 0) return {mm:o, obt:0};
+                            return {mm:mmVal, obt:obtVal};
                         }
 
-                        let d1 = getFixedMarks(sb.c[0], sb.c[1]);
-                        let d2 = getFixedMarks(sb.c[2], sb.c[3]);
-                        let d3 = getFixedMarks(sb.c[4], sb.c[5]);
-                        let d4 = getFixedMarks(sb.c[6], sb.c[7]);
+                        let f1=check(m1,o1), f2=check(m2,o2), f3=check(m3,o3), f4=check(m4,o4);
                         
-                        let rMM = (parseFloat(d1.m)||0)+(parseFloat(d2.m)||0)+(parseFloat(d3.m)||0)+(parseFloat(d4.m)||0);
-                        let rOB = (parseFloat(d1.o)||0)+(parseFloat(d2.o)||0)+(parseFloat(d3.o)||0)+(parseFloat(d4.o)||0);
+                        let rMM = (parseFloat(f1.mm)||0)+(parseFloat(f2.mm)||0)+(parseFloat(f3.mm)||0)+(parseFloat(f4.mm)||0);
+                        let rOB = (parseFloat(f1.obt)||0)+(parseFloat(f2.obt)||0)+(parseFloat(f3.obt)||0)+(parseFloat(f4.obt)||0);
                         
                         tMM += rMM; tOB += rOB;
 
                         html += `<tr><td class='sub-name'>${sb.n}</td>
-                            <td>${d1.m}</td><td>${d1.o}</td><td>${getGr(d1.o,d1.m)}</td>
-                            <td>${d2.m}</td><td>${d2.o}</td><td>${getGr(d2.o,d2.m)}</td>
-                            <td>${d3.m}</td><td>${d3.o}</td><td>${getGr(d3.o,d3.m)}</td>
-                            <td>${d4.m}</td><td>${d4.o}</td><td>${getGr(d4.o,d4.m)}</td>
+                            <td>${f1.mm}</td><td>${f1.obt}</td><td>${getGr(f1.obt,f1.mm)}</td>
+                            <td>${f2.mm}</td><td>${f2.obt}</td><td>${getGr(f2.obt,f2.mm)}</td>
+                            <td>${f3.mm}</td><td>${f3.obt}</td><td>${getGr(f3.obt,f3.mm)}</td>
+                            <td>${f4.mm}</td><td>${f4.obt}</td><td>${getGr(f4.obt,f4.mm)}</td>
                             <td class='grand-total-cell'>${rMM}</td><td class='grand-total-cell'>${rOB}</td>
                             <td class='grand-total-cell'>${getGr(rOB,rMM)}</td></tr>`;
                     });
