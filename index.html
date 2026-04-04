@@ -14,8 +14,8 @@
         #marksheetFull { display: none; width: 1000px; background: white; padding: 40px; border: 2px solid #1a73e8; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
         
-        .st-photo { width: 120px; height: 140px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; position: relative; }
-        .st-photo img { width: 100%; height: 100%; object-fit: cover; z-index: 2; position: relative; }
+        .st-photo { width: 120px; height: 140px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; }
+        .st-photo img { width: 100%; height: 100%; object-fit: cover; }
 
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
         .marks-table th, .marks-table td { border: 1px solid #1a73e8; padding: 6px; }
@@ -53,11 +53,15 @@
 
     <div id="marksheetFull">
         <div class="header-main">
-            <img src="https://drive.google.com/uc?export=view&id=1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad" style="width:110px;" alt="Logo">
+            <div id="logoArea">
+                <img id="schoolLogoImg" src="https://drive.google.com/uc?export=view&id=1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad" style="width:110px;" alt="Logo" onerror="this.src='https://via.placeholder.com/110/1a73e8/ffffff?text=LOGO'">
+            </div>
+            
             <div style="text-align:center;">
                 <h1 style="margin:0; font-size: 32px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
+
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
@@ -91,17 +95,26 @@
             <div class="sig-box">Principal Signature</div>
         </div>
 
-        <div style="text-align: center; margin-top: 40px;"><button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download Marksheet</button></div>
+        <div style="text-align: center; margin-top: 40px;"><button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download Result</button></div>
     </div>
 
     <script>
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
+        // Drive link converter
+        function fixDriveLink(url) {
+            if(!url || !url.includes("drive.google.com")) return url;
+            let id = "";
+            if(url.includes("id=")) id = url.split("id=")[1].split("&")[0];
+            else if(url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
+            return id ? `https://drive.google.com/uc?export=view&id=${id}` : url;
+        }
+
         async function findResult() {
             const sClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
             const activeAdmin = document.getElementById("activeClassControl").value;
-            if(!sClass || !admNo) return alert("Fill details!");
+            if(!sClass || !admNo) return alert("Details bhariye!");
             if(activeAdmin !== "ALL" && sClass !== activeAdmin) return alert("Result closed!");
 
             try {
@@ -111,7 +124,7 @@
                 const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(sClass));
                 if(student) showMarksheet(student);
                 else alert("Student Not Found!");
-            } catch (e) { alert("Error! Check Internet."); }
+            } catch (e) { alert("Error! Check Sheet URL or Internet."); }
         }
 
         function getGr(obt, mm) {
@@ -131,10 +144,10 @@
             const adm = parseInt(d[0]);
             document.getElementById("resAtten").innerText = (adm >= 60) ? (d[11] || "N/A") : (d[10] || "N/A");
 
+            // PHOTO FIX
             let pLink = d[12]?.trim();
             if(pLink) {
-                let id = pLink.includes("id=") ? pLink.split("id=")[1].split("&")[0] : (pLink.includes("/d/") ? pLink.split("/d/")[1].split("/")[0] : pLink);
-                document.getElementById("photoArea").innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${id}">`;
+                document.getElementById("photoArea").innerHTML = `<img src="${fixDriveLink(pLink)}" onerror="this.parentElement.innerText='NO PHOTO'">`;
             }
 
             const subjects = [
@@ -160,6 +173,7 @@
                 let m3 = parseFloat(d[s.f2+off])||0, o3 = parseFloat(d[s.f2+off+1])||0;
                 let m4 = parseFloat(d[s.an+off])||0, o4 = parseFloat(d[s.an+off+1])||0;
 
+                // Simple Swap Fix for 60+ data shift
                 if (o1 > m1 && m1 > 0) { let t=m1; m1=o1; o1=t; }
                 if (o2 > m2 && m2 > 0) { let t=m2; m2=o2; o2=t; }
                 if (o3 > m3 && m3 > 0) { let t=m3; m3=o3; o3=t; }
@@ -168,7 +182,7 @@
                 if(s.type !== "grade") {
                     tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                     let rMM = m1+m2+m3+m4, rObt = o1+o2+o3+o4;
-                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rMM}</td><td class="total-row">${rObt}</td><td class="total-row">${getGr(rObt,rMM)}</td></tr>`;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rMM)}</td></tr>`;
                 } else {
                     let r1=d[s.f1+off+1], r2=d[s.hy+off+1], r3=d[s.f2+off+1], r4=d[s.an+off+1];
                     html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${r1}</td><td>${r1}</td><td>-</td><td>${r2}</td><td>${r2}</td><td>-</td><td>${r3}</td><td>${r3}</td><td>-</td><td>${r4}</td><td>${r4}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
