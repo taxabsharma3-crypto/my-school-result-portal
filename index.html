@@ -5,69 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blue Bells Convent School - Result Portal</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .admin-box { background: #fff3cd; border: 2px dashed #856404; padding: 15px; border-radius: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; text-align: center; }
-        .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #1a73e8; }
-        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
-        .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        
-        #marksheetFull { display: none; width: 1000px; background: white; padding: 40px; border: 2px solid #1a73e8; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
-        .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
-        .st-photo { width: 120px; height: 140px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .search-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 10px solid #1a73e8; }
+        select, input { width: 90%; padding: 14px; margin: 12px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; transition: 0.3s; }
+        select:focus, input:focus { border-color: #1a73e8; outline: none; }
+        .btn-search { background: #1a73e8; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 95%; font-weight: bold; font-size: 18px; margin-top: 10px; }
+        .btn-search:disabled { background: #ccc; }
+
+        #marksheetFull { display: none; width: 1000px; background: white; padding: 40px; border: 1px solid #333; margin-top: 30px; position: relative; }
+        .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 20px; }
+        .st-photo { width: 130px; height: 150px; border: 2px solid #1a73e8; background: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .st-photo img { width: 100%; height: 100%; object-fit: cover; }
 
-        .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
-        .marks-table th, .marks-table td { border: 1px solid #1a73e8; padding: 6px; }
+        .marks-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        .marks-table th, .marks-table td { border: 1px solid #1a73e8; padding: 8px; text-align: center; }
         .bg-head { background: #e8f0fe; color: #1a73e8; font-weight: bold; }
-        .sub-name { text-align: left !important; padding-left: 10px !important; font-weight: bold; }
-        .total-row { background: #d2e3fc; font-weight: bold; font-size: 13px; color: #1557b0; }
-        
-        .final-summary { margin-top: 15px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 12px; font-weight: bold; background: #f8fbff; font-size: 16px; color: #1557b0; }
-        .sig-container { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 20px; }
-        .sig-box { text-align: center; width: 200px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; font-size: 14px; }
+        .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; }
+        .total-row { background: #d2e3fc; font-weight: bold; color: #1557b0; }
 
-        @media print { .search-card, .admin-box, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
+        .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 20px; background: #f8fbff; font-weight: bold; font-size: 18px; color: #1557b0; }
+        .sig-container { display: flex; justify-content: space-between; margin-top: 80px; }
+        .sig-box { text-align: center; width: 220px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
+
+        @media print { .search-card, .btn-search, select, input { display: none; } #marksheetFull { display: block !important; border: none; box-shadow: none; width: 100%; } }
     </style>
 </head>
 <body>
 
-    <div class="admin-box">
-        <strong>ADMIN CONTROL</strong><br>
-        <select id="activeClassControl" style="width: 70%; padding: 5px; margin-top: 5px;">
-            <option value="ALL">All Classes Open</option>
-            <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
-        </select>
-    </div>
-
     <div class="search-card">
-        <h2 style="color:#1a73e8; margin:0;">BLUE BELLS CONVENT SCHOOL</h2>
+        <h1 style="color:#1a73e8; margin-bottom: 10px;">BBCS RESULT PORTAL</h1>
+        <p style="color:#555;">Session 2025-26</p>
         <select id="studentClassSelect">
-            <option value="">-- Choose Your Class --</option>
+            <option value="">-- Select Class --</option>
             <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
         </select>
         <input type="text" id="admInput" placeholder="Enter Admission No.">
-        <button class="btn-search" id="searchBtn" onclick="findResult()">GET RESULT</button>
+        <button class="btn-search" id="searchBtn" onclick="findResult()">VIEW MARKSHEET</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header-main">
-            <img src="https://drive.google.com/uc?export=view&id=1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad" style="width:110px;" alt="Logo">
+            <img src="https://drive.google.com/uc?export=view&id=1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad" style="width:115px;" alt="Logo">
             <div style="text-align:center;">
-                <h1 style="margin:0; font-size: 32px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
-                <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
+                <h1 style="margin:0; font-size: 34px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
+                <p style="margin:5px 0; font-weight: bold; font-size: 18px;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 15px; border: 1px solid #d2e3fc; padding: 10px; background: #f8fbff;">
-            <div><strong>Student Name:</strong> <span id="sName" style="text-transform: uppercase;"></span><br><strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span></div>
-            <div style="text-align:right;"><strong>Adm No:</strong> <span id="sAdm"></span> | <strong>Class:</strong> <span id="sClass"></span><br><strong>Reg No:</strong> <span id="sReg"></span></div>
+        <div style="display: flex; justify-content: space-between; margin: 20px 0; padding: 15px; background: #f8fbff; border: 1px solid #d2e3fc; font-size: 16px;">
+            <div><strong>Student Name:</strong> <span id="sName" style="text-transform: uppercase; color:#1557b0;"></span><br><strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span></div>
+            <div style="text-align:right;"><strong>Adm No:</strong> <span id="sAdm" style="font-weight: bold;"></span> | <strong>Class:</strong> <span id="sClass"></span><br><strong>Reg No:</strong> <span id="sReg"></span></div>
         </div>
 
         <table class="marks-table">
             <thead>
                 <tr class="bg-head">
-                    <th rowspan="2" style="width: 180px;">SUBJECT NAME</th>
+                    <th rowspan="2" style="width: 200px;">SUBJECT NAME</th>
                     <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL EXAM</th><th colspan="3">GRAND TOTAL</th>
                 </tr>
                 <tr class="bg-head"><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th></tr>
@@ -89,71 +83,78 @@
             <div class="sig-box">Principal Signature</div>
         </div>
 
-        <div style="text-align: center; margin-top: 40px;"><button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download PDF</button></div>
+        <div style="text-align: center; margin-top: 50px;"><button onclick="window.print()" style="background:#28a745; color:white; padding:15px 40px; border:none; border-radius:8px; cursor:pointer; font-weight: bold; font-size: 16px;">Download/Print Marksheet</button></div>
     </div>
 
     <script>
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
+        const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         async function findResult() {
             const sClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
-            const activeAdmin = document.getElementById("activeClassControl").value;
             const btn = document.getElementById("searchBtn");
 
-            if(!sClass || !admNo) return alert("Please fill details!");
-            if(activeAdmin !== "ALL" && sClass !== activeAdmin) return alert("Result closed!");
-
-            btn.innerText = "Loading...";
+            if(!sClass || !admNo) return alert("Bhai, Details toh bhar do!");
+            
+            btn.innerText = "Checking Data...";
             btn.disabled = true;
 
             try {
-                // Use a Proxy URL to bypass Browser blocking (CORS)
-                const proxy = "https://api.allorigins.win/get?url=" + encodeURIComponent(SHEET_URL + "&cb=" + new Date().getTime());
-                const resp = await fetch(proxy);
-                const json = await resp.json();
-                const data = json.contents;
+                // Direct Fetch (Simple & Fast)
+                const response = await fetch(SHEET_CSV + "&nocache=" + Date.now());
+                if (!response.ok) throw new Error();
+                const text = await response.text();
                 
-                const rows = data.split(/\r?\n/).map(r => r.split(","));
-                const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(sClass));
-                
-                if(student) {
-                    showMarksheet(student);
-                } else {
-                    alert("Record Not Found! Please check Admission No and Class.");
+                // Parse CSV
+                const lines = text.split(/\r?\n/);
+                let studentData = null;
+
+                for (let i = 0; i < lines.length; i++) {
+                    let cols = lines[i].split(",");
+                    if (cols[0] && cols[0].trim() === admNo && cols[5] && cols[5].includes(sClass)) {
+                        studentData = cols;
+                        break;
+                    }
                 }
-            } catch (e) { 
-                alert("Error: Internet Slow hai. Ek baar page refresh karein."); 
+
+                if (studentData) {
+                    displayResult(studentData);
+                } else {
+                    alert("Record nahi mila! Check Adm No: " + admNo + " and Class: " + sClass);
+                }
+            } catch (err) {
+                alert("Internet Connection check karein ya Sheet Publish dobara karein.");
             } finally {
-                btn.innerText = "GET RESULT";
+                btn.innerText = "VIEW MARKSHEET";
                 btn.disabled = false;
             }
         }
 
-        function getGr(obt, mm) {
-            if(!mm || mm <= 0) return "-";
-            let p = (obt/mm)*100;
+        function getGrade(o, m) {
+            if (!m || m <= 0) return "-";
+            let p = (o/m)*100;
             if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
             if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
         }
 
-        function showMarksheet(d) {
+        function displayResult(d) {
             document.getElementById("sName").innerText = d[1];
             document.getElementById("sFather").innerText = d[2];
             document.getElementById("sAdm").innerText = d[0];
-            document.getElementById("sReg").innerText = d[7] || "N/A";
+            document.getElementById("sReg").innerText = d[7] || "-";
             document.getElementById("sClass").innerText = d[5];
 
             const adm = parseInt(d[0]);
-            document.getElementById("resAtten").innerText = (adm >= 60) ? (d[11] || "N/A") : (d[10] || "N/A");
+            document.getElementById("resAtten").innerText = (adm >= 60) ? d[11] : d[10];
 
-            let pLink = d[12]?.trim();
-            if(pLink) {
+            // Photo Handler
+            let pLink = d[12] ? d[12].trim() : "";
+            if (pLink) {
                 let id = pLink.includes("id=") ? pLink.split("id=")[1].split("&")[0] : (pLink.includes("/d/") ? pLink.split("/d/")[1].split("/")[0] : pLink);
                 document.getElementById("photoArea").innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${id}">`;
             }
 
-            const subjects = [
+            const subs = [
                 {n:"HINDI", f1:34, hy:92, f2:121, an:179},
                 {n:"ENGLISH", f1:36, hy:94, f2:123, an:181},
                 {n:"MATHS", f1:38, hy:96, f2:125, an:183},
@@ -163,44 +164,40 @@
                 {n:"G.K.", f1:46, hy:104, f2:133, an:191},
                 {n:"SANSKRIT", f1:48, hy:106, f2:135, an:193},
                 {n:"ART", f1:50, hy:108, f2:137, an:195},
-                {n:"PT/GAME", f1:52, hy:110, f2:139, an:197, type:"grade"}
+                {n:"PT/GAME", f1:52, hy:110, f2:139, an:197, isG:true}
             ];
 
             let html = "";
-            let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
+            let tm1=0, to1=0, tm2=0, to2=0, tm3=0, to3=0, tm4=0, to4=0;
 
-            subjects.forEach(s => {
+            subs.forEach(s => {
                 let off = (adm >= 60) ? 1 : 0;
-                let m1 = parseFloat(d[s.f1+off])||0, o1 = parseFloat(d[s.f1+off+1])||0;
-                let m2 = parseFloat(d[s.hy+off])||0, o2 = parseFloat(d[s.hy+off+1])||0;
-                let m3 = parseFloat(d[s.f2+off])||0, o3 = parseFloat(d[s.f2+off+1])||0;
-                let m4 = parseFloat(d[s.an+off])||0, o4 = parseFloat(d[s.an+off+1])||0;
+                let v1m = parseFloat(d[s.f1+off])||0, v1o = parseFloat(d[s.f1+off+1])||0;
+                let v2m = parseFloat(d[s.hy+off])||0, v2o = parseFloat(d[s.hy+off+1])||0;
+                let v3m = parseFloat(d[s.f2+off])||0, v3o = parseFloat(d[s.f2+off+1])||0;
+                let v4m = parseFloat(d[s.an+off])||0, v4o = parseFloat(d[s.an+off+1])||0;
 
-                if (o1 > m1 && m1 > 0) { let t=m1; m1=o1; o1=t; }
-                if (o2 > m2 && m2 > 0) { let t=m2; m2=o2; o2=t; }
-                if (o3 > m3 && m3 > 0) { let t=m3; m3=o3; o3=t; }
-                if (o4 > m4 && m4 > 0) { let t=m4; m4=o4; o4=t; }
-
-                if(s.type !== "grade") {
-                    tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
-                    let rMM = m1+m2+m3+m4, rObt = o1+o2+o3+o4;
-                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rMM}</td><td class="total-row">${rObt}</td><td class="total-row">${getGr(rowObt,rMM)}</td></tr>`;
+                if (!s.isG) {
+                    tm1+=v1m; to1+=v1o; tm2+=v2m; to2+=v2o; tm3+=v3m; to3+=v3o; tm4+=v4m; to4+=v4o;
+                    let rM = v1m+v2m+v3m+v4m, rO = v1o+v2o+v3o+v4o;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>${v1m}</td><td>${v1o}</td><td>${getGrade(v1o,v1m)}</td><td>${v2m}</td><td>${v2o}</td><td>${getGrade(v2o,v2m)}</td><td>${v3m}</td><td>${v3o}</td><td>${getGrade(v3o,v3m)}</td><td>${v4m}</td><td>${v4o}</td><td>${getGrade(v4o,v4m)}</td><td class="total-row">${rM}</td><td class="total-row">${rO}</td><td class="total-row">${getGrade(rO,rM)}</td></tr>`;
                 } else {
-                    let r1=d[s.f1+off+1] || "-", r2=d[s.hy+off+1] || "-", r3=d[s.f2+off+1] || "-", r4=d[s.an+off+1] || "-";
-                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${r1}</td><td>${r1}</td><td>-</td><td>${r2}</td><td>${r2}</td><td>-</td><td>${r3}</td><td>${r3}</td><td>-</td><td>${r4}</td><td>${r4}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
+                    let g1=d[s.f1+off+1]||"-", g2=d[s.hy+off+1]||"-", g3=d[s.f2+off+1]||"-", g4=d[s.an+off+1]||"-";
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
                 }
             });
 
             document.getElementById("marksBody").innerHTML = html;
-            let finMM = tF1m+tHYm+tF2m+tANm, finObt = tF1o+tHYo+tF2o+tANo;
-            document.getElementById("totalRow").innerHTML = `<tr class="total-row"><td class="sub-name">TOTAL</td><td>${tF1m}</td><td>${tF1o}</td><td>-</td><td>${tHYm}</td><td>${tHYo}</td><td>-</td><td>${tF2m}</td><td>${tF2o}</td><td>-</td><td>${tANm}</td><td>${tANo}</td><td>-</td><td>${finMM}</td><td>${finObt}</td><td>-</td></tr>`;
+            let fMM = tm1+tm2+tm3+tm4, fOB = to1+to2+to3+to4;
+            document.getElementById("totalRow").innerHTML = `<tr class="total-row"><td class="sub-name">GRAND TOTAL</td><td>${tm1}</td><td>${to1}</td><td>-</td><td>${tm2}</td><td>${to2}</td><td>-</td><td>${tm3}</td><td>${to3}</td><td>-</td><td>${tm4}</td><td>${to4}</td><td>-</td><td>${fMM}</td><td>${fOB}</td><td>-</td></tr>`;
 
-            let p = finMM > 0 ? ((finObt/finMM)*100).toFixed(2) : 0;
+            let p = fMM > 0 ? ((fOB/fMM)*100).toFixed(2) : 0;
             document.getElementById("resPerc").innerText = p;
-            document.getElementById("resGrade").innerText = getGr(finObt, finMM);
+            document.getElementById("resGrade").innerText = getGrade(fOB, fMM);
             document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
             document.getElementById("marksheetFull").style.display = "block";
+            window.scrollTo(0, document.getElementById("marksheetFull").offsetTop);
         }
     </script>
 </body>
