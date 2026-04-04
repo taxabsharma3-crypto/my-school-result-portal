@@ -3,84 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBCS Result Portal - Professional Look</title>
+    <title>BBCS Result Portal - Premium Lite</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --text: #333; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); padding: 30px; display: flex; flex-direction: column; align-items: center; color: var(--text); }
+        :root { --primary: #34495e; --accent: #5dade2; --light-bg: #f8fafc; --border: #e2e8f0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #fcfcfc; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #444; }
         
-        /* Search Section */
-        .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 100%; max-width: 460px; text-align: center; border-bottom: 5px solid var(--accent); margin-bottom: 30px; }
-        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; font-size: 15px; }
+        /* Search Card - Lite Design */
+        .search-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 450px; text-align: center; border-top: 5px solid var(--accent); margin-bottom: 30px; }
+        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 8px; outline: none; font-size: 15px; background: #fafafa; }
         .btn-search { background: var(--accent); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .btn-search:hover { background: #2980b9; transform: translateY(-2px); }
+        .btn-search:hover { background: #3498db; }
 
-        /* Marksheet Main Frame */
-        #marksheetFull { display: none; width: 1100px; background: white; padding: 40px; border: 10px solid #f8f9fa; outline: 2px solid var(--accent); box-shadow: 0 0 50px rgba(0,0,0,0.1); position: relative; }
+        /* Marksheet Lite Frame */
+        #marksheetFull { display: none; width: 1080px; background: white; padding: 40px; border: 1px solid var(--border); box-shadow: 0 0 30px rgba(0,0,0,0.02); position: relative; }
         
-        .header-box { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--accent); padding-bottom: 20px; }
-        .header-box h1 { margin: 0; font-size: 40px; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; }
-        .header-box p { margin: 5px 0; color: #7f8c8d; font-weight: 600; font-size: 14px; }
+        .header-box { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .header-box h1 { margin: 0; font-size: 36px; color: #2e86c1; letter-spacing: 1px; text-transform: uppercase; font-weight: 700; }
+        .header-box p { margin: 5px 0; color: #7f8c8d; font-size: 13px; }
+        .report-title { margin-top: 15px; font-weight: 600; color: #5d6d7e; border: 1px solid #ebf2f7; display: inline-block; padding: 5px 20px; border-radius: 20px; background: #f4f9fd; }
 
-        /* Info Grid - 4 Column Layout */
-        .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #eee; margin-bottom: 30px; border-radius: 8px; overflow: hidden; }
-        .info-cell { padding: 12px; border: 0.5px solid #eee; font-size: 13px; line-height: 1.6; }
-        .info-cell b { color: var(--accent); font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+        /* Student Info Grid - Lite Covered */
+        .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #f0f4f8; margin-bottom: 25px; background: #fcfdfe; }
+        .info-cell { padding: 12px; border: 0.5px solid #f0f4f8; font-size: 13px; }
+        .info-cell b { color: #85929e; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 2px; letter-spacing: 0.5px; }
         .info-cell span { font-weight: 600; color: #2c3e50; font-size: 14px; }
 
-        /* Table Design */
+        /* Table Design - Pastel Blue Theme */
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
-        .marks-table th, .marks-table td { border: 1px solid #dfe6e9; padding: 10px; text-align: center; }
-        .thead-dark { background: var(--primary); color: white; font-weight: 600; text-transform: uppercase; }
-        .thead-light { background: #f8f9fa; color: #636e72; font-weight: bold; }
-        .sub-name { text-align: left !important; padding-left: 15px !important; background: #fafafa; font-weight: bold; border-left: 4px solid var(--accent) !important; }
-        .grand-total-cell { background: #ebf5fb; font-weight: 900; color: var(--primary); font-size: 14px; }
+        .marks-table th, .marks-table td { border: 1px solid #eef2f6; padding: 10px; text-align: center; }
+        .thead-main { background: #f8fafc; color: #5d6d7e; font-weight: 600; text-transform: uppercase; font-size: 11px; }
+        .sub-name { text-align: left !important; padding-left: 15px !important; background: #fdfdfd; font-weight: 600; color: #34495e; border-left: 3px solid var(--accent) !important; }
+        .grand-total-cell { background: #f4f9fd; font-weight: bold; color: #2e86c1; }
 
-        /* Footer Summary */
-        .summary-wrapper { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; border: 1px solid #eee; }
-        .sum-item { text-align: center; flex: 1; border-right: 1px solid #ddd; }
-        .sum-item:last-child { border-right: none; }
-        .sum-item div { font-size: 12px; color: #7f8c8d; margin-bottom: 5px; text-transform: uppercase; }
-        .sum-item span { font-size: 22px; font-weight: bold; color: var(--primary); }
+        /* Summary Wrapper */
+        .summary-wrapper { display: flex; justify-content: space-around; background: #f9fbfc; padding: 20px; border-radius: 8px; border: 1px solid #eef2f6; margin-top: 20px; }
+        .sum-item { text-align: center; }
+        .sum-item div { font-size: 11px; color: #95a5a6; text-transform: uppercase; margin-bottom: 4px; }
+        .sum-item span { font-size: 20px; font-weight: bold; color: #2c3e50; }
 
         /* Signatures */
         .sig-container { display: flex; justify-content: space-between; margin-top: 80px; padding: 0 40px; }
-        .sig-box { text-align: center; width: 200px; border-top: 1.5px solid #2c3e50; padding-top: 10px; font-weight: bold; color: var(--primary); font-size: 13px; }
+        .sig-box { text-align: center; width: 200px; border-top: 1px solid #d1d9e0; padding-top: 8px; font-weight: 500; color: #7f8c8d; font-size: 13px; font-style: italic; }
 
         @media print {
-            .search-card, .btn-print, .print-ins { display: none; }
+            .search-card, .btn-print { display: none; }
             body { padding: 0; background: white; }
-            #marksheetFull { display: block !important; border: none; outline: none; box-shadow: none; width: 100%; padding: 0; }
+            #marksheetFull { display: block !important; border: 1px solid #eee; width: 100%; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
     <div class="search-card">
-        <h2 style="color:var(--accent); margin:0 0 15px 0;">BBCS RESULT PORTAL</h2>
+        <h2 style="color:var(--accent); margin:0 0 15px 0; letter-spacing:1px;">BBCS PORTAL 2026</h2>
         <select id="studentClassSelect">
-            <option value="">-- अपनी क्लास चुनें --</option>
+            <option value="">-- Choose Your Class --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option>
             <option value="NURSERY">Nursery</option>
             <option value="LKG">LKG</option>
             <option value="UKG">UKG</option>
-            <option value="1">Class 1</option>
-            <option value="2">Class 2</option>
-            <option value="3">Class 3</option>
-            <option value="4">Class 4</option>
-            <option value="5">Class 5</option>
-            <option value="6">Class 6</option>
-            <option value="7">Class 7</option>
-            <option value="8">Class 8</option>
+            <option value="1">Class 1</option><option value="2">Class 2</option>
+            <option value="3">Class 3</option><option value="4">Class 4</option>
+            <option value="5">Class 5</option><option value="6">Class 6</option>
+            <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
-        <input type="text" id="admInput" placeholder="Admission No. यहाँ लिखें">
-        <button class="btn-search" onclick="findResult()">रिजल्ट देखें (View Marksheet)</button>
+        <input type="text" id="admInput" placeholder="Enter Admission No.">
+        <button class="btn-search" onclick="findResult()">View Marksheet</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header-box">
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
             <p>Agra, Uttar Pradesh | UDISE: 09XXXXXXXX | Session 2025-26</p>
-            <div style="margin-top: 10px; font-weight: bold; color: var(--accent); font-size: 18px; text-decoration: underline;">ANNUAL PROGRESS REPORT CARD</div>
+            <div class="report-title">ANNUAL PROGRESS REPORT CARD</div>
         </div>
 
         <div class="info-grid">
@@ -95,12 +90,12 @@
 
         <table class="marks-table">
             <thead>
-                <tr class="thead-dark">
+                <tr class="thead-main">
                     <th rowspan="2" style="width: 200px;">SUBJECTS</th>
-                    <th colspan="3">FA-I</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-II</th><th colspan="3">ANNUAL EXAM</th><th colspan="3">GRAND TOTAL</th>
+                    <th colspan="3">FA-I</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-II</th><th colspan="3">ANNUAL</th><th colspan="3">GRAND TOTAL</th>
                 </tr>
-                <tr class="thead-light">
-                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th>
+                <tr class="thead-main">
+                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th class="grand-total-cell">MM</th><th class="grand-total-cell">OBT</th><th class="grand-total-cell">GR</th>
                 </tr>
             </thead>
             <tbody id="marksBody"></tbody>
@@ -109,10 +104,9 @@
 
         <div class="summary-wrapper">
             <div class="sum-item"><div>Attendance</div><span id="resAtten"></span></div>
-            <div class="sum-item"><div>Total Marks</div><span id="resTotal"></span></div>
             <div class="sum-item"><div>Percentage</div><span id="resPerc"></span>%</div>
             <div class="sum-item"><div>Grand Grade</div><span id="resGrade"></span></div>
-            <div class="sum-item" style="border:none;"><div>Result Status</div><span id="resStatus"></span></div>
+            <div class="sum-item"><div>Result Status</div><span id="resStatus"></span></div>
         </div>
 
         <div class="sig-container">
@@ -122,7 +116,7 @@
         </div>
 
         <center style="margin-top: 40px;">
-            <button onclick="window.print()" class="btn-search btn-print" style="width: 250px; background: #27ae60;">Download Result (PDF)</button>
+            <button onclick="window.print()" class="btn-search btn-print" style="width: 200px; background: #2ecc71;">Download PDF</button>
         </center>
     </div>
 
@@ -140,7 +134,7 @@
         async function findResult() {
             const selectedClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
-            if(!selectedClass || !admNo) return alert("Bhai, Admission No aur Class sahi se bhariye!");
+            if(!selectedClass || !admNo) return alert("Bhai, Details bhariye!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
@@ -150,7 +144,7 @@
                 
                 if(student) showMarksheet(student);
                 else alert("Record nahi mila! Admission No ya Class check kijiye.");
-            } catch (e) { alert("Data load nahi ho pa raha!"); }
+            } catch (e) { alert("Network Error!"); }
         }
 
         function showMarksheet(d) {
@@ -199,7 +193,6 @@
 
             document.getElementById("marksBody").innerHTML = html;
             let totalMM = tF1m+tHYm+tF2m+tANm, totalObt = tF1o+tHYo+tF2o+tANo;
-            document.getElementById("resTotal").innerText = totalObt + " / " + totalMM;
             
             let p = totalMM > 0 ? ((totalObt/totalMM)*100).toFixed(2) : 0;
             document.getElementById("resPerc").innerText = p;
