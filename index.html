@@ -2,29 +2,29 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Result Portal 2026</title>
+    <title>BBCS Result Portal 2026 - Final</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .search-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 8px solid #1a73e8; }
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
         .btn { background: #1a73e8; color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 18px; }
 
-        #marksheetFull { display: none; width: 1000px; background: white; padding: 50px; border: 2px solid #1a73e8; margin-top: 30px; position: relative; overflow: hidden; }
+        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 2px solid #1a73e8; margin-top: 30px; position: relative; overflow: hidden; }
         #marksheetFull::before { content: "BLUE BELLS CONVENT SCHOOL"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 70px; color: rgba(26, 115, 232, 0.05); font-weight: bold; pointer-events: none; }
         
         .header { text-align: center; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
-        .student-info { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 15px; background: #f8fbff; border: 1px solid #d2e3fc; font-size: 17px; line-height: 1.6; }
+        .student-info { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 15px; background: #f8fbff; border: 1px solid #d2e3fc; font-size: 16px; line-height: 1.6; }
         
-        table { width: 100%; border-collapse: collapse; text-align: center; }
-        th, td { border: 1px solid #1a73e8; padding: 8px; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 12px; }
+        th, td { border: 1px solid #1a73e8; padding: 6px; }
         .bg-head { background: #e8f0fe; color: #1a73e8; font-weight: bold; }
         .total-row { background: #d2e3fc; font-weight: bold; color: #1557b0; }
 
-        .summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 20px; font-weight: bold; font-size: 18px; background: #f8fbff; }
+        .summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 15px; font-weight: bold; font-size: 18px; background: #f8fbff; color: #1557b0; }
         .sig { display: flex; justify-content: space-between; margin-top: 80px; }
         .sig-box { text-align: center; width: 200px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
 
-        @media print { .search-card, .btn { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; } }
+        @media print { .search-card, .btn { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; } }
     </style>
 </head>
 <body>
@@ -41,72 +41,76 @@
 
     <div id="marksheetFull">
         <div class="header">
-            <h1 style="color:#1a73e8; margin:0;">BLUE BELLS CONVENT SCHOOL</h1>
+            <h1 style="color:#1a73e8; margin:0; font-size: 36px;">BLUE BELLS CONVENT SCHOOL</h1>
             <p style="font-weight:bold; font-size: 18px;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
         </div>
 
         <div class="student-info">
             <div style="width: 55%;">
-                <strong>Name:</strong> <span id="outName"></span><br>
-                <strong>Mother:</strong> <span id="outMom"></span><br>
-                <strong>Father:</strong> <span id="outDad"></span><br>
+                <strong>Student Name:</strong> <span id="outName" style="text-transform: uppercase;"></span><br>
+                <strong>Mother's Name:</strong> <span id="outMom" style="text-transform: uppercase;"></span><br>
+                <strong>Father's Name:</strong> <span id="outDad" style="text-transform: uppercase;"></span><br>
                 <strong>Address:</strong> <span id="outAddr"></span>
             </div>
             <div style="text-align:right; width: 45%;">
                 <strong>Adm No:</strong> <span id="outAdm"></span><br>
                 <strong>Class:</strong> <span id="outCls"></span><br>
-                <strong>DOB:</strong> <span id="outDOB"></span>
+                <strong>Date of Birth:</strong> <span id="outDOB"></span>
             </div>
         </div>
 
         <table>
             <thead>
                 <tr class="bg-head">
-                    <th rowspan="2" style="width:200px">SUBJECT</th>
-                    <th colspan="2">FA-1</th><th colspan="2">HALF YEARLY</th><th colspan="2">FA-2</th><th colspan="2">ANNUAL</th><th colspan="2">TOTAL</th>
+                    <th rowspan="2" style="width:180px">SUBJECT</th>
+                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL</th><th colspan="3">TOTAL</th>
                 </tr>
-                <tr class="bg-head"><th>MM</th><th>Obt</th><th>MM</th><th>Obt</th><th>MM</th><th>Obt</th><th>MM</th><th>Obt</th><th>MM</th><th>Obt</th></tr>
+                <tr class="bg-head">
+                    <th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th>
+                </tr>
             </thead>
             <tbody id="mBody"></tbody>
             <tfoot id="mFoot"></tfoot>
         </table>
 
         <div class="summary">
-            <span>PERC: <span id="outPer"></span>%</span>
-            <span>GRADE: <span id="outGrd"></span></span>
+            <span>PERCENTAGE: <span id="outPer"></span>%</span>
+            <span>OVERALL GRADE: <span id="outGrd"></span></span>
             <span>RESULT: <span id="outStat"></span></span>
         </div>
 
-        <p style="margin-top:20px;"><b>Date:</b> 30.03.2026 | <b>Attendance:</b> <span id="outAtt"></span></p>
+        <p style="margin-top:20px; font-weight: bold;">Result Date: 30.03.2026 | Attendance: <span id="outAtt"></span></p>
 
         <div class="sig">
-            <div class="sig-box">Parent</div>
-            <div class="sig-box">Teacher</div>
-            <div class="sig-box">Principal</div>
+            <div class="sig-box">Parent's Signature</div>
+            <div class="sig-box">Class Teacher</div>
+            <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn" style="width:200px; background:#28a745; margin-top:30px;" onclick="window.print()">PRINT PDF</button></center>
+        <center><button class="btn" style="width:200px; background:#28a745; margin-top:30px;" onclick="window.print()">PRINT / PDF</button></center>
     </div>
 
     <script>
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
+        function getGr(o, m) {
+            if (!m || m <= 0) return "-";
+            let p = (o/m)*100;
+            if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
+            if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
+        }
+
         async function findResult() {
             const adm = document.getElementById("sAdm").value.trim();
             const cls = document.getElementById("sCls").value;
-            if(!adm || !cls) return alert("Details bharo!");
+            if(!adm || !cls) return alert("Details bhariye!");
 
             try {
                 const res = await fetch(CSV_URL + "&cb=" + Date.now());
                 const text = await res.text();
                 const rows = text.split(/\r?\n/).map(r => r.split(","));
                 
-                // Search in Row: A=Adm, F=Class
-                const d = rows.find(r => {
-                    const rAdm = r[0] ? r[0].trim().toLowerCase() : "";
-                    const rCls = r[5] ? r[5].trim().toLowerCase() : "";
-                    return rAdm == adm.toLowerCase() && rCls.includes(cls.toLowerCase());
-                });
+                const d = rows.find(r => r[0] && r[0].trim() == adm && r[5] && r[5].trim().includes(cls));
 
                 if(d) {
                     const is60 = parseInt(d[0]) >= 60 ? 1 : 0;
@@ -124,11 +128,12 @@
                         {n:"ENGLISH", c:[36,37, 94,95, 123,124, 181,182]},
                         {n:"MATHS", c:[38,39, 96,97, 125,126, 183,184]},
                         {n:"SCIENCE", c:[40,41, 98,99, 127,128, 185,186]},
-                        {n:"SST/EVS", c:[42,43, 100,101, 129,130, 187,188]},
+                        {n:"SST / EVS", c:[42,43, 100,101, 129,130, 187,188]},
                         {n:"COMPUTER", c:[44,45, 102,103, 131,132, 189,190]},
                         {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
                         {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
-                        {n:"ART", c:[50,51, 108,109, 137,138, 195,196]}
+                        {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
+                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], isG:true}
                     ];
 
                     let h = "", tM=0, tO=0;
@@ -137,16 +142,23 @@
                         let m2=parseInt(d[s.c[2]+is60])||0, o2=parseInt(d[s.c[3]+is60])||0;
                         let m3=parseInt(d[s.c[4]+is60])||0, o3=parseInt(d[s.c[5]+is60])||0;
                         let m4=parseInt(d[s.c[6]+is60])||0, o4=parseInt(d[s.c[7]+is60])||0;
-                        let sM = m1+m2+m3+m4, sO = o1+o2+o3+o4;
-                        tM+=sM; tO+=sO;
-                        h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${m2}</td><td>${o2}</td><td>${m3}</td><td>${o3}</td><td>${m4}</td><td>${o4}</td><td class='total-row'>${sM}</td><td class='total-row'>${sO}</td></tr>`;
+                        
+                        if(!s.isG) {
+                            let sM = m1+m2+m3+m4, sO = o1+o2+o3+o4;
+                            tM+=sM; tO+=sO;
+                            h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class='total-row'>${sM}</td><td class='total-row'>${sO}</td><td class='total-row'>${getGr(sO,sM)}</td></tr>`;
+                        } else {
+                            // PT/GAME Grade only row
+                            let g1=d[s.c[1]+is60]||"-", g2=d[s.c[3]+is60]||"-", g3=d[s.c[5]+is60]||"-", g4=d[s.c[7]+is60]||"-";
+                            h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class='total-row'>-</td><td class='total-row'>-</td><td class='total-row'>-</td></tr>`;
+                        }
                     });
 
                     document.getElementById("mBody").innerHTML = h;
-                    document.getElementById("mFoot").innerHTML = `<tr class='total-row'><td>TOTAL</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>${tM}</td><td>${tO}</td></tr>`;
+                    document.getElementById("mFoot").innerHTML = `<tr class='total-row'><td>GRAND TOTAL</td><td colspan='12'>-</td><td>${tM}</td><td>${tO}</td><td>${getGr(tO,tM)}</td></tr>`;
                     let p = ((tO/tM)*100).toFixed(2);
                     document.getElementById("outPer").innerText = p;
-                    document.getElementById("outGrd").innerText = p>=91?"A1":p>=81?"A2":p>=71?"B1":p>=61?"B2":"C";
+                    document.getElementById("outGrd").innerText = getGr(tO,tM);
                     document.getElementById("outStat").innerText = p>=33?"PASSED":"FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
                 } else { alert("Record nahi mila! Sheet check karein."); }
