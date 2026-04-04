@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBCS Result Portal - Final Sequence</title>
+    <title>BBCS Result Portal - 2026</title>
     <style>
         :root { --primary: #2e86c1; --accent: #85c1e9; --lite-blue: #ebf5fb; --border: #d5dbdb; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
@@ -19,7 +19,6 @@
         .school-meta { font-size: 14px; color: #5d6d7e; margin-top: 8px; font-weight: 600; }
         .report-title { margin-top: 15px; font-weight: 700; color: #fff; display: inline-block; padding: 6px 25px; border-radius: 50px; background: var(--primary); font-size: 16px; letter-spacing: 1px; }
 
-        /* SEQUENCE CORRECTED INFO GRID */
         .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1.5px solid var(--lite-blue); margin-bottom: 25px; background: #fff; }
         .info-cell { padding: 12px 20px; border: 0.5px solid var(--lite-blue); font-size: 14px; display: flex; align-items: center; }
         .info-cell b { color: #5d6d7e; font-size: 11px; text-transform: uppercase; width: 150px; display: inline-block; letter-spacing: 0.5px; }
@@ -38,14 +37,19 @@
         .sum-item div { font-size: 11px; color: #5d6d7e; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
         .sum-item span { font-size: 20px; font-weight: bold; color: #2c3e50; }
 
-        .sig-container { display: flex; justify-content: space-between; margin-top: 90px; padding: 0 40px; }
+        /* SMART REMARKS SECTION */
+        .remarks-container { margin-top: 25px; padding: 20px; border: 1.5px dashed var(--accent); border-radius: 10px; background: #fdfefe; }
+        .remarks-header { font-weight: 800; color: var(--primary); font-size: 14px; margin-bottom: 10px; text-transform: uppercase; }
+        #specialMessage { font-size: 16px; color: #2c3e50; font-style: italic; line-height: 1.6; }
+        .promotion-status { margin-top: 15px; font-weight: 800; font-size: 18px; color: #27ae60; text-align: center; border: 1px solid #27ae60; display: inline-block; padding: 5px 20px; border-radius: 5px; }
+
+        .sig-container { display: flex; justify-content: space-between; margin-top: 80px; padding: 0 40px; }
         .sig-box { text-align: center; width: 220px; border-top: 2px solid var(--primary); padding-top: 10px; color: #2c3e50; font-weight: 700; font-size: 14px; }
 
         @media print {
             .search-card, .btn-print { display: none; }
             body { padding: 0; background: white; }
             #marksheetFull { display: block !important; border: 1px solid #eee; width: 100%; box-shadow: none; }
-            .thead-main th { background: #ebf5fb !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -100,9 +104,15 @@
 
         <div class="summary-wrapper">
             <div class="sum-item"><div>Attendance</div><span id="resAtten"></span></div>
-            <div class="sum-item"><div>Percentage</div><span id="resPerc"></span>%</div>
+            <div class="sum-item"><div>Final Percentage</div><span id="resPerc"></span>%</div>
             <div class="sum-item"><div>Grand Grade</div><span id="resGrade"></span></div>
             <div class="sum-item"><div>Result Status</div><span id="resStatus"></span></div>
+        </div>
+
+        <div class="remarks-container">
+            <div class="remarks-header">Class Teacher's Remarks & Promotion Status:</div>
+            <div id="specialMessage"></div>
+            <div id="promotionStatus" class="promotion-status"></div>
         </div>
 
         <div class="sig-container">
@@ -128,21 +138,21 @@
         async function findResult() {
             const selectedClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
-            if(!selectedClass || !admNo) return alert("Details bhariye!");
+            if(!selectedClass || !admNo) return alert("Fill details!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().toUpperCase().includes(selectedClass.toUpperCase()));
-                if(student) showMarksheet(student); else alert("Data nahi mila!");
+                if(student) showMarksheet(student); else alert("Data not found!");
             } catch (e) { alert("Sheet Error!"); }
         }
 
         function showMarksheet(d) {
             document.getElementById("sName").innerText = d[1];
             document.getElementById("sFather").innerText = d[2];
-            document.getElementById("sMother").innerText = d[3] || "N/A";
+            document.getElementById("sMother").innerText = (d[3] || "N/A");
             document.getElementById("sDOB").innerText = d[4] || "N/A";
             document.getElementById("sAddr").innerText = d[6] || "N/A";
             document.getElementById("sAdm").innerText = d[0];
@@ -174,10 +184,8 @@
                 let m4 = parseFloat(d[s.anm]) || 0; let o4 = parseFloat(d[s.ano]) || 0;
 
                 if(s.isPT){
-                    let g1 = d[s.f1o] || "-"; let g2 = d[s.hyo] || "-";
-                    let g3 = d[s.f2o] || "-"; let g4 = d[s.ano] || "-";
                     let finalG = d[s.ano] || d[s.hyo] || d[s.f2o] || d[s.f1o] || "-";
-                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${finalG}</td><td class="grand-total-cell">${finalG}</td></tr>`;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${o1||"-"}</td><td>${o1||"-"}</td><td>-</td><td>${o2||"-"}</td><td>${o2||"-"}</td><td>-</td><td>${o3||"-"}</td><td>${o3||"-"}</td><td>-</td><td>${o4||"-"}</td><td>${o4||"-"}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${finalG}</td><td class="grand-total-cell">${finalG}</td></tr>`;
                 } else {
                     tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                     let rMM = m1+m2+m3+m4; let rObt = o1+o2+o3+o4;
@@ -188,10 +196,23 @@
             document.getElementById("marksBody").innerHTML = html;
             let totalMM = tF1m+tHYm+tF2m+tANm, totalObt = tF1o+tHYo+tF2o+tANo;
             let p = totalMM > 0 ? ((totalObt/totalMM)*100).toFixed(2) : 0;
+            
             document.getElementById("resPerc").innerText = p;
             document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
             document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = p >= 33 ? "#27ae60" : "#e74c3c";
+
+            // SPECIAL REMARKS LOGIC
+            let msg = ""; let promo = "";
+            if(p >= 90) { msg = "Excellent! You are a star performer. Keep maintaining this brilliance."; promo = "Promoted to the Higher Class with Distinction!"; }
+            else if(p >= 75) { msg = "Very Good! Your hard work is visible. Aim for even higher next time."; promo = "Promoted to the Next Class!"; }
+            else if(p >= 60) { msg = "Good Performance. Focus a bit more on consistent studies to improve further."; promo = "Promoted to the Next Class!"; }
+            else if(p >= 33) { msg = "Fair attempt. Regular practice and more focus on weak subjects are required."; promo = "Promoted to the Next Class!"; }
+            else { msg = "Needs lot of improvement. Please consult with teachers for better guidance."; promo = "Needs Improvement / Repetition of Class."; document.getElementById("promotionStatus").style.color = "#e74c3c"; }
+
+            document.getElementById("specialMessage").innerText = msg;
+            document.getElementById("promotionStatus").innerText = promo;
+
             document.getElementById("marksheetFull").style.display = "block";
         }
     </script>
