@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Final Master Fix</title>
+    <title>BBCS Official Result Portal - Final Address Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -22,13 +22,35 @@
         .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
         .header h1 { margin: 0; font-size: 42px; color: var(--main); }
 
-        /* Address Wrapping Fix */
+        /* --- STUDENT INFO BOX (ADDRESS FIX) --- */
         .info-grid { display: flex; flex-wrap: wrap; border: 1px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); }
         .info-item { padding: 12px 15px; border: 0.5px solid #dce4f2; font-size: 16px; box-sizing: border-box; }
         .w-50 { width: 50%; }
-        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; height: auto !important; min-height: 60px; display: block; overflow: visible; }
+        
+        /* ADDRESS DEDICATED BLOCK */
+        .w-100 { 
+            width: 100%; 
+            border-top: 2px solid var(--main); 
+            background: #fff; 
+            display: block !important; 
+            height: auto !important; 
+            min-height: 50px; 
+            padding: 15px;
+            overflow: visible !important;
+        }
         .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; vertical-align: top; }
-        .addr-val { display: inline-block; width: calc(100% - 160px); word-wrap: break-word; white-space: normal; line-height: 1.5; color: #333; font-weight: 500; }
+        
+        /* ADDRESS TEXT WRAPPING */
+        .addr-val { 
+            display: inline-block; 
+            width: calc(100% - 160px); 
+            word-wrap: break-word !important; 
+            white-space: normal !important; 
+            line-height: 1.5; 
+            color: #333; 
+            font-weight: 500; 
+            vertical-align: top;
+        }
 
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; position: relative; z-index: 1; }
         th, td { border: 1px solid var(--main); padding: 9px; }
@@ -72,12 +94,14 @@
 
         <div class="info-grid">
             <div class="info-item w-50"><b>Student Name:</b> <span id="rName" style="text-transform:uppercase"></span></div>
-            <div class="info-item w-50"><b>Admission No:</b> <span id="rAdm"></span></div>
+            <div class="info-item w-50"><b>Admission No:</b> <span id="rAdm" style="font-weight:bold;"></span></div>
             <div class="info-item w-50"><b>Mother's Name:</b> <span id="rMom" style="text-transform:uppercase"></span></div>
             <div class="info-item w-50"><b>Class:</b> <span id="rCls"></span></div>
             <div class="info-item w-50"><b>Father's Name:</b> <span id="rDad" style="text-transform:uppercase"></span></div>
             <div class="info-item w-50"><b>Date of Birth:</b> <span id="rDOB"></span></div>
-            <div class="info-item w-100"><b>Full Address:</b> <span id="rAddr" class="addr-val"></span></div>
+            <div class="info-item w-100">
+                <b>Full Address:</b> <span id="rAddr" class="addr-val"></span>
+            </div>
         </div>
 
         <table>
@@ -120,7 +144,7 @@
         function getGr(obt, mm) {
             let o = parseFloat(obt);
             let m = parseFloat(mm);
-            if (isNaN(o)) return obt || "-"; // Agar pehle se Grade likha hai toh wahi dikhao
+            if (isNaN(o)) return obt || "-"; 
             if (!m || m <= 0) return "-";
             let p = (o/m)*100;
             if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
@@ -149,7 +173,7 @@
                     document.getElementById("rDOB").innerText = student[4] || "N/A";
                     document.getElementById("rCls").innerText = student[5];
                     
-                    // ADDRESS FIX: Force column 6 or 7 based on shift
+                    // --- ADDRESS FIX: SHIFT HANDLING ---
                     document.getElementById("rAddr").innerText = shift ? student[7] : student[6];
                     document.getElementById("rAtt").innerText = shift ? student[11] : student[10];
 
@@ -163,11 +187,11 @@
                         {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
                         {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
                         {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], isPT:true}
+                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198]}
                     ];
 
                     let html = "", tMM=0, tOB=0;
-                    subjects.forEach(s => {
+                    subjects.forEach((s, idx) => {
                         let m1=student[s.c[0]+shift], o1=student[s.c[1]+shift];
                         let m2=student[s.c[2]+shift], o2=student[s.c[3]+shift];
                         let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
@@ -175,13 +199,13 @@
                         
                         let g1=getGr(o1,m1), g2=getGr(o2,m2), g3=getGr(o3,m3), g4=getGr(o4,m4);
 
-                        if(!s.isPT) {
+                        if(idx < 9) { // Phle 9 subjects
                             let sMM = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
                             let sOB = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
                             tMM+=sMM; tOB+=sOB;
                             html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${g1}</td><td>${m2}</td><td>${o2}</td><td>${g2}</td><td>${m3}</td><td>${o3}</td><td>${g3}</td><td>${m4}</td><td>${o4}</td><td>${g4}</td><td class='grand-total'>${sMM}</td><td class='grand-total'>${sOB}</td><td class='grand-total'>${getGr(sOB,sMM)}</td></tr>`;
                         } else {
-                            // PT Row Fix
+                            // PT/GAME Row
                             html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${o1||'-'}</td><td>${g1}</td><td>-</td><td>${o2||'-'}</td><td>${g2}</td><td>-</td><td>${o3||'-'}</td><td>${g3}</td><td>-</td><td>${o4||'-'}</td><td>${g4}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
                         }
                     });
@@ -195,7 +219,7 @@
                     document.getElementById("marksheetFull").style.display = "block";
                     window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
                 } else { alert("Record not found!"); }
-            } catch(e) { alert("Error connecting to sheet!"); }
+            } catch(e) { alert("Sheet Connection Error!"); }
         }
     </script>
 </body>
