@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blue Bells Convent School - Result Portal</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .search-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 10px solid #1a73e8; }
-        select, input { width: 90%; padding: 14px; margin: 12px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; transition: 0.3s; }
-        select:focus, input:focus { border-color: #1a73e8; outline: none; }
+        select, input { width: 90%; padding: 14px; margin: 12px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; outline: none; }
         .btn-search { background: #1a73e8; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 95%; font-weight: bold; font-size: 18px; margin-top: 10px; }
-        .btn-search:disabled { background: #ccc; }
-
+        
+        /* Marksheet Container */
         #marksheetFull { display: none; width: 1000px; background: white; padding: 40px; border: 1px solid #333; margin-top: 30px; position: relative; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 20px; }
+        
+        .logo-box { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .logo-box img { width: 100%; height: auto; display: block; }
+        
         .st-photo { width: 130px; height: 150px; border: 2px solid #1a73e8; background: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .st-photo img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -34,7 +37,6 @@
 
     <div class="search-card">
         <h1 style="color:#1a73e8; margin-bottom: 10px;">BBCS RESULT PORTAL</h1>
-        <p style="color:#555;">Session 2025-26</p>
         <select id="studentClassSelect">
             <option value="">-- Select Class --</option>
             <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
@@ -45,11 +47,15 @@
 
     <div id="marksheetFull">
         <div class="header-main">
-            <img src="https://drive.google.com/uc?export=view&id=1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad" style="width:115px;" alt="Logo">
+            <div class="logo-box">
+                <img id="schoolLogo" src="" alt="School Logo" onerror="this.src='https://via.placeholder.com/120/1a73e8/ffffff?text=LOGO'">
+            </div>
+            
             <div style="text-align:center;">
                 <h1 style="margin:0; font-size: 34px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
                 <p style="margin:5px 0; font-weight: bold; font-size: 18px;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
+
             <div class="st-photo" id="photoArea">PHOTO</div>
         </div>
 
@@ -83,29 +89,43 @@
             <div class="sig-box">Principal Signature</div>
         </div>
 
-        <div style="text-align: center; margin-top: 50px;"><button onclick="window.print()" style="background:#28a745; color:white; padding:15px 40px; border:none; border-radius:8px; cursor:pointer; font-weight: bold; font-size: 16px;">Download/Print Marksheet</button></div>
+        <div style="text-align: center; margin-top: 50px;"><button onclick="window.print()" style="background:#28a745; color:white; padding:15px 40px; border:none; border-radius:8px; cursor:pointer; font-weight: bold; font-size: 16px;">Download Marksheet</button></div>
     </div>
 
     <script>
+        // GOOGLE SHEET CSV LINK
         const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
+        
+        // SCHOOL LOGO DRIVE LINK
+        const LOGO_DRIVE_LINK = "https://drive.google.com/file/d/1UPFTUfGRttSd6jdF4VK8KqTRI30sy0ad/view?usp=sharing";
+
+        // Function to convert Drive Link to Direct Image Link
+        function driveToDirect(url) {
+            if(!url) return "";
+            let id = "";
+            if(url.includes("id=")) id = url.split("id=")[1].split("&")[0];
+            else if(url.includes("/d/")) id = url.split("/d/")[1].split("/")[0];
+            return id ? `https://drive.google.com/uc?export=view&id=${id}` : url;
+        }
+
+        // Set School Logo on Page Load
+        window.onload = function() {
+            document.getElementById("schoolLogo").src = driveToDirect(LOGO_DRIVE_LINK);
+        };
 
         async function findResult() {
             const sClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
             const btn = document.getElementById("searchBtn");
 
-            if(!sClass || !admNo) return alert("Bhai, Details toh bhar do!");
+            if(!sClass || !admNo) return alert("Bhai, Admission No and Class bhariye!");
             
-            btn.innerText = "Checking Data...";
+            btn.innerText = "Connecting...";
             btn.disabled = true;
 
             try {
-                // Direct Fetch (Simple & Fast)
                 const response = await fetch(SHEET_CSV + "&nocache=" + Date.now());
-                if (!response.ok) throw new Error();
                 const text = await response.text();
-                
-                // Parse CSV
                 const lines = text.split(/\r?\n/);
                 let studentData = null;
 
@@ -120,10 +140,10 @@
                 if (studentData) {
                     displayResult(studentData);
                 } else {
-                    alert("Record nahi mila! Check Adm No: " + admNo + " and Class: " + sClass);
+                    alert("Record Not Found! Sheet mein check karein.");
                 }
             } catch (err) {
-                alert("Internet Connection check karein ya Sheet Publish dobara karein.");
+                alert("Internet Error! Sheet 'Publish to Web' check karein.");
             } finally {
                 btn.innerText = "VIEW MARKSHEET";
                 btn.disabled = false;
@@ -147,11 +167,10 @@
             const adm = parseInt(d[0]);
             document.getElementById("resAtten").innerText = (adm >= 60) ? d[11] : d[10];
 
-            // Photo Handler
+            // Student Photo logic
             let pLink = d[12] ? d[12].trim() : "";
             if (pLink) {
-                let id = pLink.includes("id=") ? pLink.split("id=")[1].split("&")[0] : (pLink.includes("/d/") ? pLink.split("/d/")[1].split("/")[0] : pLink);
-                document.getElementById("photoArea").innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${id}">`;
+                document.getElementById("photoArea").innerHTML = `<img src="${driveToDirect(pLink)}">`;
             }
 
             const subs = [
