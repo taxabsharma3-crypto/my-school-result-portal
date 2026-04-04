@@ -2,38 +2,30 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Final 100% Fix</title>
+    <title>BBCS Official Result Portal - Final Fix 2026</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
         .search-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 30px; }
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
-
         #marksheetFull { display: none; width: 1150px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); margin-bottom: 50px; }
-        
         .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; }
         .header h1 { margin: 0; font-size: 45px; color: var(--main); }
-
         .info-wrapper { border: 2px solid var(--main); margin-bottom: 25px; background: var(--light); width: 100%; }
         .info-row { display: flex; width: 100%; border-bottom: 1px solid #dce4f2; }
         .info-box { width: 50%; padding: 12px 15px; font-size: 16px; border-right: 1px solid #dce4f2; box-sizing: border-box; }
         .info-box b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
-
         .address-full-row { width: 100%; background: #fff; padding: 15px; border-top: 2px solid var(--main); display: block; height: auto; min-height: 60px; box-sizing: border-box; }
         .address-full-row b { color: var(--dark); font-size: 16px; margin-right: 10px; float: left; width: 140px; }
         .address-full-row span { display: block; margin-left: 150px; font-size: 16px; color: #333; line-height: 1.6; word-wrap: break-word; }
-
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; }
         th, td { border: 1px solid var(--main); padding: 10px; }
         .thead-main { background: var(--main); color: white; font-weight: bold; }
         .thead-sub { background: #f1f6ff; color: var(--main); font-weight: bold; }
         .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; }
         .grand-total-cell { background: #d2e3fc; font-weight: bold; color: var(--dark); }
-
         .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 20px; border-radius: 12px; font-size: 22px; font-weight: bold; }
-        
         @media print { .search-container, .btn-print { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 0; } }
     </style>
 </head>
@@ -42,7 +34,7 @@
     <div class="search-container">
         <h2>BBCS RESULT PORTAL</h2>
         <select id="selClass">
-            <option value="">-- Class चुनें --</option>
+            <option value="">-- अपनी क्लास चुनें --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
             <option value="LKG">LKG</option><option value="UKG">UKG</option>
             <option value="1">Class 1</option><option value="2">Class 2</option>
@@ -95,7 +87,7 @@
         <div class="result-bar">
             <span>PERCENTAGE: <span id="rPer"></span>%</span>
             <span>GRADE: <span id="rGrd"></span></span>
-            <span>RESULT: <span id="rStat"></span></span>
+            <span>STATUS: <span id="rStat"></span></span>
         </div>
 
         <div style="margin-top:25px; display:flex; justify-content:space-between; font-weight:bold;">
@@ -108,8 +100,7 @@
             <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Class Teacher</div>
             <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Principal Signature</div>
         </div>
-        
-        <center><button class="btn-view" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Download PDF</button></center>
+        <center><button class="btn-view" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Print / PDF</button></center>
     </div>
 
     <script>
@@ -146,7 +137,9 @@
                     document.getElementById("rMom").innerText = student[3] || "N/A";
                     document.getElementById("rDOB").innerText = student[4] || "N/A";
                     document.getElementById("rCls").innerText = student[5];
-                    document.getElementById("rAddr").innerText = student[6] || "N/A";
+                    
+                    // Address Fix: Har haal mein Column 6 (G) se uthayega agar shift nahi hai, warna 7.
+                    document.getElementById("rAddr").innerText = shift ? student[7] : student[6];
                     document.getElementById("rAtt").innerText = shift ? student[11] : student[10];
 
                     const subjects = [
@@ -164,10 +157,10 @@
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach((s) => {
-                        let v1 = student[s.c[0]+shift], v2 = student[s.c[1]+shift];
-                        let v3 = student[s.c[2]+shift], v4 = student[s.c[3]+shift];
-                        let v5 = student[s.c[4]+shift], v6 = student[s.c[5]+shift];
-                        let v7 = student[s.c[6]+shift], v8 = student[s.c[7]+shift];
+                        let m1=student[s.c[0]+shift], o1=student[s.c[1]+shift];
+                        let m2=student[s.c[2]+shift], o2=student[s.c[3]+shift];
+                        let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
+                        let m4=student[s.c[6]+shift], o4=student[s.c[7]+shift];
 
                         // Auto-Correction for MM and Obt Swap
                         function fix(m, o) {
@@ -176,7 +169,7 @@
                             return {m:m, o:o};
                         }
 
-                        let f1=fix(v1,v2), f2=fix(v3,v4), f3=fix(v5,v6), f4=fix(v7,v8);
+                        let f1=fix(m1,o1), f2=fix(m2,o2), f3=fix(m3,o3), f4=fix(m4,o4);
                         
                         let sMM = (parseFloat(f1.m)||0)+(parseFloat(f2.m)||0)+(parseFloat(f3.m)||0)+(parseFloat(f4.m)||0);
                         let sOB = (parseFloat(f1.o)||0)+(parseFloat(f2.o)||0)+(parseFloat(f3.o)||0)+(parseFloat(f4.o)||0);
