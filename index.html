@@ -100,38 +100,50 @@
     <script>
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
-        async function findResult() {
-            const sClass = document.getElementById("studentClassSelect").value;
-            const admNo = document.getElementById("admInput").value.trim();
-            const activeAdmin = document.getElementById("activeClassControl").value;
-            const loader = document.getElementById("loader");
-            const btn = document.getElementById("searchBtn");
+        
+          async function findResult() {
+    const sClass = document.getElementById("studentClassSelect").value;
+    const admNo = document.getElementById("admInput").value.trim();
+    const activeAdmin = document.getElementById("activeClassControl").value;
+    const loader = document.getElementById("loader");
+    const btn = document.getElementById("searchBtn");
 
-            if(!sClass || !admNo) return alert("Details bhariye!");
-            if(activeAdmin !== "ALL" && sClass !== activeAdmin) return alert("Result closed!");
+    if(!sClass || !admNo) return alert("Please fill details!");
+    if(activeAdmin !== "ALL" && sClass !== activeAdmin) return alert("Result closed!");
 
-            loader.style.display = "inline-block";
-            btn.disabled = true;
+    loader.style.display = "inline-block";
+    btn.disabled = true;
 
-            try {
-                const fetchUrl = SHEET_URL + "&cb=" + new Date().getTime();
-                const resp = await fetch(fetchUrl);
-                const data = await resp.text();
-                
-                // Rows parsing
-                const rows = data.split(/\r?\n/).map(r => r.split(","));
-                const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(sClass));
-                
-                if(student) {
-                    showMarksheet(student);
-                } else {
-                    alert("Student Record Not Found! Check Adm No and Class.");
-                }
-            } catch (e) { 
-                alert("Error: Internet check karein ya Sheet Publish dobara karein."); 
-            } finally {
-                loader.style.display = "none";
-                btn.disabled = false;
+    try {
+        // Adding a completely unique ID to force fresh data from Google
+        const fetchUrl = SHEET_URL + "&cachebuster=" + Math.random();
+        const resp = await fetch(fetchUrl, { cache: "no-store" });
+        
+        if(!resp.ok) throw new Error("Network issue");
+
+        const data = await resp.text();
+        
+        // Agar data mein HTML tag hai, matlab sheet CSV ki jagah page ban gayi hai
+        if(data.includes("<!DOCTYPE html>")) {
+            alert("Setting Error: Please Publish Sheet as 'CSV' instead of 'Web Page'");
+            return;
+        }
+
+        const rows = data.split(/\r?\n/).map(r => r.split(","));
+        const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(sClass));
+        
+        if(student) {
+            showMarksheet(student);
+        } else {
+            alert("Record Not Found! Sheet mein check karein: Adm No " + admNo + " ke samne Class sahi hai?");
+        }
+    } catch (e) { 
+        alert("Internet Slow hai ya Sheet Publish nahi hui hai. Ek baar refresh karein."); 
+    } finally {
+        loader.style.display = "none";
+        btn.disabled = false;
+    }
+}
             }
         }
 
