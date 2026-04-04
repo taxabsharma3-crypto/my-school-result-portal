@@ -3,44 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBCS Marksheet - Simple Print Version</title>
+    <title>BBCS Marksheet - Unique Light Version</title>
     <style>
-        /* General Styles */
-        body { font-family: Arial, sans-serif; background: #fff; padding: 10px; display: flex; flex-direction: column; align-items: center; color: #000; }
-        .search-card, .admin-box { background: #fff; border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-bottom: 15px; width: 100%; max-width: 400px; text-align: center; }
-        select, input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #999; border-radius: 4px; }
-        .btn-search { background: #000; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer; width: 95%; font-weight: bold; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
         
-        /* Marksheet Print Friendly */
-        #marksheetFull { display: none; width: 1000px; background: white; padding: 20px; border: 1px solid #000; margin-top: 10px; }
-        .header-simple { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
-        .header-simple h1 { margin: 0; font-size: 28px; text-transform: uppercase; }
-        .school-meta { font-size: 14px; margin-top: 5px; }
+        /* Search Box - Light Design */
+        .search-card, .admin-box { background: #ffffff; border: 1px solid #e1e8ed; padding: 20px; border-radius: 12px; margin-bottom: 20px; width: 100%; max-width: 420px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        select, input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 6px; background: #fafbfc; }
+        .btn-search { background: #4a90e2; color: #fff; padding: 12px; border: none; border-radius: 6px; cursor: pointer; width: 95%; font-weight: bold; font-size: 15px; }
 
-        .info-grid { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; line-height: 1.5; border-bottom: 1px solid #000; padding-bottom: 10px; }
-        .info-left, .info-right { width: 48%; }
+        /* Unique Light Marksheet Design */
+        #marksheetFull { display: none; width: 1050px; background: white; padding: 35px; border: 1px solid #d1d9e0; border-radius: 4px; box-shadow: 0 0 25px rgba(0,0,0,0.02); }
+        
+        .header-simple { text-align: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+        .header-simple h1 { margin: 0; font-size: 32px; color: #2c3e50; letter-spacing: 1px; }
+        .school-meta { font-size: 13px; color: #7f8c8d; margin-top: 8px; }
 
+        .info-grid { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; background: #fcfdfe; padding: 15px; border: 1px solid #f0f4f8; border-radius: 8px; }
+        .info-left, .info-right { width: 48%; line-height: 1.8; }
+
+        /* Table - Light Colors */
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .marks-table th, .marks-table td { border: 1px solid #000; padding: 5px; text-align: center; }
-        .sub-name { text-align: left !important; padding-left: 8px !important; font-weight: bold; }
-        .bold-row { font-weight: bold; background: #f2f2f2; }
-
-        .final-summary { margin-top: 15px; display: flex; justify-content: space-around; border: 1px solid #000; padding: 10px; font-weight: bold; font-size: 15px; }
+        .marks-table th, .marks-table td { border: 1px solid #e6ecf0; padding: 8px; text-align: center; }
+        .bg-head { background: #f8fafc; color: #5d6d7e; font-weight: 600; text-transform: uppercase; font-size: 11px; }
+        .sub-name { text-align: left !important; padding-left: 12px !important; font-weight: 600; color: #34495e; background: #fcfdfe; }
         
-        .sig-container { margin-top: 60px; display: flex; justify-content: space-between; text-align: center; }
-        .sig-box { width: 220px; border-top: 1px solid #000; padding-top: 5px; font-size: 13px; }
+        /* Highlighting Total with very light color */
+        .total-col { background: #f4f8fb; font-weight: bold; }
+        .bold-row { font-weight: bold; background: #f8fafc !important; color: #2c3e50; }
+
+        .final-summary { margin-top: 25px; display: flex; justify-content: space-around; background: #f9fbfc; border: 1px solid #eef2f6; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 15px; color: #2c3e50; }
+        
+        .sig-container { margin-top: 70px; display: flex; justify-content: space-between; text-align: center; }
+        .sig-box { width: 200px; border-top: 1px solid #cbd5e0; padding-top: 8px; font-size: 13px; color: #7f8c8d; font-style: italic; }
 
         @media print {
             .search-card, .admin-box, .print-btn { display: none; }
-            body { padding: 0; }
-            #marksheetFull { border: none; width: 100%; }
+            body { background: white; padding: 0; }
+            #marksheetFull { border: 1px solid #eee; width: 100%; box-shadow: none; padding: 20px; }
+            .bg-head { background: #f8fafc !important; -webkit-print-color-adjust: exact; }
+            .total-col { background: #f4f8fb !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
 <body>
 
     <div class="admin-box">
-        <strong>Result Status:</strong> 
+        <strong>Result Switch:</strong> 
         <select id="activeClassControl">
             <option value="ALL">All Classes Open</option>
             <option value="8">Class 8</option><option value="7">Class 7</option>
@@ -49,14 +58,14 @@
     </div>
 
     <div class="search-card">
-        <h3>Result Search</h3>
+        <h3 style="margin-top:0; color:#4a90e2;">BBCS PORTAL 2026</h3>
         <select id="studentClassSelect">
             <option value="">-- Select Class --</option>
             <option value="8">Class 8</option><option value="7">Class 7</option>
             <option value="6">Class 6</option><option value="5">Class 5</option>
         </select>
         <input type="text" id="admInput" placeholder="Admission No.">
-        <button class="btn-search" onclick="findResult()">Show Marksheet</button>
+        <button class="btn-search" onclick="findResult()">Generate Marksheet</button>
     </div>
 
     <div id="marksheetFull">
@@ -66,18 +75,18 @@
                 <strong>Address:</strong> [Aapka School Address Yahan Likhein] | 
                 <strong>UDISE Code:</strong> [Aapka UDISE Code Yahan Likhein]
             </div>
-            <div style="margin-top: 5px; font-weight: bold;">PROGRESS REPORT CARD (SESSION 2025-26)</div>
+            <div style="margin-top: 12px; font-weight: 600; color: #5d6d7e; border: 1px solid #eee; display: inline-block; padding: 4px 15px; border-radius: 20px;">PROGRESS REPORT CARD (2025-26)</div>
         </div>
 
         <div class="info-grid">
             <div class="info-left">
-                <strong>Student Name:</strong> <span id="sName"></span><br>
+                <strong>Student Name:</strong> <span id="sName" style="color:#2c3e50;"></span><br>
                 <strong>Father's Name:</strong> <span id="sFather"></span><br>
                 <strong>Mother's Name:</strong> <span id="sMother"></span><br>
                 <strong>Address:</strong> <span id="sAddr"></span>
             </div>
             <div class="info-right" style="text-align: right;">
-                <strong>Adm No:</strong> <span id="sAdm"></span> | <strong>Class:</strong> <span id="sClass"></span><br>
+                <strong>Adm No:</strong> <span id="sAdm" style="font-weight:bold;"></span> | <strong>Class:</strong> <span id="sClass"></span><br>
                 <strong>Date of Birth:</strong> <span id="sDOB"></span><br>
                 <strong>Attendance:</strong> <span id="resAtten"></span>
             </div>
@@ -85,12 +94,12 @@
 
         <table class="marks-table">
             <thead>
-                <tr>
+                <tr class="bg-head">
                     <th rowspan="2" style="width: 180px;">SUBJECT NAME</th>
-                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL EXAM</th><th colspan="3">GRAND TOTAL</th>
+                    <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL</th><th colspan="3">GRAND TOTAL</th>
                 </tr>
-                <tr>
-                    <th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th>
+                <tr class="bg-head">
+                    <th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th>MM</th><th>Obt</th><th>GR</th><th class="total-col">MM</th><th class="total-col">Obt</th><th class="total-col">GR</th>
                 </tr>
             </thead>
             <tbody id="marksBody"></tbody>
@@ -98,19 +107,19 @@
         </table>
 
         <div class="final-summary">
-            <div>PERCENTAGE: <span id="resPerc"></span>%</div>
-            <div>GRAND GRADE: <span id="resGrade"></span></div>
-            <div>RESULT: <span id="resStatus"></span></div>
+            <div>PERCENTAGE: <span id="resPerc" style="color:#4a90e2;"></span>%</div>
+            <div>OVERALL GRADE: <span id="resGrade" style="color:#4a90e2;"></span></div>
+            <div>STATUS: <span id="resStatus"></span></div>
         </div>
 
         <div class="sig-container">
             <div class="sig-box">Parent's Signature</div>
             <div class="sig-box">Class Teacher's Signature</div>
-            <div class="sig-box">Principal Signature</div>
+            <div class="sig-box">Principal's Signature</div>
         </div>
 
-        <div style="text-align: center; margin-top: 30px;">
-            <button onclick="window.print()" class="print-btn" style="padding:10px 20px; font-weight:bold; cursor:pointer;">Print Marksheet</button>
+        <div style="text-align: center; margin-top: 40px;">
+            <button onclick="window.print()" class="print-btn" style="padding:12px 25px; background:#4a90e2; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Print Result</button>
         </div>
     </div>
 
@@ -129,8 +138,8 @@
             const selectedClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
             const activeAdminClass = document.getElementById("activeClassControl").value;
-            if(!selectedClass || !admNo) return alert("Details bhariye!");
-            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) return alert("Result abhi open nahi hai!");
+            if(!selectedClass || !admNo) return alert("Please fill all details!");
+            if(activeAdminClass !== "ALL" && selectedClass !== activeAdminClass) return alert("Result is not active for this class!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
@@ -139,8 +148,8 @@
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().includes(selectedClass));
                 
                 if(student) showMarksheet(student);
-                else alert("Record match nahi hua!");
-            } catch (e) { alert("Data error!"); }
+                else alert("Record not found!");
+            } catch (e) { alert("Network Error!"); }
         }
 
         function showMarksheet(d) {
@@ -180,22 +189,25 @@
                 if(s.isPT){
                     let g1 = d[s.f1o] || "-"; let g2 = d[s.hyo] || "-";
                     let g3 = d[s.f2o] || "-"; let g4 = d[s.ano] || "-";
-                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td>-</td><td>-</td><td>-</td></tr>`;
+                    // PT/GAME Logic: Showing grade in Total GR column too (Jaise aapne kaha A+A+A+A=A)
+                    let totalGrade = d[s.ano] || d[s.hyo] || d[s.f2o] || d[s.f1o] || "-"; 
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class="total-col">-</td><td class="total-col">-</td><td class="total-col">${totalGrade}</td></tr>`;
                 } else {
                     tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                     let rowMM = m1+m2+m3+m4; let rowObt = o1+o2+o3+o4;
-                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td>${rowMM}</td><td>${rowObt}</td><td>${getGr(rowObt,rowMM)}</td></tr>`;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-col">${rowMM}</td><td class="total-col">${rowObt}</td><td class="total-col">${getGr(rowObt,rowMM)}</td></tr>`;
                 }
             });
 
             document.getElementById("marksBody").innerHTML = html;
             let totalMM = tF1m+tHYm+tF2m+tANm, totalObt = tF1o+tHYo+tF2o+tANo;
-            document.getElementById("totalRow").innerHTML = `<tr class="bold-row"><td class="sub-name">TOTAL</td><td>${tF1m}</td><td>${tF1o}</td><td>-</td><td>${tHYm}</td><td>${tHYo}</td><td>-</td><td>${tF2m}</td><td>${tF2o}</td><td>-</td><td>${tANm}</td><td>${tANo}</td><td>-</td><td>${totalMM}</td><td>${totalObt}</td><td>${getGr(totalObt, totalMM)}</td></tr>`;
+            document.getElementById("totalRow").innerHTML = `<tr class="bold-row"><td class="sub-name">OVERALL TOTAL</td><td>${tF1m}</td><td>${tF1o}</td><td>-</td><td>${tHYm}</td><td>${tHYo}</td><td>-</td><td>${tF2m}</td><td>${tF2o}</td><td>-</td><td>${tANm}</td><td>${tANo}</td><td>-</td><td class="total-col">${totalMM}</td><td class="total-col">${totalObt}</td><td class="total-col">${getGr(totalObt, totalMM)}</td></tr>`;
             
             let p = totalMM > 0 ? ((totalObt/totalMM)*100).toFixed(2) : 0;
             document.getElementById("resPerc").innerText = p;
             document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
             document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
+            document.getElementById("resStatus").style.color = p >= 33 ? "#27ae60" : "#e74c3c";
             document.getElementById("marksheetFull").style.display = "block";
         }
     </script>
