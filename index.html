@@ -2,17 +2,16 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Final Fix</title>
+    <title>BBCS Official Result Portal - Final 1000 Marks Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        .search-container { background: white; padding: 35px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 30px; }
+        .search-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 30px; }
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
 
         #marksheetFull { display: none; width: 1100px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); margin-bottom: 50px; }
-        
         #marksheetFull::after {
             content: "BLUE BELLS CONVENT SCHOOL";
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
@@ -22,13 +21,13 @@
         .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
         .header h1 { margin: 0; font-size: 42px; color: var(--main); }
 
-        /* Address Wrapping Fix */
         .info-wrapper { border: 2px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); width: 100%; }
         .info-row { display: flex; width: 100%; border-bottom: 1px solid #dce4f2; }
-        .info-box { width: 50%; padding: 12px 15px; font-size: 16px; border-right: 1px solid #dce4f2; }
+        .info-box { width: 50%; padding: 12px 15px; font-size: 16px; border-right: 1px solid #dce4f2; box-sizing: border-box; }
         .info-box:last-child { border-right: none; }
         .info-box b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
 
+        /* ADDRESS FULL SHOW FIX */
         .address-full-row { 
             width: 100%; background: #fff; padding: 15px; border-top: 2px solid var(--main); 
             display: block !important; height: auto !important; min-height: 60px; box-sizing: border-box;
@@ -131,6 +130,7 @@
         function getGr(obt, mm) {
             let o = parseFloat(obt);
             let m = parseFloat(mm);
+            // Agar pehle se Grade likha hai toh wahi utha lo
             if (isNaN(o) && (obt+"").trim().length > 0) return obt;
             if (!m || m <= 0 || isNaN(o)) return "-";
             let p = (o/m)*100;
@@ -159,12 +159,9 @@
                     document.getElementById("rMom").innerText = student[3] || "N/A";
                     document.getElementById("rDOB").innerText = student[4] || "N/A";
                     document.getElementById("rCls").innerText = student[5];
-                    
-                    // Address: Row 6 (Always Fixed for Address)
                     document.getElementById("rAddr").innerText = student[6] || "N/A";
                     document.getElementById("rAtt").innerText = shift ? student[11] : student[10];
 
-                    // Correct Column Mapping for Shift 60+
                     const subjects = [
                         {n:"HINDI", c:[34,35, 92,93, 121,122, 179,180]},
                         {n:"ENGLISH", c:[36,37, 94,95, 123,124, 181,182]},
@@ -175,7 +172,7 @@
                         {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
                         {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
                         {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], pt:true}
+                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198]}
                     ];
 
                     let html = "", tMM=0, tOB=0;
@@ -185,17 +182,14 @@
                         let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
                         let m4=student[s.c[6]+shift], o4=student[s.c[7]+shift];
                         
+                        let sMM = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
+                        let sOB = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
+                        
                         let g1=getGr(o1,m1), g2=getGr(o2,m2), g3=getGr(o3,m3), g4=getGr(o4,m4);
 
-                        if(!s.pt) {
-                            let sMM = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
-                            let sOB = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
-                            tMM+=sMM; tOB+=sOB;
-                            html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${g1}</td><td>${m2}</td><td>${o2}</td><td>${g2}</td><td>${m3}</td><td>${o3}</td><td>${g3}</td><td>${m4}</td><td>${o4}</td><td>${g4}</td><td class='grand-total-cell'>${sMM}</td><td class='grand-total-cell'>${sOB}</td><td class='grand-total-cell'>${getGr(sOB,sMM)}</td></tr>`;
-                        } else {
-                            // PT Row: Showing grades even for Shift 60+
-                            html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${o1||'-'}</td><td>${g1}</td><td>-</td><td>${o2||'-'}</td><td>${g2}</td><td>-</td><td>${o3||'-'}</td><td>${g3}</td><td>-</td><td>${o4||'-'}</td><td>${g4}</td><td class='grand-total-cell'>-</td><td class='grand-total-cell'>-</td><td class='grand-total-cell'>-</td></tr>`;
-                        }
+                        // Ab ART aur PT dono regular table mein aayenge aur Grand Total mein judenge
+                        tMM+=sMM; tOB+=sOB;
+                        html += `<tr><td class='sub-name'>${s.n}</td><td>${m1||'-'}</td><td>${o1||'-'}</td><td>${g1}</td><td>${m2||'-'}</td><td>${o2||'-'}</td><td>${g2}</td><td>${m3||'-'}</td><td>${o3||'-'}</td><td>${g3}</td><td>${m4||'-'}</td><td>${o4||'-'}</td><td>${g4}</td><td class='grand-total-cell'>${sMM||'-'}</td><td class='grand-total-cell'>${sOB||'-'}</td><td class='grand-total-cell'>${getGr(sOB,sMM)}</td></tr>`;
                     });
 
                     document.getElementById("mBody").innerHTML = html;
