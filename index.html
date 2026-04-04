@@ -13,7 +13,10 @@
         #marksheetFull::before { content: "BLUE BELLS CONVENT SCHOOL"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 70px; color: rgba(26, 115, 232, 0.05); font-weight: bold; pointer-events: none; }
         
         .header { text-align: center; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
+        
+        /* Address Full Show Fix */
         .student-info { display: flex; justify-content: space-between; margin-bottom: 25px; padding: 15px; background: #f8fbff; border: 1px solid #d2e3fc; font-size: 16px; line-height: 1.6; }
+        .address-text { word-wrap: break-word; white-space: normal; max-width: 450px; display: block; }
         
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 12px; }
         th, td { border: 1px solid #1a73e8; padding: 6px; }
@@ -46,13 +49,13 @@
         </div>
 
         <div class="student-info">
-            <div style="width: 55%;">
+            <div style="width: 60%;">
                 <strong>Student Name:</strong> <span id="outName" style="text-transform: uppercase;"></span><br>
                 <strong>Mother's Name:</strong> <span id="outMom" style="text-transform: uppercase;"></span><br>
                 <strong>Father's Name:</strong> <span id="outDad" style="text-transform: uppercase;"></span><br>
-                <strong>Address:</strong> <span id="outAddr"></span>
+                <strong>Address:</strong> <span id="outAddr" class="address-text"></span>
             </div>
-            <div style="text-align:right; width: 45%;">
+            <div style="text-align:right; width: 40%;">
                 <strong>Adm No:</strong> <span id="outAdm"></span><br>
                 <strong>Class:</strong> <span id="outCls"></span><br>
                 <strong>Date of Birth:</strong> <span id="outDOB"></span>
@@ -148,9 +151,8 @@
                             tM+=sM; tO+=sO;
                             h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class='total-row'>${sM}</td><td class='total-row'>${sO}</td><td class='total-row'>${getGr(sO,sM)}</td></tr>`;
                         } else {
-                            // PT/GAME Grade only row
-                            let g1=d[s.c[1]+is60]||"-", g2=d[s.c[3]+is60]||"-", g3=d[s.c[5]+is60]||"-", g4=d[s.c[7]+is60]||"-";
-                            h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class='total-row'>-</td><td class='total-row'>-</td><td class='total-row'>-</td></tr>`;
+                            // PT/GAME No Grades Shown (As requested)
+                            h += `<tr><td style='text-align:left; font-weight:bold; padding-left:10px'>${s.n}</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class='total-row'>-</td><td class='total-row'>-</td><td class='total-row'>-</td></tr>`;
                         }
                     });
 
