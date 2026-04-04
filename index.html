@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <title>BBCS Official Result Portal</title>
     <style>
-        :root { --main: #1a73e8; --dark: #0d47a1; --light: #e8f0fe; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f1f3f4; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Search Section */
-        .search-container { background: white; padding: 35px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 40px; }
-        h2 { color: var(--main); margin-top: 0; }
+        .search-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 30px; }
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; transition: 0.3s; }
-        .btn-view:hover { background: var(--dark); }
+        .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
 
-        /* Professional Marksheet Design */
-        #marksheetFull { display: none; width: 1050px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
+        /* Marksheet Container */
+        #marksheetFull { display: none; width: 1080px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
         
         /* Watermark */
         #marksheetFull::after {
@@ -25,41 +22,41 @@
         }
 
         .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
-        .header h1 { margin: 0; font-size: 42px; color: var(--main); }
+        .header h1 { margin: 0; font-size: 42px; color: var(--main); letter-spacing: 1px; }
 
-        /* Student Info Box - ADDRESS FULL FIX */
+        /* Student Info - ADDRESS WRAP FIX */
         .info-grid { display: flex; flex-wrap: wrap; border: 1px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); }
-        .info-item { padding: 12px 15px; border: 0.5px solid #cddcf5; font-size: 15px; }
-        .w-50 { width: 50%; box-sizing: border-box; }
-        .w-100 { width: 100%; box-sizing: border-box; border-top: 2px solid var(--main); background: #fff; }
-        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 130px; }
+        .info-item { padding: 12px 15px; border: 0.5px solid #dce4f2; font-size: 16px; box-sizing: border-box; }
+        .w-50 { width: 50%; }
+        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; min-height: 50px; }
+        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
+        #rAddr { display: inline-block; vertical-align: top; width: calc(100% - 160px); white-space: normal; word-wrap: break-word; line-height: 1.4; }
 
-        /* Table Styles */
+        /* Table */
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; position: relative; z-index: 1; }
-        th, td { border: 1px solid var(--main); padding: 8px; }
-        .thead-main { background: var(--main); color: white; font-weight: bold; }
+        th, td { border: 1px solid var(--main); padding: 9px; }
+        .thead-main { background: var(--main); color: white; font-weight: bold; text-transform: uppercase; }
         .thead-sub { background: #f1f6ff; color: var(--main); font-weight: bold; }
         .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; background: #fafafa; }
-        .grand-total { background: #d2e3fc; font-weight: bold; color: var(--dark); }
+        .grand-total { background: #d2e3fc; font-weight: bold; color: var(--dark); font-size: 14px; }
 
-        .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 15px; border-radius: 8px; font-size: 20px; font-weight: bold; position: relative; z-index: 1; }
-        
-        .footer { margin-top: 30px; display: flex; justify-content: space-between; font-weight: bold; color: #333; position: relative; z-index: 1; }
-        .sig-row { display: flex; justify-content: space-between; margin-top: 80px; position: relative; z-index: 1; }
-        .sig-box { text-align: center; width: 200px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
+        .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 18px; border-radius: 10px; font-size: 22px; font-weight: bold; position: relative; z-index: 1; }
+        .sig-row { display: flex; justify-content: space-between; margin-top: 100px; position: relative; z-index: 1; }
+        .sig-box { text-align: center; width: 220px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
 
         @media print {
             .search-container, .btn-print { display: none; }
-            #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 0; }
-            .info-grid { background: #e8f0fe !important; -webkit-print-color-adjust: exact; }
-            .result-bar { background: #1a73e8 !important; color: white !important; -webkit-print-color-adjust: exact; }
+            #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 20px; }
+            .info-grid { background: #f8fbff !important; -webkit-print-color-adjust: exact; }
+            .result-bar { background: #1a73e8 !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
 <body>
 
     <div class="search-container">
-        <h2>BBCS RESULT PORTAL</h2>
+        <h2 style="margin-bottom:5px;">BBCS RESULT PORTAL</h2>
+        <p style="margin-bottom:15px; color:#666; font-size:14px;">Annual Examination 2025-26</p>
         <select id="selClass">
             <option value="">-- Select Class --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
@@ -70,7 +67,7 @@
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
         <input type="text" id="inpAdm" placeholder="Enter Admission No.">
-        <button class="btn-view" onclick="findResult()">VIEW MARKSHEET</button>
+        <button class="btn-view" onclick="findResult()">VIEW RESULT</button>
     </div>
 
     <div id="marksheetFull">
@@ -81,7 +78,7 @@
 
         <div class="info-grid">
             <div class="info-item w-50"><b>Student Name:</b> <span id="rName" style="text-transform:uppercase"></span></div>
-            <div class="info-item w-50"><b>Admission No:</b> <span id="rAdm"></span></div>
+            <div class="info-item w-50"><b>Admission No:</b> <span id="rAdm" style="font-weight:bold"></span></div>
             <div class="info-item w-50"><b>Mother's Name:</b> <span id="rMom" style="text-transform:uppercase"></span></div>
             <div class="info-item w-50"><b>Class:</b> <span id="rCls"></span></div>
             <div class="info-item w-50"><b>Father's Name:</b> <span id="rDad" style="text-transform:uppercase"></span></div>
@@ -92,7 +89,7 @@
         <table>
             <thead>
                 <tr class="thead-main">
-                    <th rowspan="2" style="width:200px">SUBJECT</th>
+                    <th rowspan="2" style="width:200px">SUBJECT NAME</th>
                     <th colspan="3">FA-1</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-2</th><th colspan="3">ANNUAL</th><th colspan="3">TOTAL</th>
                 </tr>
                 <tr class="thead-sub">
@@ -109,8 +106,8 @@
             <span>STATUS: <span id="rStat"></span></span>
         </div>
 
-        <div class="footer">
-            <span>Date of Issue: 30.03.2026</span>
+        <div style="margin-top:25px; display:flex; justify-content:space-between; font-weight:bold; position:relative; z-index:1;">
+            <span>Release Date: 30.03.2026</span>
             <span>Attendance: <span id="rAtt"></span></span>
         </div>
 
@@ -120,7 +117,7 @@
             <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Download Marksheet (PDF)</button></center>
+        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download PDF</button></center>
     </div>
 
     <script>
@@ -136,14 +133,13 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("Please enter Admission No and Select Class!");
+            if(!adm || !cls) return alert("Details bhariye!");
 
             try {
                 const res = await fetch(CSV_LINK + "&v=" + Date.now());
                 const data = await res.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 
-                // Flexible Match for Class and Adm
                 const student = rows.find(r => r[0] && r[0].trim() == adm && r[5] && r[5].toUpperCase().includes(cls.toUpperCase()));
 
                 if(student) {
@@ -182,8 +178,9 @@
                             tMM+=sMM; tOB+=sOB;
                             html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${calcGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${calcGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${calcGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${calcGr(o4,m4)}</td><td class='grand-total'>${sMM}</td><td class='grand-total'>${sOB}</td><td class='grand-total'>${calcGr(sOB,sMM)}</td></tr>`;
                         } else {
-                            // PT/GAME Grade Display Fix
-                            html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${calcGr(o1,m1)}</td><td>${calcGr(o1,m1)}</td><td>-</td><td>${calcGr(o2,m2)}</td><td>${calcGr(o2,m2)}</td><td>-</td><td>${calcGr(o3,m3)}</td><td>${calcGr(o3,m3)}</td><td>-</td><td>${calcGr(o4,m4)}</td><td>${calcGr(o4,m4)}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
+                            // PT/GAME Grade Logic Updated
+                            let g1=calcGr(o1,m1), g2=calcGr(o2,m2), g3=calcGr(o3,m3), g4=calcGr(o4,m4);
+                            html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
                         }
                     });
 
@@ -195,7 +192,7 @@
                     document.getElementById("rStat").innerText = perc >= 33 ? "PASSED" : "FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
                     window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
-                } else { alert("Record not found! Please check Admission No and Class."); }
+                } else { alert("Record not found!"); }
             } catch(e) { alert("Error connecting to sheet!"); }
         }
     </script>
