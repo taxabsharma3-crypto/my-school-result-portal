@@ -10,24 +10,39 @@
         .search-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 8px solid #1a73e8; }
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
         .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
+        
+        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; position: relative; }
+        
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
-        .st-photo { width: 125px; height: 150px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; overflow: hidden; }
-        .st-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .st-photo { width: 120px; height: 140px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #fdfdfd; font-size: 12px; }
+
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; border: 1px solid #d2e3fc; padding: 15px; background: #f8fbff; font-size: 14px; }
+        .info-grid div { line-height: 1.6; }
+
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
         .marks-table th, .marks-table td { border: 1px solid #1a73e8; padding: 6px; }
         .bg-head { background: #e8f0fe; color: #1a73e8; font-weight: bold; }
         .sub-name { text-align: left !important; padding-left: 10px !important; font-weight: bold; }
         .total-row { background: #d2e3fc; font-weight: bold; font-size: 13px; color: #1557b0; }
+
         .final-summary { margin-top: 20px; display: flex; justify-content: space-around; border: 2px solid #1a73e8; padding: 15px; font-weight: bold; background: #f8fbff; font-size: 16px; color: #1557b0; }
-        @media print { .search-card, .admin-box, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
+        
+        /* Signature Section */
+        .sig-container { margin-top: 50px; display: flex; justify-content: space-between; text-align: center; }
+        .sig-box { width: 200px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; font-size: 14px; color: #333; }
+
+        @media print { 
+            .search-card, .admin-box, .print-btn { display: none; } 
+            body { background: white; padding: 0; }
+            #marksheetFull { border: none; box-shadow: none; width: 100%; padding: 20px; } 
+        }
     </style>
 </head>
 <body>
 
     <div class="admin-box">
-        <strong style="color: #856404;">ADMIN CONTROL: Result Switch</strong><br>
-        <select id="activeClassControl" style="width: 70%; padding: 5px; margin-top: 5px; border-color: #856404;">
+        <strong>ADMIN CONTROL: Result Switch</strong><br>
+        <select id="activeClassControl">
             <option value="ALL">Sabka Result Open Karein (All)</option>
             <option value="8">Class 8</option>
             <option value="7">Class 7</option>
@@ -37,13 +52,11 @@
     </div>
 
     <div class="search-card">
-        <h2 style="color:#1a73e8; margin:0; font-size: 22px;">BLUE BELLS CONVENT SCHOOL</h2>
+        <h2 style="color:#1a73e8; margin-bottom:15px;">BBCS RESULT PORTAL</h2>
         <select id="studentClassSelect">
             <option value="">-- Choose Your Class --</option>
-            <option value="8">Class 8</option>
-            <option value="7">Class 7</option>
-            <option value="6">Class 6</option>
-            <option value="5">Class 5</option>
+            <option value="8">Class 8</option><option value="7">Class 7</option>
+            <option value="6">Class 6</option><option value="5">Class 5</option>
         </select>
         <input type="text" id="admInput" placeholder="Enter Admission No.">
         <button class="btn-search" onclick="findResult()">Show Marksheet</button>
@@ -51,17 +64,27 @@
 
     <div id="marksheetFull">
         <div class="header-main">
-            <img src="https://via.placeholder.com/110/1a73e8/ffffff?text=BBCS" style="width:110px;">
+            <img src="https://via.placeholder.com/110/1a73e8/ffffff?text=BBCS" style="width:100px;">
             <div style="text-align:center;">
-                <h1 style="margin:0; font-size: 32px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
-                <p style="margin:5px 0; font-weight: 600;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
+                <h1 style="margin:0; font-size: 28px; color: #1a73e8;">BLUE BELLS CONVENT SCHOOL</h1>
+                <p style="margin:5px 0; font-weight: bold;">ANNUAL PROGRESS REPORT CARD (2025-26)</p>
             </div>
-            <div class="st-photo" id="photoArea">PHOTO</div>
+            <div class="st-photo">PHOTO</div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 15px; border: 1px solid #d2e3fc; padding: 10px; background: #f8fbff;">
-            <div><strong>Student Name:</strong> <span id="sName" style="text-transform: uppercase; color: #1557b0;"></span><br><strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span></div>
-            <div style="text-align:right;"><strong>Adm No:</strong> <span id="sAdm" style="color: #1557b0;"></span> | <strong>Class:</strong> <span id="sClass"></span><br><strong>Reg No:</strong> <span id="sReg"></span></div>
+        <div class="info-grid">
+            <div>
+                <strong>Student Name:</strong> <span id="sName" style="text-transform: uppercase;"></span><br>
+                <strong>Father's Name:</strong> <span id="sFather" style="text-transform: uppercase;"></span><br>
+                <strong>Mother's Name:</strong> <span id="sMother" style="text-transform: uppercase;"></span><br>
+                <strong>Address:</strong> <span id="sAddr"></span>
+            </div>
+            <div style="text-align: right;">
+                <strong>Adm No:</strong> <span id="sAdm"></span> | <strong>Class:</strong> <span id="sClass"></span><br>
+                <strong>Reg No:</strong> <span id="sReg"></span><br>
+                <strong>Date of Birth:</strong> <span id="sDOB"></span><br>
+                <strong>Attendance:</strong> <span id="resAtten"></span>
+            </div>
         </div>
 
         <table class="marks-table">
@@ -78,16 +101,31 @@
 
         <div class="final-summary">
             <div>PERCENTAGE: <span id="resPerc"></span>%</div>
-            <div>GRADE: <span id="resGrade"></span></div>
-            <div>STATUS: <span id="resStatus"></span></div>
-            <div>ATTENDANCE: <span id="resAtten"></span></div>
+            <div>OVERALL GRADE: <span id="resGrade"></span></div>
+            <div>RESULT STATUS: <span id="resStatus"></span></div>
         </div>
 
-        <div style="text-align: center; margin-top: 40px;"><button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:12px 30px; border:none; border-radius:6px; cursor:pointer; font-weight: bold;">Download Marksheet</button></div>
+        <div class="sig-container">
+            <div class="sig-box">Parent's Signature</div>
+            <div class="sig-box">Class Teacher's Signature</div>
+            <div class="sig-box">Principal Signature</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="window.print()" class="print-btn" style="background:#28a745; color:white; padding:10px 25px; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Download PDF</button>
+        </div>
     </div>
 
     <script>
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
+
+        function getGr(obt, mm) {
+            let o = parseFloat(obt); let m = parseFloat(mm);
+            if(!m || m <= 0 || isNaN(o)) return "-";
+            let p = (o/m)*100;
+            if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
+            if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
+        }
 
         async function findResult() {
             const selectedClass = document.getElementById("studentClassSelect").value;
@@ -99,29 +137,26 @@
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
-                const rows = data.split("\n").map(r => r.split(","));
+                const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().includes(selectedClass));
+                
                 if(student) showMarksheet(student);
                 else alert("Record match nahi hua!");
             } catch (e) { alert("Data error!"); }
         }
 
-        function getGr(obt, mm) {
-            if(!mm || mm <= 0) return "-";
-            let p = (obt/mm)*100;
-            if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
-            if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
-        }
-
         function showMarksheet(d) {
             document.getElementById("sName").innerText = d[1];
             document.getElementById("sFather").innerText = d[2];
+            document.getElementById("sMother").innerText = d[3] || "N/A";
+            document.getElementById("sDOB").innerText = d[4] || "N/A";
+            document.getElementById("sAddr").innerText = d[6] || "N/A";
             document.getElementById("sAdm").innerText = d[0];
-            document.getElementById("sReg").innerText = d[7];
+            document.getElementById("sReg").innerText = d[7] || "N/A";
             document.getElementById("sClass").innerText = d[5];
 
             let attVal = d[10]?.trim();
-            if(!attVal || attVal.includes("202")) { attVal = d[11]?.trim(); }
+            if(!attVal || attVal.includes("202")) attVal = d[11]?.trim();
             document.getElementById("resAtten").innerText = attVal || "N/A";
 
             const subjects = [
@@ -134,38 +169,25 @@
                 {n:"G.K.", f1m:46, f1o:47, hym:104, hyo:105, f2m:133, f2o:134, anm:191, ano:192},
                 {n:"SANSKRIT", f1m:48, f1o:49, hym:106, hyo:107, f2m:135, f2o:136, anm:193, ano:194},
                 {n:"ART", f1m:50, f1o:51, hym:108, hyo:109, f2m:137, f2o:138, anm:195, ano:196},
-                {n:"PT/GAME", f1m:52, f1o:53, hym:110, hyo:111, f2m:139, f2o:140, anm:197, ano:198, type:"gradeOnly"}
+                {n:"PT/GAME", f1m:52, f1o:53, hym:110, hyo:111, f2m:139, f2o:140, anm:197, ano:198, isPT: true}
             ];
 
             let html = ""; let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
 
             subjects.forEach(s => {
-                function getFix(mIdx, oIdx) {
-                    let m_raw = d[mIdx]?.trim() || "";
-                    let o_raw = d[oIdx]?.trim() || "";
-                    let m = parseFloat(m_raw) || 0;
-                    let o = parseFloat(o_raw) || 0;
-                    if((m === 0 && o_raw.length > 0) || (o > m && m > 0)) {
-                        m = parseFloat(d[oIdx]?.trim()) || 0; 
-                        o = parseFloat(d[oIdx+1]?.trim()) || 0;
-                        return [m, o, d[oIdx+1]?.trim()];
-                    }
-                    return [m, o, o_raw];
-                }
+                let m1 = parseFloat(d[s.f1m]) || 0; let o1 = parseFloat(d[s.f1o]) || 0;
+                let m2 = parseFloat(d[s.hym]) || 0; let o2 = parseFloat(d[s.hyo]) || 0;
+                let m3 = parseFloat(d[s.f2m]) || 0; let o3 = parseFloat(d[s.f2o]) || 0;
+                let m4 = parseFloat(d[s.anm]) || 0; let o4 = parseFloat(d[s.ano]) || 0;
 
-                let [m1, o1, r1] = getFix(s.f1m, s.f1o);
-                let [m2, o2, r2] = getFix(s.hym, s.hyo);
-                let [m3, o3, r3] = getFix(s.f2m, s.f2o);
-                let [m4, o4, r4] = getFix(s.anm, s.ano);
-
-                if(s.type !== "gradeOnly") {
-                    tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
-                }
-
-                let rowMM = m1+m2+m3+m4, rowObt = o1+o2+o3+o4;
-                if(s.type === "gradeOnly") {
-                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${r1||"-"}</td><td>${r1||"-"}</td><td>-</td><td>${r2||"-"}</td><td>${r2||"-"}</td><td>-</td><td>${r3||"-"}</td><td>${r3||"-"}</td><td>-</td><td>${r4||"-"}</td><td>${r4||"-"}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
+                // PT/GAME Logic (Sirf Grade dikhayega)
+                if(s.isPT){
+                    let g1 = d[s.f1o] || "-"; let g2 = d[s.hyo] || "-";
+                    let g3 = d[s.f2o] || "-"; let g4 = d[s.ano] || "-";
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
                 } else {
+                    tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
+                    let rowMM = m1+m2+m3+m4; let rowObt = o1+o2+o3+o4;
                     html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rowMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rowMM)}</td></tr>`;
                 }
             });
@@ -173,8 +195,10 @@
             document.getElementById("marksBody").innerHTML = html;
             let totalMM = tF1m+tHYm+tF2m+tANm, totalObt = tF1o+tHYo+tF2o+tANo;
             document.getElementById("totalRow").innerHTML = `<tr class="total-row"><td class="sub-name">TOTAL</td><td>${tF1m}</td><td>${tF1o}</td><td>-</td><td>${tHYm}</td><td>${tHYo}</td><td>-</td><td>${tF2m}</td><td>${tF2o}</td><td>-</td><td>${tANm}</td><td>${tANo}</td><td>-</td><td>${totalMM}</td><td>${totalObt}</td><td>-</td></tr>`;
+            
             let p = totalMM > 0 ? ((totalObt/totalMM)*100).toFixed(2) : 0;
-            document.getElementById("resPerc").innerText = p; document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
+            document.getElementById("resPerc").innerText = p;
+            document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
             document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
             document.getElementById("marksheetFull").style.display = "block";
