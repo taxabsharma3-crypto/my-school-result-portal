@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal 2026</title>
+    <title>BBCS Official Result Portal - Final Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -16,24 +16,25 @@
         .info-row { display: flex; width: 100%; border-bottom: 1px solid #dce4f2; }
         .info-box { width: 50%; padding: 12px 15px; font-size: 16px; border-right: 1px solid #dce4f2; box-sizing: border-box; }
         .info-box b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
-        .address-full-row { width: 100%; background: #fff; padding: 15px; border-top: 2px solid var(--main); display: block; min-height: 60px; height: auto; box-sizing: border-box; }
+        .address-full-row { width: 100%; background: #fff; padding: 15px; border-top: 2px solid var(--main); display: block; height: auto; min-height: 60px; box-sizing: border-box; }
         .address-full-row b { color: var(--dark); font-size: 16px; margin-right: 10px; float: left; width: 140px; }
-        .addr-content { display: block; margin-left: 150px; font-size: 16px; color: #333; line-height: 1.6; word-wrap: break-word; }
+        .addr-content { display: block; margin-left: 150px; font-size: 16px; color: #333; line-height: 1.6; word-wrap: break-word; text-align: left; }
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; }
         th, td { border: 1px solid var(--main); padding: 10px; }
         .thead-main { background: var(--main); color: white; font-weight: bold; }
         .thead-sub { background: #f1f6ff; color: var(--main); font-weight: bold; }
-        .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; }
+        .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; background: #fafafa; }
         .grand-total-cell { background: #d2e3fc; font-weight: bold; color: var(--dark); }
         .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 20px; border-radius: 12px; font-size: 22px; font-weight: bold; }
         @media print { .search-container, .btn-print { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 10px; } }
     </style>
 </head>
 <body>
+
     <div class="search-container">
         <h2>BBCS RESULT PORTAL</h2>
         <select id="selClass">
-            <option value="">-- अपनी क्लास चुनें --</option>
+            <option value="">-- Class चुनें --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
             <option value="LKG">LKG</option><option value="UKG">UKG</option>
             <option value="1">Class 1</option><option value="2">Class 2</option>
@@ -86,7 +87,7 @@
             <span>STATUS: <span id="rStat"></span></span>
         </div>
         <div style="margin-top:20px; display:flex; justify-content:space-between; font-weight:bold;">
-            <span>Release Date: 30.03.2026</span>
+            <span>Result Date: 30.03.2026</span>
             <span>Attendance: <span id="rAtt"></span></span>
         </div>
         <div style="display:flex; justify-content:space-between; margin-top:100px;">
@@ -94,11 +95,11 @@
             <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Class Teacher</div>
             <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Principal Signature</div>
         </div>
-        <center><button class="btn-view" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Print / PDF</button></center>
+        <center><button class="btn-view" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Download / Print PDF</button></center>
     </div>
 
     <script>
-        const CSV_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         function getGr(obt, mm) {
             let o = parseFloat(obt);
@@ -113,10 +114,10 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("Details bhariye!");
+            if(!adm || !cls) return alert("Bhai, Details bhariye!");
 
             try {
-                const res = await fetch(CSV_LINK + "&v=" + Date.now());
+                const res = await fetch(CSV_URL + "&v=" + Date.now());
                 const data = await res.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0] && r[0].trim() == adm && r[5].toUpperCase().includes(cls.toUpperCase()));
@@ -131,6 +132,8 @@
                     document.getElementById("rMom").innerText = student[3];
                     document.getElementById("rDOB").innerText = student[4];
                     document.getElementById("rCls").innerText = student[5];
+                    
+                    // Address Hard-Fix for 137 and others
                     document.getElementById("rAddr").innerText = (shift === 1) ? student[7] : student[6];
                     document.getElementById("rAtt").innerText = (shift === 1) ? student[11] : student[10];
 
@@ -154,11 +157,14 @@
                         let m3 = student[s.c[4]+shift], o3 = student[s.c[5]+shift];
                         let m4 = student[s.c[6]+shift], o4 = student[s.c[7]+shift];
 
-                        // MM/Obt Swap Fix
-                        let d1 = (parseFloat(o1) > parseFloat(m1)) ? {mm:o1, obt:m1} : {mm:m1, obt:o1};
-                        let d2 = (parseFloat(o2) > parseFloat(m2)) ? {mm:o2, obt:m2} : {mm:m2, obt:o2};
-                        let d3 = (parseFloat(o3) > parseFloat(m3)) ? {mm:o3, obt:m3} : {mm:m3, obt:o3};
-                        let d4 = (parseFloat(o4) > parseFloat(m4)) ? {mm:o4, obt:m4} : {mm:m4, obt:o4};
+                        // POWERFUL SWAP FIX: If Obtained > MM, then swap them.
+                        function smartFix(m, o) {
+                            let valM = parseFloat(m)||0, valO = parseFloat(o)||0;
+                            if(valO > valM && valM > 0) return {mm:valO, obt:valM};
+                            return {mm:m, obt:o};
+                        }
+
+                        let d1 = smartFix(m1,o1), d2 = smartFix(m2,o2), d3 = smartFix(m3,o3), d4 = smartFix(m4,o4);
                         
                         let rMM = (parseFloat(d1.mm)||0)+(parseFloat(d2.mm)||0)+(parseFloat(d3.mm)||0)+(parseFloat(d4.mm)||0);
                         let rOB = (parseFloat(d1.obt)||0)+(parseFloat(d2.obt)||0)+(parseFloat(d3.obt)||0)+(parseFloat(d4.obt)||0);
@@ -175,12 +181,13 @@
                     });
 
                     document.getElementById("mBody").innerHTML = html;
-                    document.getElementById("mFoot").innerHTML = `<tr class='grand-total-cell'><td colspan='13' style='text-align:right; padding-right:20px'>OVERALL GRAND TOTAL</td><td>${tMM}</td><td>${tOB}</td><td>${getGr(tOB,tMM)}</td></tr>`;
+                    document.getElementById("mFoot").innerHTML = `<tr class='grand-total-cell'><td colspan='13' style='text-align:right; padding-right:20px'>OVERALL TOTAL</td><td>${tMM}</td><td>${tOB}</td><td>${getGr(tOB,tMM)}</td></tr>`;
                     let p = ((tOB/tMM)*100).toFixed(2);
                     document.getElementById("rPer").innerText = p;
                     document.getElementById("rGrd").innerText = getGr(tOB,tMM);
                     document.getElementById("rStat").innerText = p >= 33 ? "PASSED" : "FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
+                    window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
                 } else { alert("Record not found!"); }
             } catch(e) { alert("Error connecting to sheet!"); }
         }
