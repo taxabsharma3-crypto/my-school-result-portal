@@ -11,7 +11,6 @@
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
 
-        /* Marksheet Container */
         #marksheetFull { display: none; width: 1100px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); margin-bottom: 50px; }
         
         #marksheetFull::after {
@@ -23,24 +22,21 @@
         .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
         .header h1 { margin: 0; font-size: 42px; color: var(--main); }
 
-        /* STUDENT INFO - ADDRESS FULL FIX */
         .info-wrapper { border: 2px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); width: 100%; }
         .info-row { display: flex; width: 100%; border-bottom: 1px solid #dce4f2; }
-        .info-box { width: 50%; padding: 12px 15px; font-size: 16px; border-right: 1px solid #dce4f2; }
+        .info-box { width: 50%; padding: 12px 15px; font-size: 16px; border-right: 1px solid #dce4f2; box-sizing: border-box; }
         .info-box:last-child { border-right: none; }
         .info-box b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
 
-        /* ADDRESS DEDICATED ROW - NO CUTTING */
+        /* ADDRESS BOX - GUARANTEED FULL WIDTH & NO CUTTING */
         .address-full-row { 
             width: 100%; 
             background: #fff; 
             padding: 15px; 
             border-top: 2px solid var(--main); 
             display: block !important; 
-            height: auto !important; 
-            min-height: 50px; 
+            min-height: 60px; 
             box-sizing: border-box;
-            word-wrap: break-word !important;
             overflow: visible !important;
         }
         .address-full-row b { color: var(--dark); font-size: 16px; margin-right: 10px; float: left; width: 140px; }
@@ -52,6 +48,7 @@
             font-weight: 500; 
             line-height: 1.6; 
             white-space: normal !important; 
+            word-wrap: break-word !important;
             text-align: left;
         }
 
@@ -69,7 +66,6 @@
         @media print {
             .search-container, .btn-print { display: none; }
             #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 10px; }
-            .address-full-row { background: white !important; }
         }
     </style>
 </head>
@@ -130,7 +126,7 @@
 
         <div class="result-bar">
             <span>PERCENTAGE: <span id="rPer"></span>%</span>
-            <span>OVERALL GRADE: <span id="rGrd"></span></span>
+            <span>GRADE: <span id="rGrd"></span></span>
             <span>STATUS: <span id="rStat"></span></span>
         </div>
 
@@ -145,7 +141,7 @@
             <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download PDF Result</button></center>
+        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download PDF</button></center>
     </div>
 
     <script>
@@ -154,7 +150,6 @@
         function getGr(obt, mm) {
             let o = parseFloat(obt);
             let m = parseFloat(mm);
-            // Agar pehle se Grade (A, B) hai toh wahi dikhao
             if (isNaN(o) && (obt+"").length > 0) return obt;
             if (!m || m <= 0 || isNaN(o)) return "-";
             let p = (o/m)*100;
@@ -165,7 +160,7 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("Bhai, details bhariye!");
+            if(!adm || !cls) return alert("Details bhariye!");
 
             try {
                 const res = await fetch(CSV_LINK + "&v=" + Date.now());
@@ -175,8 +170,8 @@
 
                 if(student) {
                     const admVal = parseInt(student[0]);
-                    const shift = (admVal >= 60) ? 1 : 0;
                     
+                    // Fixed Column Mapping (A=0, B=1, C=2, D=3, E=4, F=5, G=6)
                     document.getElementById("rAdm").innerText = student[0];
                     document.getElementById("rName").innerText = student[1];
                     document.getElementById("rDad").innerText = student[2];
@@ -184,8 +179,10 @@
                     document.getElementById("rDOB").innerText = student[4] || "N/A";
                     document.getElementById("rCls").innerText = student[5];
                     
-                    // --- ADDRESS COLUMN FIX ---
-                    document.getElementById("rAddr").innerText = shift ? student[7] : student[6];
+                    // Address Fix: Har haal mein Column 6 (G) se uthayega
+                    document.getElementById("rAddr").innerText = student[6] || "N/A";
+
+                    const shift = (admVal >= 60) ? 1 : 0;
                     document.getElementById("rAtt").innerText = shift ? student[11] : student[10];
 
                     const subjects = [
@@ -216,7 +213,6 @@
                             tMM+=sMM; tOB+=sOB;
                             html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${g1}</td><td>${m2}</td><td>${o2}</td><td>${g2}</td><td>${m3}</td><td>${o3}</td><td>${g3}</td><td>${m4}</td><td>${o4}</td><td>${g4}</td><td class='grand-total-cell'>${sMM}</td><td class='grand-total-cell'>${sOB}</td><td class='grand-total-cell'>${getGr(sOB,sMM)}</td></tr>`;
                         } else {
-                            // PT Row WITH GRADES
                             html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${o1||'-'}</td><td>${g1}</td><td>-</td><td>${o2||'-'}</td><td>${g2}</td><td>-</td><td>${o3||'-'}</td><td>${g3}</td><td>-</td><td>${o4||'-'}</td><td>${g4}</td><td class='grand-total-cell'>-</td><td class='grand-total-cell'>-</td><td class='grand-total-cell'>-</td></tr>`;
                         }
                     });
@@ -228,9 +224,8 @@
                     document.getElementById("rGrd").innerText = getGr(tOB,tMM);
                     document.getElementById("rStat").innerText = perc >= 33 ? "PASSED" : "FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
-                    window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
-                } else { alert("Record not found! Admission No aur Class sahi se bhariye."); }
-            } catch(e) { alert("Sheet se connect nahi ho pa raha!"); }
+                } else { alert("Record not found!"); }
+            } catch(e) { alert("Sheet Connection Error!"); }
         }
     </script>
 </body>
