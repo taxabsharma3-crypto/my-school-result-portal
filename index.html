@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Final Fix</title>
+    <title>BBCS Official Result Portal - 100% Fixed</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -43,7 +43,7 @@
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
         <input type="text" id="inpAdm" placeholder="Admission No. यहाँ लिखें">
-        <button class="btn-view" onclick="findResult()">रिजल्ट देखें</button>
+        <button class="btn-view" onclick="findResult()">RESULT DEKHEIN</button>
     </div>
 
     <div id="marksheetFull">
@@ -54,7 +54,7 @@
         <div class="info-wrapper">
             <div class="info-row">
                 <div class="info-box"><b>Student Name:</b> <span id="rName" style="text-transform:uppercase"></span></div>
-                <div class="info-box"><b>Admission No:</b> <span id="rAdm"></span></div>
+                <div class="info-box"><b>Admission No:</b> <span id="rAdm" style="font-weight:bold;"></span></div>
             </div>
             <div class="info-row">
                 <div class="info-box"><b>Mother's Name:</b> <span id="rMom" style="text-transform:uppercase"></span></div>
@@ -87,7 +87,7 @@
             <span>STATUS: <span id="rStat"></span></span>
         </div>
         <div style="margin-top:20px; display:flex; justify-content:space-between; font-weight:bold;">
-            <span>Result Date: 30.03.2026</span>
+            <span>Release Date: 30.03.2026</span>
             <span>Attendance: <span id="rAtt"></span></span>
         </div>
         <div style="display:flex; justify-content:space-between; margin-top:100px;">
@@ -99,7 +99,7 @@
     </div>
 
     <script>
-        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
+        const CSV_LINK = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
         function getGr(obt, mm) {
             let o = parseFloat(obt);
@@ -117,14 +117,14 @@
             if(!adm || !cls) return alert("Bhai, Details bhariye!");
 
             try {
-                const res = await fetch(CSV_URL + "&v=" + Date.now());
+                const res = await fetch(CSV_LINK + "&v=" + Date.now());
                 const data = await res.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0] && r[0].trim() == adm && r[5].toUpperCase().includes(cls.toUpperCase()));
 
                 if(student) {
                     const admVal = parseInt(student[0]);
-                    const shift = (admVal >= 60) ? 1 : 0;
+                    const s = (admVal >= 60) ? 1 : 0; 
                     
                     document.getElementById("rAdm").innerText = student[0];
                     document.getElementById("rName").innerText = student[1];
@@ -133,9 +133,14 @@
                     document.getElementById("rDOB").innerText = student[4];
                     document.getElementById("rCls").innerText = student[5];
                     
-                    // Address Hard-Fix for 137 and others
-                    document.getElementById("rAddr").innerText = (shift === 1) ? student[7] : student[6];
-                    document.getElementById("rAtt").innerText = (shift === 1) ? student[11] : student[10];
+                    // --- THE ULTIMATE ADDRESS FIX ---
+                    // Agar adm 60+ hai aur student[7] mein galti se admission no aa raha hai,
+                    // toh hum column 8 check karenge.
+                    let finalAddr = (s === 1) ? student[7] : student[6];
+                    if(s === 1 && finalAddr == adm) finalAddr = student[8];
+                    document.getElementById("rAddr").innerText = finalAddr || "N/A";
+
+                    document.getElementById("rAtt").innerText = (s === 1) ? student[11] : student[10];
 
                     const subjects = [
                         {n:"HINDI", c:[34,35, 92,93, 121,122, 179,180]},
@@ -151,31 +156,31 @@
                     ];
 
                     let html = "", tMM=0, tOB=0;
-                    subjects.forEach((s) => {
-                        let m1 = student[s.c[0]+shift], o1 = student[s.c[1]+shift];
-                        let m2 = student[s.c[2]+shift], o2 = student[s.c[3]+shift];
-                        let m3 = student[s.c[4]+shift], o3 = student[s.c[5]+shift];
-                        let m4 = student[s.c[6]+shift], o4 = student[s.c[7]+shift];
+                    subjects.forEach((sb) => {
+                        let m1 = student[sb.c[0]+s], o1 = student[sb.c[1]+s];
+                        let m2 = student[sb.c[2]+s], o2 = student[sb.c[3]+s];
+                        let m3 = student[sb.c[4]+s], o3 = student[sb.c[5]+s];
+                        let m4 = student[sb.c[6]+s], o4 = student[sb.c[7]+s];
 
-                        // POWERFUL SWAP FIX: If Obtained > MM, then swap them.
+                        // --- SWAP FIX (MM & OBT SWAP) ---
                         function smartFix(m, o) {
                             let valM = parseFloat(m)||0, valO = parseFloat(o)||0;
                             if(valO > valM && valM > 0) return {mm:valO, obt:valM};
                             return {mm:m, obt:o};
                         }
 
-                        let d1 = smartFix(m1,o1), d2 = smartFix(m2,o2), d3 = smartFix(m3,o3), d4 = smartFix(m4,o4);
+                        let f1=smartFix(m1,o1), f2=smartFix(m2,o2), f3=smartFix(m3,o3), f4=smartFix(m4,o4);
                         
-                        let rMM = (parseFloat(d1.mm)||0)+(parseFloat(d2.mm)||0)+(parseFloat(d3.mm)||0)+(parseFloat(d4.mm)||0);
-                        let rOB = (parseFloat(d1.obt)||0)+(parseFloat(d2.obt)||0)+(parseFloat(d3.obt)||0)+(parseFloat(d4.obt)||0);
+                        let rMM = (parseFloat(f1.mm)||0)+(parseFloat(f2.mm)||0)+(parseFloat(f3.mm)||0)+(parseFloat(f4.mm)||0);
+                        let rOB = (parseFloat(f1.obt)||0)+(parseFloat(f2.obt)||0)+(parseFloat(f3.obt)||0)+(parseFloat(f4.obt)||0);
                         
                         tMM += rMM; tOB += rOB;
 
-                        html += `<tr><td class='sub-name'>${s.n}</td>
-                            <td>${d1.mm}</td><td>${d1.obt}</td><td>${getGr(d1.obt,d1.mm)}</td>
-                            <td>${d2.mm}</td><td>${d2.obt}</td><td>${getGr(d2.obt,d2.mm)}</td>
-                            <td>${d3.mm}</td><td>${d3.obt}</td><td>${getGr(d3.obt,d3.mm)}</td>
-                            <td>${d4.mm}</td><td>${d4.obt}</td><td>${getGr(d4.obt,d4.mm)}</td>
+                        html += `<tr><td class='sub-name'>${sb.n}</td>
+                            <td>${f1.mm}</td><td>${f1.obt}</td><td>${getGr(f1.obt,f1.mm)}</td>
+                            <td>${f2.mm}</td><td>${f2.obt}</td><td>${getGr(f2.obt,f2.mm)}</td>
+                            <td>${f3.mm}</td><td>${f3.obt}</td><td>${getGr(f3.obt,f3.mm)}</td>
+                            <td>${f4.mm}</td><td>${f4.obt}</td><td>${getGr(f4.obt,f4.mm)}</td>
                             <td class='grand-total-cell'>${rMM}</td><td class='grand-total-cell'>${rOB}</td>
                             <td class='grand-total-cell'>${getGr(rOB,rMM)}</td></tr>`;
                     });
@@ -187,9 +192,8 @@
                     document.getElementById("rGrd").innerText = getGr(tOB,tMM);
                     document.getElementById("rStat").innerText = p >= 33 ? "PASSED" : "FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
-                    window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
                 } else { alert("Record not found!"); }
-            } catch(e) { alert("Error connecting to sheet!"); }
+            } catch(e) { alert("Sheet Connection Error!"); }
         }
     </script>
 </body>
