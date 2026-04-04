@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blue Bells Convent School - Result Portal 2026</title>
+    <title>Blue Bells Convent School - Result Portal</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef2f7; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .admin-box { background: #fff3cd; border: 2px dashed #856404; padding: 15px; border-radius: 10px; margin-bottom: 20px; width: 100%; max-width: 450px; text-align: center; }
@@ -11,10 +11,6 @@
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
         .btn-search { background: #1a73e8; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
         
-        /* Loading Spinner */
-        #loader { display: none; margin: 10px; border: 4px solid #f3f3f3; border-top: 4px solid #1a73e8; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         #marksheetFull { display: none; width: 1000px; background: white; padding: 40px; border: 2px solid #1a73e8; box-shadow: 0 0 30px rgba(0,0,0,0.15); margin-top: 20px; color: #000; }
         .header-main { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px double #1a73e8; padding-bottom: 15px; margin-bottom: 20px; }
         .st-photo { width: 120px; height: 140px; border: 2px solid #1a73e8; display: flex; align-items: center; justify-content: center; background: #f9f9f9; overflow: hidden; }
@@ -30,7 +26,7 @@
         .sig-container { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 20px; }
         .sig-box { text-align: center; width: 200px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; font-size: 14px; }
 
-        @media print { .search-card, .admin-box, .print-btn, #loader { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
+        @media print { .search-card, .admin-box, .print-btn { display: none; } #marksheetFull { border: none; box-shadow: none; width: 100%; } }
     </style>
 </head>
 <body>
@@ -50,7 +46,6 @@
             <option value="8">Class 8</option><option value="7">Class 7</option><option value="6">Class 6</option><option value="5">Class 5</option>
         </select>
         <input type="text" id="admInput" placeholder="Enter Admission No.">
-        <div id="loader"></div>
         <button class="btn-search" id="searchBtn" onclick="findResult()">GET RESULT</button>
     </div>
 
@@ -100,50 +95,38 @@
     <script>
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
-        
-          async function findResult() {
-    const sClass = document.getElementById("studentClassSelect").value;
-    const admNo = document.getElementById("admInput").value.trim();
-    const activeAdmin = document.getElementById("activeClassControl").value;
-    const loader = document.getElementById("loader");
-    const btn = document.getElementById("searchBtn");
+        async function findResult() {
+            const sClass = document.getElementById("studentClassSelect").value;
+            const admNo = document.getElementById("admInput").value.trim();
+            const activeAdmin = document.getElementById("activeClassControl").value;
+            const btn = document.getElementById("searchBtn");
 
-    if(!sClass || !admNo) return alert("Please fill details!");
-    if(activeAdmin !== "ALL" && sClass !== activeAdmin) return alert("Result closed!");
+            if(!sClass || !admNo) return alert("Please fill details!");
+            if(activeAdmin !== "ALL" && sClass !== activeAdmin) return alert("Result closed!");
 
-    loader.style.display = "inline-block";
-    btn.disabled = true;
+            btn.innerText = "Loading...";
+            btn.disabled = true;
 
-    try {
-        // Adding a completely unique ID to force fresh data from Google
-        const fetchUrl = SHEET_URL + "&cachebuster=" + Math.random();
-        const resp = await fetch(fetchUrl, { cache: "no-store" });
-        
-        if(!resp.ok) throw new Error("Network issue");
-
-        const data = await resp.text();
-        
-        // Agar data mein HTML tag hai, matlab sheet CSV ki jagah page ban gayi hai
-        if(data.includes("<!DOCTYPE html>")) {
-            alert("Setting Error: Please Publish Sheet as 'CSV' instead of 'Web Page'");
-            return;
-        }
-
-        const rows = data.split(/\r?\n/).map(r => r.split(","));
-        const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(sClass));
-        
-        if(student) {
-            showMarksheet(student);
-        } else {
-            alert("Record Not Found! Sheet mein check karein: Adm No " + admNo + " ke samne Class sahi hai?");
-        }
-    } catch (e) { 
-        alert("Internet Slow hai ya Sheet Publish nahi hui hai. Ek baar refresh karein."); 
-    } finally {
-        loader.style.display = "none";
-        btn.disabled = false;
-    }
-}
+            try {
+                // Use a Proxy URL to bypass Browser blocking (CORS)
+                const proxy = "https://api.allorigins.win/get?url=" + encodeURIComponent(SHEET_URL + "&cb=" + new Date().getTime());
+                const resp = await fetch(proxy);
+                const json = await resp.json();
+                const data = json.contents;
+                
+                const rows = data.split(/\r?\n/).map(r => r.split(","));
+                const student = rows.find(r => r[0] && r[0].trim() === admNo && r[5]?.trim().includes(sClass));
+                
+                if(student) {
+                    showMarksheet(student);
+                } else {
+                    alert("Record Not Found! Please check Admission No and Class.");
+                }
+            } catch (e) { 
+                alert("Error: Internet Slow hai. Ek baar page refresh karein."); 
+            } finally {
+                btn.innerText = "GET RESULT";
+                btn.disabled = false;
             }
         }
 
@@ -168,8 +151,6 @@
             if(pLink) {
                 let id = pLink.includes("id=") ? pLink.split("id=")[1].split("&")[0] : (pLink.includes("/d/") ? pLink.split("/d/")[1].split("/")[0] : pLink);
                 document.getElementById("photoArea").innerHTML = `<img src="https://drive.google.com/uc?export=view&id=${id}">`;
-            } else {
-                document.getElementById("photoArea").innerText = "NO PHOTO";
             }
 
             const subjects = [
@@ -195,7 +176,6 @@
                 let m3 = parseFloat(d[s.f2+off])||0, o3 = parseFloat(d[s.f2+off+1])||0;
                 let m4 = parseFloat(d[s.an+off])||0, o4 = parseFloat(d[s.an+off+1])||0;
 
-                // Auto swap fix
                 if (o1 > m1 && m1 > 0) { let t=m1; m1=o1; o1=t; }
                 if (o2 > m2 && m2 > 0) { let t=m2; m2=o2; o2=t; }
                 if (o3 > m3 && m3 > 0) { let t=m3; m3=o3; o3=t; }
@@ -204,7 +184,7 @@
                 if(s.type !== "grade") {
                     tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                     let rMM = m1+m2+m3+m4, rObt = o1+o2+o3+o4;
-                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rMM}</td><td class="total-row">${rowObt}</td><td class="total-row">${getGr(rowObt,rMM)}</td></tr>`;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="total-row">${rMM}</td><td class="total-row">${rObt}</td><td class="total-row">${getGr(rowObt,rMM)}</td></tr>`;
                 } else {
                     let r1=d[s.f1+off+1] || "-", r2=d[s.hy+off+1] || "-", r3=d[s.f2+off+1] || "-", r4=d[s.an+off+1] || "-";
                     html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${r1}</td><td>${r1}</td><td>-</td><td>${r2}</td><td>${r2}</td><td>-</td><td>${r3}</td><td>${r3}</td><td>-</td><td>${r4}</td><td>${r4}</td><td class="total-row">-</td><td class="total-row">-</td><td class="total-row">-</td></tr>`;
@@ -221,7 +201,6 @@
             document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
             document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
             document.getElementById("marksheetFull").style.display = "block";
-            window.scrollTo(0, document.body.scrollHeight);
         }
     </script>
 </body>
