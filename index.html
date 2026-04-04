@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBCS Result Portal - Final Polished Lite</title>
+    <title>BBCS Result Portal - Session 2025-26</title>
     <style>
         :root { --primary: #2e86c1; --accent: #85c1e9; --lite-blue: #ebf5fb; --border: #d5dbdb; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
@@ -16,42 +16,44 @@
         /* Marksheet Frame */
         #marksheetFull { display: none; width: 1080px; background: white; padding: 40px; border: 1px solid var(--border); position: relative; }
         
-        .header-box { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        .header-box h1 { margin: 0; font-size: 34px; color: var(--primary); letter-spacing: 1px; font-weight: 700; }
-        .report-title { margin-top: 10px; font-weight: 600; color: #5d6d7e; border: 1px solid var(--lite-blue); display: inline-block; padding: 4px 18px; border-radius: 20px; background: var(--lite-blue); font-size: 14px; }
+        /* Header Management */
+        .header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--lite-blue); padding-bottom: 20px; }
+        .header-box h1 { margin: 0; font-size: 38px; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; }
+        .school-meta { font-size: 15px; color: #5d6d7e; margin-top: 8px; font-weight: 600; }
+        .report-title { margin-top: 15px; font-weight: 700; color: #fff; border: none; display: inline-block; padding: 6px 25px; border-radius: 50px; background: var(--primary); font-size: 16px; letter-spacing: 1px; }
 
         /* Student Info Grid */
-        .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--lite-blue); margin-bottom: 25px; background: #fff; }
-        .info-cell { padding: 10px; border: 0.5px solid var(--lite-blue); font-size: 13px; }
-        .info-cell b { color: #7f8c8d; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1.5px solid var(--lite-blue); margin-bottom: 25px; background: #fff; }
+        .info-cell { padding: 12px; border: 0.5px solid var(--lite-blue); font-size: 13px; }
+        .info-cell b { color: #7f8c8d; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px; }
         .info-cell span { font-weight: 600; color: #2c3e50; font-size: 14px; }
 
-        /* Table Design - LITE COLORS ON HEADERS */
+        /* Table Design */
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
         .marks-table th, .marks-table td { border: 1px solid #eef2f6; padding: 10px; text-align: center; }
         
-        /* Lite Blue color on Subject, FA, Half Yearly Headers */
         .thead-main th { background: var(--lite-blue); color: #2e86c1; font-weight: 700; text-transform: uppercase; font-size: 11px; }
         .thead-sub th { background: #fcfdfe; color: #7f8c8d; font-weight: 600; font-size: 10px; }
         
-        .sub-name { text-align: left !important; padding-left: 15px !important; font-weight: 600; color: #34495e; background: #fdfdfd; border-left: 4px solid var(--accent) !important; }
+        .sub-name { text-align: left !important; padding-left: 15px !important; font-weight: 600; color: #34495e; background: #fdfdfd; border-left: 5px solid var(--accent) !important; }
         .grand-total-cell { background: #f4f9fd; font-weight: bold; color: var(--primary); }
 
         /* Summary Wrapper */
-        .summary-wrapper { display: flex; justify-content: space-around; background: var(--lite-blue); padding: 15px; border-radius: 8px; margin-top: 20px; border: 1px solid #d6eaf8; }
+        .summary-wrapper { display: flex; justify-content: space-around; background: #f8fafc; padding: 20px; border-radius: 10px; margin-top: 25px; border: 1px solid #d6eaf8; }
         .sum-item { text-align: center; }
-        .sum-item div { font-size: 10px; color: #5d6d7e; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
-        .sum-item span { font-size: 18px; font-weight: bold; color: #2c3e50; }
+        .sum-item div { font-size: 11px; color: #5d6d7e; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
+        .sum-item span { font-size: 20px; font-weight: bold; color: #2c3e50; }
 
         /* Signatures */
-        .sig-container { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 40px; }
-        .sig-box { text-align: center; width: 200px; border-top: 1px solid var(--border); padding-top: 8px; color: #7f8c8d; font-size: 13px; font-style: italic; }
+        .sig-container { display: flex; justify-content: space-between; margin-top: 90px; padding: 0 40px; }
+        .sig-box { text-align: center; width: 220px; border-top: 2px solid var(--primary); padding-top: 10px; color: #2c3e50; font-weight: 700; font-size: 14px; }
 
         @media print {
             .search-card, .btn-print { display: none; }
             body { padding: 0; background: white; }
             #marksheetFull { display: block !important; border: 1px solid #eee; width: 100%; box-shadow: none; }
             .thead-main th { background: #ebf5fb !important; -webkit-print-color-adjust: exact; }
+            .report-title { background: #2e86c1 !important; color: white !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -70,14 +72,16 @@
             <option value="5">Class 5</option><option value="6">Class 6</option>
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
-        <input type="text" id="admInput" placeholder="Admission No.">
-        <button class="btn-search" onclick="findResult()">रिजल्ट देखें</button>
+        <input type="text" id="admInput" placeholder="Enter Admission No.">
+        <button class="btn-search" onclick="findResult()">SHOW REPORT CARD</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header-box">
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
-            <p>Agra, Uttar Pradesh | Session 2025-26</p>
+            <div class="school-meta">
+                Agra, Uttar Pradesh | UDISE Code: 09XXXXXXXXX | Session: 2025-26
+            </div>
             <div class="report-title">ANNUAL PROGRESS REPORT CARD</div>
         </div>
 
@@ -94,7 +98,7 @@
         <table class="marks-table">
             <thead>
                 <tr class="thead-main">
-                    <th rowspan="2" style="width: 200px;">SUBJECTS</th>
+                    <th rowspan="2" style="width: 200px;">SUBJECT NAME</th>
                     <th colspan="3">FA-I</th>
                     <th colspan="3">HALF YEARLY</th>
                     <th colspan="3">FA-II</th>
@@ -114,19 +118,19 @@
 
         <div class="summary-wrapper">
             <div class="sum-item"><div>Attendance</div><span id="resAtten"></span></div>
-            <div class="sum-item"><div>Percentage</div><span id="resPerc"></span>%</div>
+            <div class="sum-item"><div>Final Percentage</div><span id="resPerc"></span>%</div>
             <div class="sum-item"><div>Grand Grade</div><span id="resGrade"></span></div>
             <div class="sum-item"><div>Result Status</div><span id="resStatus"></span></div>
         </div>
 
         <div class="sig-container">
             <div class="sig-box">Parent's Signature</div>
-            <div class="sig-box">Class Teacher</div>
-            <div class="sig-box">Principal Signature</div>
+            <div class="sig-box">Class Teacher's Sign</div>
+            <div class="sig-box">Principal's Signature</div>
         </div>
 
         <center style="margin-top: 40px;">
-            <button onclick="window.print()" class="btn-search" style="width: 180px; background: #2ecc71;">Download PDF</button>
+            <button onclick="window.print()" class="btn-search btn-print" style="width: 220px; background: #2ecc71;">Download Result (PDF)</button>
         </center>
     </div>
 
@@ -144,15 +148,15 @@
         async function findResult() {
             const selectedClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
-            if(!selectedClass || !admNo) return alert("Fill details!");
+            if(!selectedClass || !admNo) return alert("Bhai, Admission No aur Class bharo!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().toUpperCase().includes(selectedClass.toUpperCase()));
-                if(student) showMarksheet(student); else alert("Record not found!");
-            } catch (e) { alert("Data error!"); }
+                if(student) showMarksheet(student); else alert("Record match nahi hua!");
+            } catch (e) { alert("Sheet se connect nahi ho pa raha!"); }
         }
 
         function showMarksheet(d) {
