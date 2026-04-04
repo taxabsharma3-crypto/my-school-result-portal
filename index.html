@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Final Fix</title>
+    <title>BBCS Official Result Portal - Final Master Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -11,27 +11,24 @@
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
 
-        #marksheetFull { display: none; width: 1080px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
+        #marksheetFull { display: none; width: 1100px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
         
-        /* Watermark */
         #marksheetFull::after {
             content: "BLUE BELLS CONVENT SCHOOL";
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
-            font-size: 70px; color: rgba(26, 115, 232, 0.04); font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
+            font-size: 75px; color: rgba(26, 115, 232, 0.04); font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
         }
 
         .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
         .header h1 { margin: 0; font-size: 42px; color: var(--main); }
 
-        /* STUDENT INFO - ADDRESS FULL FIX */
+        /* Address Wrapping Fix */
         .info-grid { display: flex; flex-wrap: wrap; border: 1px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); }
         .info-item { padding: 12px 15px; border: 0.5px solid #dce4f2; font-size: 16px; box-sizing: border-box; }
         .w-50 { width: 50%; }
-        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; height: auto !important; min-height: 60px; display: block; clear: both; }
-        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
-        
-        /* THE ADDRESS WRAP LOGIC */
-        .addr-text { display: block; margin-top: -24px; margin-left: 150px; word-wrap: break-word; white-space: normal; line-height: 1.5; color: #333; }
+        .w-100 { width: 100%; border-top: 2px solid var(--main); background: #fff; height: auto !important; min-height: 60px; display: block; overflow: visible; }
+        .info-item b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; vertical-align: top; }
+        .addr-val { display: inline-block; width: calc(100% - 160px); word-wrap: break-word; white-space: normal; line-height: 1.5; color: #333; font-weight: 500; }
 
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; position: relative; z-index: 1; }
         th, td { border: 1px solid var(--main); padding: 9px; }
@@ -41,12 +38,12 @@
         .grand-total { background: #d2e3fc; font-weight: bold; color: var(--dark); }
 
         .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 18px; border-radius: 10px; font-size: 22px; font-weight: bold; position: relative; z-index: 1; }
-        .sig-row { display: flex; justify-content: space-between; margin-top: 90px; position: relative; z-index: 1; }
+        .sig-row { display: flex; justify-content: space-between; margin-top: 100px; position: relative; z-index: 1; }
         .sig-box { text-align: center; width: 220px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
 
         @media print {
             .search-container, .btn-print { display: none; }
-            #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 10px; }
+            #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 20px; }
         }
     </style>
 </head>
@@ -63,7 +60,7 @@
             <option value="5">Class 5</option><option value="6">Class 6</option>
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
-        <input type="text" id="inpAdm" placeholder="Enter Admission No.">
+        <input type="text" id="inpAdm" placeholder="Admission No.">
         <button class="btn-view" onclick="findResult()">VIEW RESULT</button>
     </div>
 
@@ -80,7 +77,7 @@
             <div class="info-item w-50"><b>Class:</b> <span id="rCls"></span></div>
             <div class="info-item w-50"><b>Father's Name:</b> <span id="rDad" style="text-transform:uppercase"></span></div>
             <div class="info-item w-50"><b>Date of Birth:</b> <span id="rDOB"></span></div>
-            <div class="info-item w-100"><b>Full Address:</b> <span id="rAddr" class="addr-text"></span></div>
+            <div class="info-item w-100"><b>Full Address:</b> <span id="rAddr" class="addr-val"></span></div>
         </div>
 
         <table>
@@ -103,8 +100,8 @@
             <span>STATUS: <span id="rStat"></span></span>
         </div>
 
-        <div style="margin-top:20px; display:flex; justify-content:space-between; font-weight:bold; position:relative; z-index:1;">
-            <span>Result Date: 30.03.2026</span>
+        <div style="margin-top:25px; display:flex; justify-content:space-between; font-weight:bold; position:relative; z-index:1;">
+            <span>Release Date: 30.03.2026</span>
             <span>Attendance: <span id="rAtt"></span></span>
         </div>
 
@@ -114,7 +111,7 @@
             <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download PDF</button></center>
+        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download Result</button></center>
     </div>
 
     <script>
@@ -123,7 +120,8 @@
         function getGr(obt, mm) {
             let o = parseFloat(obt);
             let m = parseFloat(mm);
-            if (!m || m <= 0 || isNaN(o)) return "-";
+            if (isNaN(o)) return obt || "-"; // Agar pehle se Grade likha hai toh wahi dikhao
+            if (!m || m <= 0) return "-";
             let p = (o/m)*100;
             if(p>=91) return "A1"; if(p>=81) return "A2"; if(p>=71) return "B1";
             if(p>=61) return "B2"; if(p>=51) return "C1"; if(p>=33) return "D"; return "E";
@@ -132,7 +130,7 @@
         async function findResult() {
             const adm = document.getElementById("inpAdm").value.trim();
             const cls = document.getElementById("selClass").value;
-            if(!adm || !cls) return alert("Bhai, Admission No and Class fill karein!");
+            if(!adm || !cls) return alert("Bhai, Details bhariye!");
 
             try {
                 const res = await fetch(CSV_LINK + "&v=" + Date.now());
@@ -141,14 +139,18 @@
                 const student = rows.find(r => r[0] && r[0].trim() == adm && r[5] && r[5].toUpperCase().includes(cls.toUpperCase()));
 
                 if(student) {
-                    const shift = parseInt(student[0]) >= 60 ? 1 : 0;
+                    const admVal = parseInt(student[0]);
+                    const shift = (admVal >= 60) ? 1 : 0;
+                    
                     document.getElementById("rAdm").innerText = student[0];
                     document.getElementById("rName").innerText = student[1];
                     document.getElementById("rDad").innerText = student[2];
                     document.getElementById("rMom").innerText = student[3] || "N/A";
                     document.getElementById("rDOB").innerText = student[4] || "N/A";
                     document.getElementById("rCls").innerText = student[5];
-                    document.getElementById("rAddr").innerText = student[6] || "N/A";
+                    
+                    // ADDRESS FIX: Force column 6 or 7 based on shift
+                    document.getElementById("rAddr").innerText = shift ? student[7] : student[6];
                     document.getElementById("rAtt").innerText = shift ? student[11] : student[10];
 
                     const subjects = [
@@ -161,25 +163,26 @@
                         {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
                         {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
                         {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], pt:true}
+                        {n:"PT / GAME", c:[52,53, 110,111, 139,140, 197,198], isPT:true}
                     ];
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach(s => {
-                        let m1=parseFloat(student[s.c[0]+shift])||0, o1=parseFloat(student[s.c[1]+shift])||0;
-                        let m2=parseFloat(student[s.c[2]+shift])||0, o2=parseFloat(student[s.c[3]+shift])||0;
-                        let m3=parseFloat(student[s.c[4]+shift])||0, o3=parseFloat(student[s.c[5]+shift])||0;
-                        let m4=parseFloat(student[s.c[6]+shift])||0, o4=parseFloat(student[s.c[7]+shift])||0;
+                        let m1=student[s.c[0]+shift], o1=student[s.c[1]+shift];
+                        let m2=student[s.c[2]+shift], o2=student[s.c[3]+shift];
+                        let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
+                        let m4=student[s.c[6]+shift], o4=student[s.c[7]+shift];
                         
                         let g1=getGr(o1,m1), g2=getGr(o2,m2), g3=getGr(o3,m3), g4=getGr(o4,m4);
 
-                        if(!s.pt) {
-                            let sMM = m1+m2+m3+m4, sOB = o1+o2+o3+o4;
+                        if(!s.isPT) {
+                            let sMM = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
+                            let sOB = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
                             tMM+=sMM; tOB+=sOB;
                             html += `<tr><td class='sub-name'>${s.n}</td><td>${m1}</td><td>${o1}</td><td>${g1}</td><td>${m2}</td><td>${o2}</td><td>${g2}</td><td>${m3}</td><td>${o3}</td><td>${g3}</td><td>${m4}</td><td>${o4}</td><td>${g4}</td><td class='grand-total'>${sMM}</td><td class='grand-total'>${sOB}</td><td class='grand-total'>${getGr(sOB,sMM)}</td></tr>`;
                         } else {
-                            // PT Row with Grade calculation
-                            html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${o1}</td><td>${g1}</td><td>-</td><td>${o2}</td><td>${g2}</td><td>-</td><td>${o3}</td><td>${g3}</td><td>-</td><td>${o4}</td><td>${g4}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
+                            // PT Row Fix
+                            html += `<tr><td class='sub-name'>${s.n}</td><td>-</td><td>${o1||'-'}</td><td>${g1}</td><td>-</td><td>${o2||'-'}</td><td>${g2}</td><td>-</td><td>${o3||'-'}</td><td>${g3}</td><td>-</td><td>${o4||'-'}</td><td>${g4}</td><td class='grand-total'>-</td><td class='grand-total'>-</td><td class='grand-total'>-</td></tr>`;
                         }
                     });
 
@@ -192,7 +195,7 @@
                     document.getElementById("marksheetFull").style.display = "block";
                     window.scrollTo(0, document.getElementById("marksheetFull").offsetTop - 20);
                 } else { alert("Record not found!"); }
-            } catch(e) { alert("Sheet Connection Error!"); }
+            } catch(e) { alert("Error connecting to sheet!"); }
         }
     </script>
 </body>
