@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Final 1000 Marks Fix</title>
+    <title>BBCS Official Result Portal - Final 100% Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -11,15 +11,15 @@
         select, input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         .btn-view { background: var(--main); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 18px; }
 
-        #marksheetFull { display: none; width: 1100px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); margin-bottom: 50px; }
+        #marksheetFull { display: none; width: 1150px; background: white; padding: 50px; border: 1px solid #ccc; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); margin-bottom: 50px; }
         #marksheetFull::after {
             content: "BLUE BELLS CONVENT SCHOOL";
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
-            font-size: 75px; color: rgba(26, 115, 232, 0.04); font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
+            font-size: 80px; color: rgba(26, 115, 232, 0.04); font-weight: 900; z-index: 0; pointer-events: none; white-space: nowrap;
         }
 
         .header { text-align: center; border-bottom: 5px double var(--main); padding-bottom: 20px; margin-bottom: 30px; position: relative; z-index: 1; }
-        .header h1 { margin: 0; font-size: 42px; color: var(--main); }
+        .header h1 { margin: 0; font-size: 45px; color: var(--main); }
 
         .info-wrapper { border: 2px solid var(--main); margin-bottom: 25px; position: relative; z-index: 1; background: var(--light); width: 100%; }
         .info-row { display: flex; width: 100%; border-bottom: 1px solid #dce4f2; }
@@ -27,7 +27,7 @@
         .info-box:last-child { border-right: none; }
         .info-box b { color: var(--dark); margin-right: 10px; display: inline-block; width: 140px; }
 
-        /* ADDRESS FULL SHOW FIX */
+        /* ADDRESS FULL FIX */
         .address-full-row { 
             width: 100%; background: #fff; padding: 15px; border-top: 2px solid var(--main); 
             display: block !important; height: auto !important; min-height: 60px; box-sizing: border-box;
@@ -36,17 +36,17 @@
         .address-full-row span { display: block; margin-left: 150px; font-size: 16px; color: #333; font-weight: 500; line-height: 1.6; white-space: normal !important; word-wrap: break-word !important; text-align: left; }
 
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 13px; position: relative; z-index: 1; }
-        th, td { border: 1px solid var(--main); padding: 9px; }
+        th, td { border: 1px solid var(--main); padding: 10px; }
         .thead-main { background: var(--main); color: white; font-weight: bold; }
         .thead-sub { background: #f1f6ff; color: var(--main); font-weight: bold; }
         .sub-name { text-align: left !important; font-weight: bold; padding-left: 15px !important; background: #fafafa; }
-        .grand-total-cell { background: #d2e3fc; font-weight: bold; color: var(--dark); }
+        .grand-total-cell { background: #d2e3fc; font-weight: bold; color: var(--dark); font-size: 14px; }
 
-        .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 18px; border-radius: 10px; font-size: 22px; font-weight: bold; position: relative; z-index: 1; }
-        .sig-row { display: flex; justify-content: space-between; margin-top: 100px; position: relative; z-index: 1; }
+        .result-bar { margin-top: 30px; display: flex; justify-content: space-around; background: var(--main); color: white; padding: 20px; border-radius: 12px; font-size: 22px; font-weight: bold; position: relative; z-index: 1; }
+        .sig-row { display: flex; justify-content: space-between; margin-top: 100px; position: relative; z-index: 1; padding: 0 20px; }
         .sig-box { text-align: center; width: 220px; border-top: 2px solid #333; padding-top: 10px; font-weight: bold; }
 
-        @media print { .search-container, .btn-print { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 10px; } }
+        @media print { .search-container, .btn-print { display: none; } #marksheetFull { display: block !important; border: none; width: 100%; box-shadow: none; padding: 0; } }
     </style>
 </head>
 <body>
@@ -54,7 +54,7 @@
     <div class="search-container">
         <h2>BBCS RESULT PORTAL</h2>
         <select id="selClass">
-            <option value="">-- Select Class --</option>
+            <option value="">-- अपनी क्लास चुनें --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
             <option value="LKG">LKG</option><option value="UKG">UKG</option>
             <option value="1">Class 1</option><option value="2">Class 2</option>
@@ -62,14 +62,14 @@
             <option value="5">Class 5</option><option value="6">Class 6</option>
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
-        <input type="text" id="inpAdm" placeholder="Enter Admission No.">
-        <button class="btn-view" onclick="findResult()">VIEW RESULT</button>
+        <input type="text" id="inpAdm" placeholder="Admission No. यहाँ लिखें">
+        <button class="btn-view" onclick="findResult()">रिजल्ट देखें</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header">
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
-            <p>ANNUAL PROGRESS REPORT CARD (2025-26)</p>
+            <p>ANNUAL PROGRESS REPORT CARD (SESSION 2025-26)</p>
         </div>
 
         <div class="info-wrapper">
@@ -106,11 +106,11 @@
 
         <div class="result-bar">
             <span>PERCENTAGE: <span id="rPer"></span>%</span>
-            <span>OVERALL GRADE: <span id="rGrd"></span></span>
-            <span>STATUS: <span id="rStat"></span></span>
+            <span>GRADE: <span id="rGrd"></span></span>
+            <span>RESULT: <span id="rStat"></span></span>
         </div>
 
-        <div style="margin-top:20px; display:flex; justify-content:space-between; font-weight:bold; position:relative; z-index:1;">
+        <div style="margin-top:25px; display:flex; justify-content:space-between; font-weight:bold; position:relative; z-index:1;">
             <span>Release Date: 30.03.2026</span>
             <span>Attendance: <span id="rAtt"></span></span>
         </div>
@@ -121,7 +121,7 @@
             <div class="sig-box">Principal Signature</div>
         </div>
         
-        <center><button class="btn-view btn-print" style="width:250px; background:#28a745; margin-top:40px; border:none; border-radius:8px; cursor:pointer;" onclick="window.print()">📥 Download Result</button></center>
+        <center><button class="btn-view btn-print" style="width:280px; background:#28a745; margin-top:50px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;" onclick="window.print()">📥 Download / Print Result</button></center>
     </div>
 
     <script>
@@ -130,7 +130,6 @@
         function getGr(obt, mm) {
             let o = parseFloat(obt);
             let m = parseFloat(mm);
-            // Agar pehle se Grade likha hai toh wahi utha lo
             if (isNaN(o) && (obt+"").trim().length > 0) return obt;
             if (!m || m <= 0 || isNaN(o)) return "-";
             let p = (o/m)*100;
@@ -177,19 +176,27 @@
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach((s) => {
-                        let m1=student[s.c[0]+shift], o1=student[s.c[1]+shift];
-                        let m2=student[s.c[2]+shift], o2=student[s.c[3]+shift];
-                        let m3=student[s.c[4]+shift], o3=student[s.c[5]+shift];
-                        let m4=student[s.c[6]+shift], o4=student[s.c[7]+shift];
-                        
-                        let sMM = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
-                        let sOB = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
-                        
-                        let g1=getGr(o1,m1), g2=getGr(o2,m2), g3=getGr(o3,m3), g4=getGr(o4,m4);
+                        // Data extraction with shift logic
+                        let v1_1 = student[s.c[0]+shift], v1_2 = student[s.c[1]+shift];
+                        let v2_1 = student[s.c[2]+shift], v2_2 = student[s.c[3]+shift];
+                        let v3_1 = student[s.c[4]+shift], v3_2 = student[s.c[5]+shift];
+                        let v4_1 = student[s.c[6]+shift], v4_2 = student[s.c[7]+shift];
 
-                        // Ab ART aur PT dono regular table mein aayenge aur Grand Total mein judenge
-                        tMM+=sMM; tOB+=sOB;
-                        html += `<tr><td class='sub-name'>${s.n}</td><td>${m1||'-'}</td><td>${o1||'-'}</td><td>${g1}</td><td>${m2||'-'}</td><td>${o2||'-'}</td><td>${g2}</td><td>${m3||'-'}</td><td>${o3||'-'}</td><td>${g3}</td><td>${m4||'-'}</td><td>${o4||'-'}</td><td>${g4}</td><td class='grand-total-cell'>${sMM||'-'}</td><td class='grand-total-cell'>${sOB||'-'}</td><td class='grand-total-cell'>${getGr(sOB,sMM)}</td></tr>`;
+                        // Auto-Swap Logic: Fixes MM and Obt if they are reversed
+                        function fixMM(m, o) {
+                            let fm = parseFloat(m)||0, fo = parseFloat(o)||0;
+                            return (fo > fm && fm > 0) ? {mm:fo, obt:fm} : {mm:m, obt:o};
+                        }
+
+                        let f1 = fixMM(v1_1, v1_2), f2 = fixMM(v2_1, v2_2), f3 = fixMM(v3_1, v3_2), f4 = fixMM(v4_1, v4_2);
+                        
+                        let sMM = (parseFloat(f1.mm)||0)+(parseFloat(f2.mm)||0)+(parseFloat(f3.mm)||0)+(parseFloat(f4.mm)||0);
+                        let sOB = (parseFloat(f1.obt)||0)+(parseFloat(f2.obt)||0)+(parseFloat(f3.obt)||0)+(parseFloat(f4.obt)||0);
+                        
+                        // Add to Grand Total
+                        tMM += sMM; tOB += sOB;
+
+                        html += `<tr><td class='sub-name'>${s.n}</td><td>${f1.mm}</td><td>${f1.obt}</td><td>${getGr(f1.obt,f1.mm)}</td><td>${f2.mm}</td><td>${f2.obt}</td><td>${getGr(f2.obt,f2.mm)}</td><td>${f3.mm}</td><td>${f3.obt}</td><td>${getGr(f3.obt,f3.mm)}</td><td>${f4.mm}</td><td>${f4.obt}</td><td>${getGr(f4.obt,f4.mm)}</td><td class='grand-total-cell'>${sMM}</td><td class='grand-total-cell'>${sOB}</td><td class='grand-total-cell'>${getGr(sOB,sMM)}</td></tr>`;
                     });
 
                     document.getElementById("mBody").innerHTML = html;
