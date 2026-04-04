@@ -3,48 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBCS Result Portal - Session 2025-26</title>
+    <title>BBCS Result Portal - Final Sequence</title>
     <style>
         :root { --primary: #2e86c1; --accent: #85c1e9; --lite-blue: #ebf5fb; --border: #d5dbdb; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
         
-        /* Search Card */
         .search-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); width: 100%; max-width: 450px; text-align: center; border-top: 5px solid var(--accent); margin-bottom: 30px; }
         select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 8px; outline: none; background: #fafafa; }
         .btn-search { background: var(--primary); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; }
 
-        /* Marksheet Frame */
         #marksheetFull { display: none; width: 1080px; background: white; padding: 40px; border: 1px solid var(--border); position: relative; }
         
-        /* Header Management */
         .header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--lite-blue); padding-bottom: 20px; }
         .header-box h1 { margin: 0; font-size: 38px; color: var(--primary); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; }
-        .school-meta { font-size: 15px; color: #5d6d7e; margin-top: 8px; font-weight: 600; }
-        .report-title { margin-top: 15px; font-weight: 700; color: #fff; border: none; display: inline-block; padding: 6px 25px; border-radius: 50px; background: var(--primary); font-size: 16px; letter-spacing: 1px; }
+        .school-meta { font-size: 14px; color: #5d6d7e; margin-top: 8px; font-weight: 600; }
+        .report-title { margin-top: 15px; font-weight: 700; color: #fff; display: inline-block; padding: 6px 25px; border-radius: 50px; background: var(--primary); font-size: 16px; letter-spacing: 1px; }
 
-        /* Student Info Grid */
-        .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1.5px solid var(--lite-blue); margin-bottom: 25px; background: #fff; }
-        .info-cell { padding: 12px; border: 0.5px solid var(--lite-blue); font-size: 13px; }
-        .info-cell b { color: #7f8c8d; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 4px; letter-spacing: 0.5px; }
-        .info-cell span { font-weight: 600; color: #2c3e50; font-size: 14px; }
+        /* SEQUENCE CORRECTED INFO GRID */
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1.5px solid var(--lite-blue); margin-bottom: 25px; background: #fff; }
+        .info-cell { padding: 12px 20px; border: 0.5px solid var(--lite-blue); font-size: 14px; display: flex; align-items: center; }
+        .info-cell b { color: #5d6d7e; font-size: 11px; text-transform: uppercase; width: 150px; display: inline-block; letter-spacing: 0.5px; }
+        .info-cell span { font-weight: 700; color: #2c3e50; text-transform: uppercase; }
+        .full-width { grid-column: span 2; }
 
-        /* Table Design */
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
         .marks-table th, .marks-table td { border: 1px solid #eef2f6; padding: 10px; text-align: center; }
-        
         .thead-main th { background: var(--lite-blue); color: #2e86c1; font-weight: 700; text-transform: uppercase; font-size: 11px; }
         .thead-sub th { background: #fcfdfe; color: #7f8c8d; font-weight: 600; font-size: 10px; }
-        
         .sub-name { text-align: left !important; padding-left: 15px !important; font-weight: 600; color: #34495e; background: #fdfdfd; border-left: 5px solid var(--accent) !important; }
         .grand-total-cell { background: #f4f9fd; font-weight: bold; color: var(--primary); }
 
-        /* Summary Wrapper */
         .summary-wrapper { display: flex; justify-content: space-around; background: #f8fafc; padding: 20px; border-radius: 10px; margin-top: 25px; border: 1px solid #d6eaf8; }
         .sum-item { text-align: center; }
         .sum-item div { font-size: 11px; color: #5d6d7e; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
         .sum-item span { font-size: 20px; font-weight: bold; color: #2c3e50; }
 
-        /* Signatures */
         .sig-container { display: flex; justify-content: space-between; margin-top: 90px; padding: 0 40px; }
         .sig-box { text-align: center; width: 220px; border-top: 2px solid var(--primary); padding-top: 10px; color: #2c3e50; font-weight: 700; font-size: 14px; }
 
@@ -53,7 +46,6 @@
             body { padding: 0; background: white; }
             #marksheetFull { display: block !important; border: 1px solid #eee; width: 100%; box-shadow: none; }
             .thead-main th { background: #ebf5fb !important; -webkit-print-color-adjust: exact; }
-            .report-title { background: #2e86c1 !important; color: white !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -73,44 +65,34 @@
             <option value="7">Class 7</option><option value="8">Class 8</option>
         </select>
         <input type="text" id="admInput" placeholder="Enter Admission No.">
-        <button class="btn-search" onclick="findResult()">SHOW REPORT CARD</button>
+        <button class="btn-search" onclick="findResult()">रिजल्ट देखें</button>
     </div>
 
     <div id="marksheetFull">
         <div class="header-box">
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
-            <div class="school-meta">
-                Agra, Uttar Pradesh | UDISE Code: 09XXXXXXXXX | Session: 2025-26
-            </div>
+            <div class="school-meta">Agra, Uttar Pradesh | Session: 2025-26</div>
             <div class="report-title">ANNUAL PROGRESS REPORT CARD</div>
         </div>
 
         <div class="info-grid">
-            <div class="info-cell"><b>Student Name</b><span id="sName"></span></div>
-            <div class="info-cell"><b>Admission No.</b><span id="sAdm"></span></div>
-            <div class="info-cell"><b>Father's Name</b><span id="sFather"></span></div>
-            <div class="info-cell"><b>Class / Section</b><span id="sClass"></span></div>
-            <div class="info-cell"><b>Mother's Name</b><span id="sMother"></span></div>
-            <div class="info-cell"><b>Date of Birth</b><span id="sDOB"></span></div>
-            <div class="info-cell" style="grid-column: span 2;"><b>Full Address</b><span id="sAddr"></span></div>
+            <div class="info-cell"><b>Student Name:</b><span id="sName"></span></div>
+            <div class="info-cell"><b>Admission No:</b><span id="sAdm"></span></div>
+            <div class="info-cell"><b>Father's Name:</b><span id="sFather"></span></div>
+            <div class="info-cell"><b>Class / Section:</b><span id="sClass"></span></div>
+            <div class="info-cell"><b>Mother's Name:</b><span id="sMother"></span></div>
+            <div class="info-cell"><b>Date of Birth:</b><span id="sDOB"></span></div>
+            <div class="info-cell full-width"><b>Full Address:</b><span id="sAddr"></span></div>
         </div>
 
         <table class="marks-table">
             <thead>
                 <tr class="thead-main">
                     <th rowspan="2" style="width: 200px;">SUBJECT NAME</th>
-                    <th colspan="3">FA-I</th>
-                    <th colspan="3">HALF YEARLY</th>
-                    <th colspan="3">FA-II</th>
-                    <th colspan="3">ANNUAL EXAM</th>
-                    <th colspan="3">GRAND TOTAL</th>
+                    <th colspan="3">FA-I</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-II</th><th colspan="3">ANNUAL EXAM</th><th colspan="3">GRAND TOTAL</th>
                 </tr>
                 <tr class="thead-sub">
-                    <th>MM</th><th>OBT</th><th>GR</th>
-                    <th>MM</th><th>OBT</th><th>GR</th>
-                    <th>MM</th><th>OBT</th><th>GR</th>
-                    <th>MM</th><th>OBT</th><th>GR</th>
-                    <th class="grand-total-cell">MM</th><th class="grand-total-cell">OBT</th><th class="grand-total-cell">GR</th>
+                    <th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th>MM</th><th>OBT</th><th>GR</th><th class="grand-total-cell">MM</th><th class="grand-total-cell">OBT</th><th class="grand-total-cell">GR</th>
                 </tr>
             </thead>
             <tbody id="marksBody"></tbody>
@@ -118,7 +100,7 @@
 
         <div class="summary-wrapper">
             <div class="sum-item"><div>Attendance</div><span id="resAtten"></span></div>
-            <div class="sum-item"><div>Final Percentage</div><span id="resPerc"></span>%</div>
+            <div class="sum-item"><div>Percentage</div><span id="resPerc"></span>%</div>
             <div class="sum-item"><div>Grand Grade</div><span id="resGrade"></span></div>
             <div class="sum-item"><div>Result Status</div><span id="resStatus"></span></div>
         </div>
@@ -129,9 +111,7 @@
             <div class="sig-box">Principal's Signature</div>
         </div>
 
-        <center style="margin-top: 40px;">
-            <button onclick="window.print()" class="btn-search btn-print" style="width: 220px; background: #2ecc71;">Download Result (PDF)</button>
-        </center>
+        <center style="margin-top: 40px;"><button onclick="window.print()" class="btn-search" style="width: 200px; background: #2ecc71;">Download PDF</button></center>
     </div>
 
     <script>
@@ -148,21 +128,21 @@
         async function findResult() {
             const selectedClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
-            if(!selectedClass || !admNo) return alert("Bhai, Admission No aur Class bharo!");
+            if(!selectedClass || !admNo) return alert("Details bhariye!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().toUpperCase().includes(selectedClass.toUpperCase()));
-                if(student) showMarksheet(student); else alert("Record match nahi hua!");
-            } catch (e) { alert("Sheet se connect nahi ho pa raha!"); }
+                if(student) showMarksheet(student); else alert("Data nahi mila!");
+            } catch (e) { alert("Sheet Error!"); }
         }
 
         function showMarksheet(d) {
-            document.getElementById("sName").innerText = d[1].toUpperCase();
-            document.getElementById("sFather").innerText = d[2].toUpperCase();
-            document.getElementById("sMother").innerText = (d[3] || "N/A").toUpperCase();
+            document.getElementById("sName").innerText = d[1];
+            document.getElementById("sFather").innerText = d[2];
+            document.getElementById("sMother").innerText = d[3] || "N/A";
             document.getElementById("sDOB").innerText = d[4] || "N/A";
             document.getElementById("sAddr").innerText = d[6] || "N/A";
             document.getElementById("sAdm").innerText = d[0];
@@ -194,8 +174,10 @@
                 let m4 = parseFloat(d[s.anm]) || 0; let o4 = parseFloat(d[s.ano]) || 0;
 
                 if(s.isPT){
+                    let g1 = d[s.f1o] || "-"; let g2 = d[s.hyo] || "-";
+                    let g3 = d[s.f2o] || "-"; let g4 = d[s.ano] || "-";
                     let finalG = d[s.ano] || d[s.hyo] || d[s.f2o] || d[s.f1o] || "-";
-                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${o1||"-"}</td><td>${o1||"-"}</td><td>-</td><td>${o2||"-"}</td><td>${o2||"-"}</td><td>-</td><td>${o3||"-"}</td><td>${o3||"-"}</td><td>-</td><td>${o4||"-"}</td><td>${o4||"-"}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${finalG}</td><td class="grand-total-cell">${finalG}</td></tr>`;
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${g1}</td><td>${g1}</td><td>-</td><td>${g2}</td><td>${g2}</td><td>-</td><td>${g3}</td><td>${g3}</td><td>-</td><td>${g4}</td><td>${g4}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${finalG}</td><td class="grand-total-cell">${finalG}</td></tr>`;
                 } else {
                     tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
                     let rMM = m1+m2+m3+m4; let rObt = o1+o2+o3+o4;
