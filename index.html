@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Ultimate Fix</title>
+    <title>BBCS Official Result Portal - Master Fix</title>
     <style>
         :root { --main: #1a73e8; --dark: #0d47a1; --light: #f8fbff; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -34,7 +34,7 @@
     <div class="search-container">
         <h2>BBCS RESULT PORTAL</h2>
         <select id="selClass">
-            <option value="">-- Class चुनें --</option>
+            <option value="">-- अपनी क्लास चुनें --</option>
             <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
             <option value="LKG">LKG</option><option value="UKG">UKG</option>
             <option value="1">Class 1</option><option value="2">Class 2</option>
@@ -87,7 +87,7 @@
             <span>STATUS: <span id="rStat"></span></span>
         </div>
         <div style="margin-top:20px; display:flex; justify-content:space-between; font-weight:bold;">
-            <span>Release Date: 30.03.2026</span>
+            <span>Result Date: 30.03.2026</span>
             <span>Attendance: <span id="rAtt"></span></span>
         </div>
         <div style="display:flex; justify-content:space-between; margin-top:100px;">
@@ -95,7 +95,7 @@
             <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Class Teacher</div>
             <div style="text-align:center; width:220px; border-top:2px solid #333; padding-top:10px; font-weight:bold;">Principal Signature</div>
         </div>
-        <center><button class="btn-view" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Download / Print PDF</button></center>
+        <center><button class="btn-view" style="width:250px; background:#28a745; margin-top:40px;" onclick="window.print()">Download / Print Result</button></center>
     </div>
 
     <script>
@@ -133,11 +133,15 @@
                     document.getElementById("rDOB").innerText = student[4];
                     document.getElementById("rCls").innerText = student[5];
                     
-                    // Address Fix
-                    let finalAddr = (s === 1) ? student[7] : student[6];
-                    if(s === 1 && (!isNaN(finalAddr) || finalAddr.length < 5)) finalAddr = student[8];
-                    document.getElementById("rAddr").innerText = finalAddr || "N/A";
-
+                    // SMART ADDRESS DETECTOR: Numbers ko ignore karega, sirf text uthayega
+                    let addr = "";
+                    for(let i=6; i<=8; i++) {
+                        if(student[i] && isNaN(student[i]) && student[i].length > 5) {
+                            addr = student[i];
+                            break;
+                        }
+                    }
+                    document.getElementById("rAddr").innerText = addr || "N/A";
                     document.getElementById("rAtt").innerText = (s === 1) ? student[11] : student[10];
 
                     const subjects = [
@@ -155,23 +159,21 @@
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach((sb) => {
-                        // FORCE CORRECT INDEX FOR 137+ STUDENTS
-                        function getHardFixedMarks(idx1, idx2) {
-                            let valMM = student[idx1+s], valOB = student[idx2+s];
-                            let mm = parseFloat(valMM)||0, obt = parseFloat(valOB)||0;
-
-                            // Agar Obtained MM se bada hai toh exchange (swap) karo
-                            if (obt > mm && mm > 0) return { mm: obt, obt: mm };
-                            // Agar MM blank hai par Obtained mein number hai, toh MM ko default 100 ya dusre column se check karo
-                            if (mm === 0 && obt > 0) return { mm: obt, obt: 0 }; 
+                        // DETECTOR LOGIC: Har subject ke liye check karega ki MM kaunsa hai
+                        function detectMarks(idx1, idx2) {
+                            let val1 = student[idx1+s], val2 = student[idx2+s];
+                            let num1 = parseFloat(val1)||0, num2 = parseFloat(val2)||0;
                             
-                            return { mm: valMM, obt: valOB };
+                            // MM hamesha badha hota hai (10, 20, 50, 100, 1000)
+                            // Agar Obtained MM se badha hai, toh unhe exchange karo
+                            if (num2 > num1 && num1 > 0) return { mm: num2, obt: num1 };
+                            // Agar MM wala dabba khali hai (jaise ART mein ho raha hai)
+                            if (num1 == 0 && num2 > 0) return { mm: num2, obt: 0 }; 
+                            
+                            return { mm: val1, obt: val2 };
                         }
 
-                        let f1=getHardFixedMarks(sb.c[0], sb.c[1]);
-                        let f2=getHardFixedMarks(sb.c[2], sb.c[3]);
-                        let f3=getHardFixedMarks(sb.c[4], sb.c[5]);
-                        let f4=getHardFixedMarks(sb.c[6], sb.c[7]);
+                        let f1=detectMarks(sb.c[0], sb.c[1]), f2=detectMarks(sb.c[2], sb.c[3]), f3=detectMarks(sb.c[4], sb.c[5]), f4=detectMarks(sb.c[6], sb.c[7]);
                         
                         let rMM = (parseFloat(f1.mm)||0)+(parseFloat(f2.mm)||0)+(parseFloat(f3.mm)||0)+(parseFloat(f4.mm)||0);
                         let rOB = (parseFloat(f1.obt)||0)+(parseFloat(f2.obt)||0)+(parseFloat(f3.obt)||0)+(parseFloat(f4.obt)||0);
@@ -195,7 +197,7 @@
                     document.getElementById("rStat").innerText = p >= 33 ? "PASSED" : "FAILED";
                     document.getElementById("marksheetFull").style.display = "block";
                 } else { alert("Record not found!"); }
-            } catch(e) { alert("Sheet Connection Error!"); }
+            } catch(e) { alert("Sheet Error!"); }
         }
     </script>
 </body>
