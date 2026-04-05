@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBCS Result Portal - Final Sequence</title>
+    <title>BBCS Result Portal - PT Grade Fix</title>
     <style>
         :root { --primary: #2e86c1; --accent: #85c1e9; --lite-blue: #ebf5fb; --border: #d5dbdb; }
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
@@ -37,19 +37,17 @@
         .sum-item div { font-size: 11px; color: #5d6d7e; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; }
         .sum-item span { font-size: 20px; font-weight: bold; color: #2c3e50; }
 
-        /* SHORT MESSAGE SECTION */
         .msg-box { margin-top: 20px; padding: 15px; border: 1px solid var(--lite-blue); background: #fcfdfe; text-align: center; }
         #shortMsg { font-weight: 600; color: #2c3e50; font-style: italic; font-size: 15px; }
         #promStatus { font-weight: 800; color: #27ae60; margin-top: 5px; font-size: 16px; }
 
-        .sig-container { display: flex; justify-content: space-between; margin-top: 70px; padding: 0 40px; }
+        .sig-container { display: flex; justify-content: space-between; margin-top: 90px; padding: 0 40px; }
         .sig-box { text-align: center; width: 220px; border-top: 2px solid var(--primary); padding-top: 10px; color: #2c3e50; font-weight: 700; font-size: 14px; }
 
         @media print {
-            .search-card, .btn-print { display: none; }
+            .search-card, .btn-search, .print-btn { display: none; }
             body { padding: 0; background: white; }
             #marksheetFull { display: block !important; border: 1px solid #eee; width: 100%; box-shadow: none; }
-            .thead-main th { background: #ebf5fb !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -120,7 +118,7 @@
             <div class="sig-box">Principal's Signature</div>
         </div>
 
-        <center style="margin-top: 40px;"><button onclick="window.print()" class="btn-search" style="width: 200px; background: #2ecc71;">Download PDF</button></center>
+        <center style="margin-top: 40px;"><button onclick="window.print()" class="btn-search print-btn" style="width: 200px; background: #2ecc71;">Download PDF</button></center>
     </div>
 
     <script>
@@ -137,15 +135,15 @@
         async function findResult() {
             const selectedClass = document.getElementById("studentClassSelect").value;
             const admNo = document.getElementById("admInput").value.trim();
-            if(!selectedClass || !admNo) return alert("Details bhariye!");
+            if(!selectedClass || !admNo) return alert("Please fill all details!");
 
             try {
                 const resp = await fetch(SHEET_URL + "&cb=" + new Date().getTime());
                 const data = await resp.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 const student = rows.find(r => r[0]?.trim() === admNo && r[5]?.trim().toUpperCase().includes(selectedClass.toUpperCase()));
-                if(student) showMarksheet(student); else alert("Data nahi mila!");
-            } catch (e) { alert("Sheet Error!"); }
+                if(student) showMarksheet(student); else alert("Record not found!");
+            } catch (e) { alert("Data Error!"); }
         }
 
         function showMarksheet(d) {
@@ -177,40 +175,11 @@
             let html = ""; let tF1m=0, tF1o=0, tHYm=0, tHYo=0, tF2m=0, tF2o=0, tANm=0, tANo=0;
 
             subjects.forEach(s => {
-                let m1 = parseFloat(d[s.f1m]) || 0; let o1 = parseFloat(d[s.f1o]) || 0;
-                let m2 = parseFloat(d[s.hym]) || 0; let o2 = parseFloat(d[s.hyo]) || 0;
-                let m3 = parseFloat(d[s.f2m]) || 0; let o3 = parseFloat(d[s.f2o]) || 0;
-                let m4 = parseFloat(d[s.anm]) || 0; let o4 = parseFloat(d[s.ano]) || 0;
+                let m1 = parseFloat(d[s.f1m]) || 0; let o1 = d[s.f1o] || "-";
+                let m2 = parseFloat(d[s.hym]) || 0; let o2 = d[s.hyo] || "-";
+                let m3 = parseFloat(d[s.f2m]) || 0; let o3 = d[s.f2o] || "-";
+                let m4 = parseFloat(d[s.anm]) || 0; let o4 = d[s.ano] || "-";
 
                 if(s.isPT){
-                    let finalG = d[s.ano] || d[s.hyo] || d[s.f2o] || d[s.f1o] || "-";
-                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${o1||"-"}</td><td>${o1||"-"}</td><td>-</td><td>${o2||"-"}</td><td>${o2||"-"}</td><td>-</td><td>${o3||"-"}</td><td>${o3||"-"}</td><td>-</td><td>${o4||"-"}</td><td>${o4||"-"}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${finalG}</td><td class="grand-total-cell">${finalG}</td></tr>`;
-                } else {
-                    tF1m+=m1; tF1o+=o1; tHYm+=m2; tHYo+=o2; tF2m+=m3; tF2o+=o3; tANm+=m4; tANo+=o4;
-                    let rMM = m1+m2+m3+m4; let rObt = o1+o2+o3+o4;
-                    html += `<tr><td class="sub-name">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${getGr(o1,m1)}</td><td>${m2}</td><td>${o2}</td><td>${getGr(o2,m2)}</td><td>${m3}</td><td>${o3}</td><td>${getGr(o3,m3)}</td><td>${m4}</td><td>${o4}</td><td>${getGr(o4,m4)}</td><td class="grand-total-cell">${rMM}</td><td class="grand-total-cell">${rObt}</td><td class="grand-total-cell">${getGr(rObt,rMM)}</td></tr>`;
-                }
-            });
-
-            document.getElementById("marksBody").innerHTML = html;
-            let totalMM = tF1m+tHYm+tF2m+tANm, totalObt = tF1o+tHYo+tF2o+tANo;
-            let p = totalMM > 0 ? ((totalObt/totalMM)*100).toFixed(2) : 0;
-            document.getElementById("resPerc").innerText = p;
-            document.getElementById("resGrade").innerText = getGr(totalObt, totalMM);
-            document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
-            document.getElementById("resStatus").style.color = p >= 33 ? "#27ae60" : "#e74c3c";
-
-            // --- SHORT MESSAGE LOGIC ---
-            let msg = ""; let promo = "";
-            if(p >= 75) { msg = "Excellent performance! Keep it up."; promo = "Result: Promoted to the next class."; }
-            else if(p >= 33) { msg = "Good attempt. Work hard for better results."; promo = "Result: Promoted to the next class."; }
-            else { msg = "Needs lot of improvement. Better luck next time."; promo = "Result: Not promoted."; document.getElementById("promStatus").style.color = "red"; }
-            
-            document.getElementById("shortMsg").innerText = "Message: " + msg;
-            document.getElementById("promStatus").innerText = promo;
-
-            document.getElementById("marksheetFull").style.display = "block";
-        }
-    </script>
-</body>
-</html>
+                    let finalG = o4 !== "-" ? o4 : (o2 !== "-" ? o2 : (o3 !== "-" ? o3 : o1));
+                    html += `<tr><td class="sub-name">${s.n}</td><td>-</td><td>${o1}</td><td>${o1}</td><td>-</td><td>${o2}</td><td>${o2}</td><td>-</td><td>${o3}</td><td>
