@@ -2,129 +2,89 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Result Portal 2026</title>
+    <title>BBCS Portal - Topper Finder</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border-top: 5px solid #2e86c1; }
-        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
-        button { background: #2e86c1; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        
-        #marksheet { display: none; width: 1000px; background: white; padding: 30px; margin-top: 20px; border: 1px solid #ddd; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        .head { background: #ebf5fb; color: #2e86c1; font-weight: bold; }
-        .sub { text-align: left; font-weight: bold; background: #fafafa; }
-        .info { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 20px; border: 1px solid #2e86c1; padding: 10px; }
-        .info div { width: 45%; margin-bottom: 5px; font-size: 14px; }
-        @media print { .card, .btn-print { display: none; } #marksheet { display: block !important; border: none; } }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; text-align: center; }
+        .admin-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border-top: 5px solid #2ecc71; }
+        .btn-topper { background: #2ecc71; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; width: 100%; }
+        #topperResult { margin-top: 20px; padding: 15px; background: #e8f8f5; border-radius: 8px; display: none; color: #117a65; font-weight: bold; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h2>BBCS RESULT 2026</h2>
-        <input type="text" id="admNo" placeholder="Admission No. Daalein">
-        <button onclick="fetchResult()">Show Result</button>
-    </div>
+    <div class="admin-card">
+        <h2>BBCS MASTER PANEL</h2>
+        <p>Class 8 ka sabse honhaar (Topper) student dhoondhein:</p>
+        <button class="btn-topper" onclick="findClass8Topper()">🏆 Class 8 Topper Dekhein</button>
+        
+        <div id="topperResult"></div>
 
-    <div id="marksheet">
-        <center>
-            <h1 style="color:#2e86c1; margin:0;">BLUE BELLS CONVENT SCHOOL</h1>
-            <p>Agra, Uttar Pradesh | Session 2025-26</p>
-            <h3 style="background:#2e86c1; color:white; display:inline-block; padding:5px 20px; border-radius:20px;">REPORT CARD</h3>
-        </center>
-
-        <div class="info">
-            <div><b>Name:</b> <span id="n"></span></div>
-            <div><b>Adm No:</b> <span id="a"></span></div>
-            <div><b>Father:</b> <span id="f"></span></div>
-            <div><b>Class:</b> <span id="c"></span></div>
-            <div><b>Mother:</b> <span id="m"></span></div>
-            <div><b>DOB:</b> <span id="d"></span></div>
-        </div>
-
-        <table>
-            <thead>
-                <tr class="head">
-                    <th rowspan="2">SUBJECTS</th>
-                    <th colspan="2">FA-I</th><th colspan="2">HALF YEARLY</th><th colspan="2">FA-II</th><th colspan="2">ANNUAL</th><th colspan="2">TOTAL</th>
-                </tr>
-                <tr class="head">
-                    <th>MM</th><th>OBT</th><th>MM</th><th>OBT</th><th>MM</th><th>OBT</th><th>MM</th><th>OBT</th><th>MM</th><th>OBT</th>
-                </tr>
-            </thead>
-            <tbody id="b"></tbody>
-        </table>
-
-        <div style="margin-top:20px; font-weight:bold; display:flex; justify-content:space-around; background:#eee; padding:10px;">
-            <span>PERCENTAGE: <span id="p"></span>%</span>
-            <span>GRADE: <span id="g"></span></span>
-            <span>STATUS: <span id="s"></span></span>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; margin-top:50px; text-align:center;">
-            <div style="width:150px; border-top:1px solid #000;">Parent</div>
-            <div style="width:150px; border-top:1px solid #000;">Teacher</div>
-            <div style="width:150px; border-top:1px solid #000;">Principal</div>
-        </div>
-        <center><button class="btn-print" onclick="window.print()" style="margin-top:20px; background:green;">Print PDF</button></center>
+        <hr style="margin: 20px 0; border: 0.5px solid #eee;">
+        
+        <p>Individual Result Dekhein:</p>
+        <input type="text" id="admInput" placeholder="Admission No. Likhein">
+        <button onclick="alert('Bhai pehle topper check kar lo, phir result nikalenge!')" style="padding:10px; width:100%;">Result Dekhein</button>
     </div>
 
     <script>
-        const URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
+        const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQVYOZX3AnpGZi8LxABZEEFC0Iya7ZtSJdxAvNwXI2zFgwtmWUtgAjZW81QQCxFeb6Npj1WvXepkOYy/pub?gid=853110802&single=true&output=csv";
 
-        async function fetchResult() {
-            const val = document.getElementById("admNo").value.trim();
-            if(!val) return alert("Adm No?");
+        async function findClass8Topper() {
+            const resDiv = document.getElementById("topperResult");
+            resDiv.style.display = "block";
+            resDiv.innerText = "Sheet scan ho rahi hai... Sabr rakhein...";
 
             try {
-                const res = await fetch(URL + "&v=" + Date.now());
-                const csv = await res.text();
-                const rows = csv.split("\n").map(r => r.split(","));
+                const resp = await fetch(SHEET_CSV + "&cb=" + Date.now());
+                const data = await resp.text();
+                const rows = data.split(/\r?\n/).map(r => r.split(","));
                 
-                // PURE ROW MEIN KAHIN BHI ADM NO MILE
-                const row = rows.find(r => r.some(cell => cell.trim() == val));
+                let topperName = "";
+                let maxPerc = 0;
+                let topperAdm = "";
 
-                if(row) {
-                    const shift = (parseInt(val) >= 60) ? 1 : 0;
-                    document.getElementById("n").innerText = row[1];
-                    document.getElementById("a").innerText = val;
-                    document.getElementById("f").innerText = row[2];
-                    document.getElementById("c").innerText = row[5];
-                    document.getElementById("m").innerText = row[3];
-                    document.getElementById("d").innerText = row[4];
+                // Row 1 se start karenge (Header chhod kar)
+                for(let i = 1; i < rows.length; i++) {
+                    let row = rows[i];
+                    let studentClass = row[5] ? row[5].trim() : "";
 
-                    const subs = [
-                        {n:"HINDI", i:[34,35, 92,93, 121,122, 179,180]},
-                        {n:"ENGLISH", i:[36,37, 94,95, 123,124, 181,182]},
-                        {n:"MATHS", i:[38,39, 96,97, 125,126, 183,184]},
-                        {n:"SCIENCE", i:[40,41, 98,99, 127,128, 185,186]},
-                        {n:"COMPUTER", i:[44,45, 102,103, 131,132, 189,190]},
-                        {n:"ART", i:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT/GAME", i:[52,53, 110,111, 139,140, 197,198], pt:true}
-                    ];
-
-                    let html = "", tM=0, tO=0;
-                    subs.forEach(s => {
-                        let m1=row[s.i[0]+shift], o1=row[s.i[1]+shift], m2=row[s.i[2]+shift], o2=row[s.i[3]+shift];
-                        let m3=row[s.i[4]+shift], o3=row[s.i[5]+shift], m4=row[s.i[6]+shift], o4=row[s.i[7]+shift];
+                    // Sirf Class 8 ke students check karega
+                    if(studentClass == "8") {
+                        let shift = (parseInt(row[0]) >= 60) ? 1 : 0;
                         
-                        if(s.pt){
-                            html += `<tr><td class="sub">${s.n}</td><td>-</td><td>${o1}</td><td>-</td><td>${o2}</td><td>-</td><td>${o3}</td><td>-</td><td>${o4}</td><td>-</td><td>${o4||o2}</td></tr>`;
-                        } else {
-                            let rm = (parseFloat(m1)||0)+(parseFloat(m2)||0)+(parseFloat(m3)||0)+(parseFloat(m4)||0);
-                            let ro = (parseFloat(o1)||0)+(parseFloat(o2)||0)+(parseFloat(o3)||0)+(parseFloat(o4)||0);
-                            tM+=rm; tO+=ro;
-                            html += `<tr><td class="sub">${s.n}</td><td>${m1}</td><td>${o1}</td><td>${m2}</td><td>${o2}</td><td>${m3}</td><td>${o3}</td><td>${m4}</td><td>${o4}</td><td>${rm}</td><td>${ro}</td></tr>`;
+                        // Main Subjects ke marks (Hindi, English, Math, Science, SST)
+                        // Indices: 35, 37, 39, 41, 43... (Shift ke sath)
+                        let subIndices = [35, 37, 39, 41, 43, 45, 47, 49, 51];
+                        let totalObt = 0;
+                        let totalMM = 0;
+
+                        subIndices.forEach(idx => {
+                            let obt = parseFloat(row[idx + shift]) || 0;
+                            let mm = parseFloat(row[idx + shift - 1]) || 10; // Default MM 10 if missing
+                            totalObt += obt;
+                            totalMM += (mm > 0 ? mm : 10);
+                        });
+
+                        let perc = (totalObt / totalMM) * 100;
+
+                        if(perc > maxPerc) {
+                            maxPerc = perc;
+                            topperName = row[1];
+                            topperAdm = row[0];
                         }
-                    });
-                    document.getElementById("b").innerHTML = html;
-                    let p = ((tO/tM)*100).toFixed(2);
-                    document.getElementById("p").innerText = p;
-                    document.getElementById("s").innerText = p >= 33 ? "PASSED" : "FAILED";
-                    document.getElementById("marksheet").style.display = "block";
-                } else alert("Adm No " + val + " nahi mila!");
-            } catch(e) { alert("Error!"); }
+                    }
+                }
+
+                if(topperName) {
+                    resDiv.innerHTML = `🎉 Class 8 Topper Found!<br><br>Name: ${topperName.toUpperCase()}<br>Adm No: ${topperAdm}<br>Percentage: ${maxPerc.toFixed(2)}%`;
+                } else {
+                    resDiv.innerText = "Class 8 ka koi data nahi mila. Sheet check karein.";
+                }
+
+            } catch (e) {
+                resDiv.innerText = "Error: Sheet connect nahi ho pa rahi.";
+            }
         }
     </script>
 </body>
