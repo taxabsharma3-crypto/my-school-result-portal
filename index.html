@@ -2,42 +2,48 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Master Fix</title>
+    <title>BBCS Official Portal - Final Master Fix</title>
     <style>
         :root { --main: #2e86c1; --accent: #85c1e9; --lite: #f4f9fd; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
         .search-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 30px; }
-        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 8px; outline: none; font-size: 16px; }
-        .btn-search { background: var(--main); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 8px; outline: none; font-size: 16px; text-align: center; }
+        .btn-search { background: var(--main); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-search:hover { background: #21618c; }
+        
         #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #ccc; box-shadow: 0 0 30px rgba(0,0,0,0.05); }
         .header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--main); padding-bottom: 20px; }
         .header-box h1 { margin: 0; font-size: 36px; color: var(--main); text-transform: uppercase; font-weight: 800; }
+        
         .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1.5px solid var(--main); margin-bottom: 25px; }
         .info-cell { padding: 10px 15px; border: 0.5px solid var(--main); font-size: 14px; }
         .info-cell b { color: #5d6d7e; font-size: 11px; text-transform: uppercase; width: 130px; display: inline-block; }
+        
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
         .marks-table th, .marks-table td { border: 1px solid #dee2e6; padding: 8px; }
         .thead-main th { background: #ebf5fb; color: var(--main); font-weight: 700; text-transform: uppercase; }
         .sub-name { text-align: left !important; padding-left: 15px !important; font-weight: 600; color: #34495e; border-left: 5px solid var(--main) !important; }
-        .grand-total-cell { background: #f4f9fd; font-weight: bold; color: var(--main); }
+        
         .summary-wrapper { display: flex; justify-content: space-around; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #d6eaf8; margin-top: 20px; font-weight: bold; }
+        .grand-total-cell { background: #f4f9fd; font-weight: bold; color: var(--main); }
+
         @media print { .search-card, .btn-print { display: none; } body { padding: 0; } #marksheetFull { display: block !important; width: 100%; box-shadow: none; border: 1px solid #333; } }
     </style>
 </head>
 <body>
 
     <div class="search-card">
-        <h2 style="color:var(--main); margin:0 0 15px 0;">BBCS RESULT PORTAL</h2>
-        <input type="text" id="admInput" placeholder="Admission No. (e.g. 137)">
+        <h2 style="color:var(--main); margin:0 0 15px 0;">BBCS RESULT PORTAL 2026</h2>
+        <input type="text" id="admInput" placeholder="Admission No. Likhein (Jaise 137)">
         <button class="btn-search" onclick="findResult()">रिजल्ट देखें</button>
-        <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">Note: Class selection removed for faster matching.</p>
+        <p style="font-size: 11px; color: #e74c3c; margin-top: 10px; font-weight: bold;">Note: Ab har Admission No. match hoga!</p>
     </div>
 
     <div id="marksheetFull">
         <div class="header-box">
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
             <p>Agra, Uttar Pradesh | Session: 2025-26</p>
-            <div style="background:var(--main); color:white; display:inline-block; padding:4px 20px; border-radius:20px; font-weight:bold;">ANNUAL PROGRESS REPORT CARD</div>
+            <div style="background:var(--main); color:white; display:inline-block; padding:4px 25px; border-radius:20px; font-weight:bold;">ANNUAL PROGRESS REPORT CARD</div>
         </div>
 
         <div class="info-grid">
@@ -65,12 +71,12 @@
 
         <div class="summary-wrapper">
             <div>PERCENTAGE: <span id="resPerc"></span>%</div>
-            <div>GRAND GRADE: <span id="resGrade"></span></div>
+            <div>GRADE: <span id="resGrade"></span></div>
             <div>STATUS: <span id="resStatus"></span></div>
             <div>ATTENDANCE: <span id="resAtten"></span></div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; margin-top:70px; text-align:center;">
+        <div style="display:flex; justify-content:space-between; margin-top:80px; text-align:center;">
             <div style="width:180px; border-top:1.5px solid #333; padding-top:5px; font-weight:bold;">Parent's Sign</div>
             <div style="width:180px; border-top:1.5px solid #333; padding-top:5px; font-weight:bold;">Class Teacher</div>
             <div style="width:180px; border-top:1.5px solid #333; padding-top:5px; font-weight:bold;">Principal Sign</div>
@@ -90,77 +96,89 @@
         }
 
         async function findResult() {
-            const admVal = document.getElementById("admInput").value.trim();
-            if(!admVal) return alert("Admission Number Likhein!");
+            const admInput = document.getElementById("admInput").value.trim();
+            if(!admInput) return alert("Bhai, Admission No. toh daalo!");
 
             try {
                 const resp = await fetch(SHEET_URL + "?v=" + Date.now());
                 const data = await resp.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 
-                // Naya Search Logic: Row mein kahin bhi Admission No mile
-                const student = rows.find(r => r[0] && r[0].trim() == admVal);
+                // --- POWER SEARCH LOGIC ---
+                // Row 1 (Headers) ko ignore karke poori sheet chaan lo
+                let studentRow = rows.find((r, index) => {
+                    if(index === 0) return false;
+                    // Check if Adm No exists in first 3 columns (A, B, or C)
+                    return (r[0] && r[0].trim() == admInput) || (r[1] && r[1].trim() == admInput) || (r[2] && r[2].trim() == admInput);
+                });
 
-                if(student) {
-                    // Force shift logic based on Admission No
-                    const shift = (parseInt(student[0]) >= 60) ? 1 : 0; 
-                    
-                    document.getElementById("sName").innerText = student[1] || "N/A";
-                    document.getElementById("sFather").innerText = student[2] || "N/A";
-                    document.getElementById("sMother").innerText = student[3] || "N/A";
-                    document.getElementById("sDOB").innerText = student[4] || "N/A";
-                    document.getElementById("sAdm").innerText = student[0];
-                    document.getElementById("sClass").innerText = student[5] || "N/A";
-                    document.getElementById("sAddr").innerText = (shift === 1) ? (student[7] || student[6]) : student[6];
-                    document.getElementById("resAtten").innerText = (shift === 1) ? student[11] : student[10];
+                if(studentRow) {
+                    showData(studentRow);
+                } else {
+                    alert("Record matching nahi hua! Adm No: " + admInput + " sheet mein nahi mila.");
+                }
+            } catch(e) { alert("Sheet error! Check Internet."); }
+        }
 
-                    const subjects = [
-                        {n:"HINDI", c:[34,35, 92,93, 121,122, 179,180]},
-                        {n:"ENGLISH", c:[36,37, 94,95, 123,124, 181,182]},
-                        {n:"MATHS", c:[38,39, 96,97, 125,126, 183,184]},
-                        {n:"SCIENCE", c:[40,41, 98,99, 127,128, 185,186]},
-                        {n:"SST / EVS", c:[42,43, 100,101, 129,130, 187,188]},
-                        {n:"COMPUTER", c:[44,45, 102,103, 131,132, 189,190]},
-                        {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
-                        {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
-                        {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
-                        {n:"PT/GAME", c:[52,53, 110,111, 139,140, 197,198], isPT: true}
-                    ];
+        function showData(d) {
+            // Find start of Name/Father (Usually index 1 or 2)
+            let nameIdx = d[1].length > 2 ? 1 : 2;
+            let adm = d[0].length < 6 ? d[0] : d[1];
+            
+            // Shift Detection (Adm 60+ has extra column)
+            const shift = (parseInt(adm) >= 60) ? 1 : 0;
 
-                    let html = "", tMM=0, tOB=0;
-                    subjects.forEach(sb => {
-                        function pickSafe(idx1, idx2) {
-                            let v1 = student[idx1+shift], v2 = student[idx2+shift];
-                            let n1 = parseFloat(v1)||0, n2 = parseFloat(v2)||0;
-                            // Agar Obtained MM se zyada hai, toh Swap karo
-                            if(n2 > n1 && n1 > 0) return {m:n2, o:n1};
-                            // Agar MM khali hai par Obtained mein data hai
-                            if(v1 === "" && v2 !== "") return {m:v2, o:""};
-                            return {m:v1, o:v2};
-                        }
+            document.getElementById("sName").innerText = d[nameIdx] || "N/A";
+            document.getElementById("sFather").innerText = d[nameIdx+1] || "N/A";
+            document.getElementById("sMother").innerText = d[nameIdx+2] || "N/A";
+            document.getElementById("sDOB").innerText = d[nameIdx+3] || "N/A";
+            document.getElementById("sAdm").innerText = adm;
+            document.getElementById("sClass").innerText = d[nameIdx+4] || "N/A";
+            document.getElementById("sAddr").innerText = (shift === 1) ? d[nameIdx+6] : d[nameIdx+5];
+            document.getElementById("resAtten").innerText = (shift === 1) ? d[nameIdx+10] : d[nameIdx+9];
 
-                        let f1=pickSafe(sb.c[0],sb.c[1]), f2=pickSafe(sb.c[2],sb.c[3]), f3=pickSafe(sb.c[4],sb.c[5]), f4=pickSafe(sb.c[6],sb.c[7]);
+            const subjects = [
+                {n:"HINDI", c:[34,35, 92,93, 121,122, 179,180]},
+                {n:"ENGLISH", c:[36,37, 94,95, 123,124, 181,182]},
+                {n:"MATHS", c:[38,39, 96,97, 125,126, 183,184]},
+                {n:"SCIENCE", c:[40,41, 98,99, 127,128, 185,186]},
+                {n:"SST / EVS", c:[42,43, 100,101, 129,130, 187,188]},
+                {n:"COMPUTER", c:[44,45, 102,103, 131,132, 189,190]},
+                {n:"G.K.", c:[46,47, 104,105, 133,134, 191,192]},
+                {n:"SANSKRIT", c:[48,49, 106,107, 135,136, 193,194]},
+                {n:"ART", c:[50,51, 108,109, 137,138, 195,196]},
+                {n:"PT/GAME", c:[52,53, 110,111, 139,140, 197,198], isPT: true}
+            ];
 
-                        if(sb.isPT) {
-                            let g = f4.m || f2.m || f1.m || "-";
-                            html += `<tr><td class="sub-name">${sb.n}</td><td>-</td><td>${f1.m}</td><td>${f1.m}</td><td>-</td><td>${f2.m}</td><td>${f2.m}</td><td>-</td><td>${f3.m}</td><td>${f3.m}</td><td>-</td><td>${f4.m}</td><td>${f4.m}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${g}</td><td class="grand-total-cell">${g}</td></tr>`;
-                        } else {
-                            let rM = (parseFloat(f1.m)||0)+(parseFloat(f2.m)||0)+(parseFloat(f3.m)||0)+(parseFloat(f4.m)||0);
-                            let rO = (parseFloat(f1.o)||0)+(parseFloat(f2.o)||0)+(parseFloat(f3.o)||0)+(parseFloat(f4.o)||0);
-                            tMM += rM; tOB += rO;
-                            html += `<tr><td class="sub-name">${sb.n}</td><td>${f1.m}</td><td>${f1.o}</td><td>${getGr(f1.o,f1.m)}</td><td>${f2.m}</td><td>${f2.o}</td><td>${getGr(f2.o,f2.m)}</td><td>${f3.m}</td><td>${f3.o}</td><td>${getGr(f3.o,f3.m)}</td><td>${f4.m}</td><td>${f4.o}</td><td>${getGr(f4.o,f4.m)}</td><td class="grand-total-cell">${rM}</td><td class="grand-total-cell">${rO}</td><td class="grand-total-cell">${getGr(rO,rM)}</td></tr>`;
-                        }
-                    });
+            let html = "", tMM=0, tOB=0;
+            subjects.forEach(sb => {
+                function pick(idx1, idx2) {
+                    let v1 = d[idx1+shift], v2 = d[idx2+shift];
+                    let n1 = parseFloat(v1)||0, n2 = parseFloat(v2)||0;
+                    if(n2 > n1 && n1 > 0) return {m:n2, o:n1}; // SWAP FIX
+                    if(v1 === "" && v2 !== "") return {m:v2, o:""}; // SHIFT FIX
+                    return {m:v1, o:v2};
+                }
+                let f1=pick(sb.c[0],sb.c[1]), f2=pick(sb.c[2],sb.c[3]), f3=pick(sb.c[4],sb.c[5]), f4=pick(sb.c[6],sb.c[7]);
 
-                    document.getElementById("marksBody").innerHTML = html;
-                    let p = ((tOB/tMM)*100).toFixed(2);
-                    document.getElementById("resPerc").innerText = p;
-                    document.getElementById("resGrade").innerText = getGr(tOB, tMM);
-                    document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
-                    document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
-                    document.getElementById("marksheetFull").style.display = "block";
-                } else alert("Record matching nahi hua! Adm No sahi daalein.");
-            } catch(e) { alert("Data load nahi hua! Check internet."); }
+                if(sb.isPT) {
+                    let g = f4.m || f2.m || f1.m || "-";
+                    html += `<tr><td class="sub-name">${sb.n}</td><td>-</td><td>${f1.m}</td><td>${f1.m}</td><td>-</td><td>${f2.m}</td><td>${f2.m}</td><td>-</td><td>${f3.m}</td><td>${f3.m}</td><td>-</td><td>${f4.m}</td><td>${f4.m}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${g}</td><td class="grand-total-cell">${g}</td></tr>`;
+                } else {
+                    let rM = (parseFloat(f1.m)||0)+(parseFloat(f2.m)||0)+(parseFloat(f3.m)||0)+(parseFloat(f4.m)||0);
+                    let rO = (parseFloat(f1.o)||0)+(parseFloat(f2.o)||0)+(parseFloat(f3.o)||0)+(parseFloat(f4.o)||0);
+                    tMM += rM; tOB += rO;
+                    html += `<tr><td class="sub-name">${sb.n}</td><td>${f1.m}</td><td>${f1.o}</td><td>${getGr(f1.o,f1.m)}</td><td>${f2.m}</td><td>${f2.o}</td><td>${getGr(f2.o,f2.m)}</td><td>${f3.m}</td><td>${f3.o}</td><td>${getGr(f3.o,f3.m)}</td><td>${f4.m}</td><td>${f4.o}</td><td>${getGr(f4.o,f4.m)}</td><td class="grand-total-cell">${rM}</td><td class="grand-total-cell">${rO}</td><td class="grand-total-cell">${getGr(rO,rM)}</td></tr>`;
+                }
+            });
+
+            document.getElementById("marksBody").innerHTML = html;
+            let p = ((tOB/tMM)*100).toFixed(2);
+            document.getElementById("resPerc").innerText = p;
+            document.getElementById("resGrade").innerText = getGr(tOB, tMM);
+            document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
+            document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
+            document.getElementById("marksheetFull").style.display = "block";
         }
     </script>
 </body>
