@@ -2,25 +2,25 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BBCS Official Result Portal - Absolute Fix</title>
+    <title>BBCS Official Result Portal - Master Fix</title>
     <style>
         :root { --main: #2e86c1; --accent: #85c1e9; --lite: #f4f9fd; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #fdfdfd; padding: 20px; display: flex; flex-direction: column; align-items: center; color: #333; }
         .search-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; border-top: 6px solid var(--main); margin-bottom: 30px; }
-        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 8px; outline: none; }
+        select, input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #d1d9e0; border-radius: 8px; outline: none; font-size: 16px; }
         .btn-search { background: var(--main); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 95%; font-weight: bold; font-size: 16px; }
-        #marksheetFull { display: none; width: 1080px; background: white; padding: 40px; border: 1px solid #ccc; box-shadow: 0 0 30px rgba(0,0,0,0.05); }
+        #marksheetFull { display: none; width: 1050px; background: white; padding: 40px; border: 1px solid #ccc; box-shadow: 0 0 30px rgba(0,0,0,0.05); }
         .header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--main); padding-bottom: 20px; }
-        .header-box h1 { margin: 0; font-size: 38px; color: var(--main); text-transform: uppercase; font-weight: 800; }
+        .header-box h1 { margin: 0; font-size: 36px; color: var(--main); text-transform: uppercase; font-weight: 800; }
         .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1.5px solid var(--main); margin-bottom: 25px; }
-        .info-cell { padding: 12px 20px; border: 0.5px solid var(--main); font-size: 14px; }
-        .info-cell b { color: #5d6d7e; font-size: 11px; text-transform: uppercase; width: 140px; display: inline-block; }
+        .info-cell { padding: 10px 15px; border: 0.5px solid var(--main); font-size: 14px; }
+        .info-cell b { color: #5d6d7e; font-size: 11px; text-transform: uppercase; width: 130px; display: inline-block; }
         .marks-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
-        .marks-table th, .marks-table td { border: 1px solid #eef2f6; padding: 10px; }
+        .marks-table th, .marks-table td { border: 1px solid #dee2e6; padding: 8px; }
         .thead-main th { background: #ebf5fb; color: var(--main); font-weight: 700; text-transform: uppercase; }
         .sub-name { text-align: left !important; padding-left: 15px !important; font-weight: 600; color: #34495e; border-left: 5px solid var(--main) !important; }
         .grand-total-cell { background: #f4f9fd; font-weight: bold; color: var(--main); }
-        .summary-wrapper { display: flex; justify-content: space-around; background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #d6eaf8; margin-top: 20px; }
+        .summary-wrapper { display: flex; justify-content: space-around; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #d6eaf8; margin-top: 20px; font-weight: bold; }
         @media print { .search-card, .btn-print { display: none; } body { padding: 0; } #marksheetFull { display: block !important; width: 100%; box-shadow: none; border: 1px solid #333; } }
     </style>
 </head>
@@ -28,24 +28,16 @@
 
     <div class="search-card">
         <h2 style="color:var(--main); margin:0 0 15px 0;">BBCS RESULT PORTAL</h2>
-        <select id="studentClassSelect">
-            <option value="">-- Select Class --</option>
-            <option value="PRE-NURSERY">Pre-Nursery</option><option value="NURSERY">Nursery</option>
-            <option value="LKG">LKG</option><option value="UKG">UKG</option>
-            <option value="1">Class 1</option><option value="2">Class 2</option>
-            <option value="3">Class 3</option><option value="4">Class 4</option>
-            <option value="5">Class 5</option><option value="6">Class 6</option>
-            <option value="7">Class 7</option><option value="8">Class 8</option>
-        </select>
-        <input type="text" id="admInput" placeholder="Admission No. Yahan Likhein">
+        <input type="text" id="admInput" placeholder="Admission No. (e.g. 137)">
         <button class="btn-search" onclick="findResult()">रिजल्ट देखें</button>
+        <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">Note: Class selection removed for faster matching.</p>
     </div>
 
     <div id="marksheetFull">
         <div class="header-box">
             <h1>BLUE BELLS CONVENT SCHOOL</h1>
             <p>Agra, Uttar Pradesh | Session: 2025-26</p>
-            <div style="background:var(--main); color:white; display:inline-block; padding:5px 20px; border-radius:20px; margin-top:10px;">ANNUAL PROGRESS REPORT CARD</div>
+            <div style="background:var(--main); color:white; display:inline-block; padding:4px 20px; border-radius:20px; font-weight:bold;">ANNUAL PROGRESS REPORT CARD</div>
         </div>
 
         <div class="info-grid">
@@ -61,7 +53,7 @@
         <table class="marks-table">
             <thead>
                 <tr class="thead-main">
-                    <th rowspan="2" style="width: 200px;">SUBJECTS</th>
+                    <th rowspan="2" style="width: 180px;">SUBJECTS</th>
                     <th colspan="3">FA-I</th><th colspan="3">HALF YEARLY</th><th colspan="3">FA-II</th><th colspan="3">ANNUAL</th><th colspan="3">GRAND TOTAL</th>
                 </tr>
                 <tr class="thead-main">
@@ -72,18 +64,18 @@
         </table>
 
         <div class="summary-wrapper">
-            <div><b>PERCENTAGE:</b> <span id="resPerc"></span>%</div>
-            <div><b>GRADE:</b> <span id="resGrade"></span></div>
-            <div><b>STATUS:</b> <span id="resStatus"></span></div>
-            <div><b>ATTENDANCE:</b> <span id="resAtten"></span></div>
+            <div>PERCENTAGE: <span id="resPerc"></span>%</div>
+            <div>GRAND GRADE: <span id="resGrade"></span></div>
+            <div>STATUS: <span id="resStatus"></span></div>
+            <div>ATTENDANCE: <span id="resAtten"></span></div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; margin-top:80px; text-align:center;">
-            <div style="width:200px; border-top:1.5px solid #333; padding-top:5px;">Parent's Sign</div>
-            <div style="width:200px; border-top:1.5px solid #333; padding-top:5px;">Class Teacher</div>
-            <div style="width:200px; border-top:1.5px solid #333; padding-top:5px;">Principal Sign</div>
+        <div style="display:flex; justify-content:space-between; margin-top:70px; text-align:center;">
+            <div style="width:180px; border-top:1.5px solid #333; padding-top:5px; font-weight:bold;">Parent's Sign</div>
+            <div style="width:180px; border-top:1.5px solid #333; padding-top:5px; font-weight:bold;">Class Teacher</div>
+            <div style="width:180px; border-top:1.5px solid #333; padding-top:5px; font-weight:bold;">Principal Sign</div>
         </div>
-        <center><button onclick="window.print()" class="btn-search" style="margin-top:40px; width:200px; background:#2ecc71;">Print / PDF Download</button></center>
+        <center><button onclick="window.print()" class="btn-search btn-print" style="margin-top:30px; width:180px; background:#2ecc71;">Download PDF</button></center>
     </div>
 
     <script>
@@ -99,27 +91,27 @@
 
         async function findResult() {
             const admVal = document.getElementById("admInput").value.trim();
-            const clsVal = document.getElementById("studentClassSelect").value;
-            if(!admVal || !clsVal) return alert("Fill details!");
+            if(!admVal) return alert("Admission Number Likhein!");
 
             try {
-                const resp = await fetch(SHEET_URL + "?cb=" + Date.now());
+                const resp = await fetch(SHEET_URL + "?v=" + Date.now());
                 const data = await resp.text();
                 const rows = data.split(/\r?\n/).map(r => r.split(","));
                 
-                // FORCE ADMISSION NO MATCH (ANY COLUMN)
+                // Naya Search Logic: Row mein kahin bhi Admission No mile
                 const student = rows.find(r => r[0] && r[0].trim() == admVal);
 
                 if(student) {
+                    // Force shift logic based on Admission No
                     const shift = (parseInt(student[0]) >= 60) ? 1 : 0; 
                     
-                    document.getElementById("sName").innerText = student[1];
-                    document.getElementById("sFather").innerText = student[2];
-                    document.getElementById("sMother").innerText = student[3];
-                    document.getElementById("sDOB").innerText = student[4];
+                    document.getElementById("sName").innerText = student[1] || "N/A";
+                    document.getElementById("sFather").innerText = student[2] || "N/A";
+                    document.getElementById("sMother").innerText = student[3] || "N/A";
+                    document.getElementById("sDOB").innerText = student[4] || "N/A";
                     document.getElementById("sAdm").innerText = student[0];
-                    document.getElementById("sClass").innerText = student[5];
-                    document.getElementById("sAddr").innerText = (shift === 1) ? (isNaN(student[7]) ? student[7] : student[8]) : student[6];
+                    document.getElementById("sClass").innerText = student[5] || "N/A";
+                    document.getElementById("sAddr").innerText = (shift === 1) ? (student[7] || student[6]) : student[6];
                     document.getElementById("resAtten").innerText = (shift === 1) ? student[11] : student[10];
 
                     const subjects = [
@@ -137,26 +129,26 @@
 
                     let html = "", tMM=0, tOB=0;
                     subjects.forEach(sb => {
-                        function pick(idx1, idx2) {
+                        function pickSafe(idx1, idx2) {
                             let v1 = student[idx1+shift], v2 = student[idx2+shift];
                             let n1 = parseFloat(v1)||0, n2 = parseFloat(v2)||0;
-                            // SHIFT RECOVERY LOGIC: If MM is empty, check next column
-                            if (v1 === "" && v2 !== "") return {m: v2, o: ""};
-                            // SWAP RECOVERY LOGIC: If Obt > MM
-                            if (n2 > n1 && n1 > 0) return {m: n2, o: n1};
-                            return {m: v1, o: v2};
+                            // Agar Obtained MM se zyada hai, toh Swap karo
+                            if(n2 > n1 && n1 > 0) return {m:n2, o:n1};
+                            // Agar MM khali hai par Obtained mein data hai
+                            if(v1 === "" && v2 !== "") return {m:v2, o:""};
+                            return {m:v1, o:v2};
                         }
 
-                        let f1=pick(sb.c[0],sb.c[1]), f2=pick(sb.c[2],sb.c[3]), f3=pick(sb.c[4],sb.c[5]), f4=pick(sb.c[6],sb.c[7]);
+                        let f1=pickSafe(sb.c[0],sb.c[1]), f2=pickSafe(sb.c[2],sb.c[3]), f3=pickSafe(sb.c[4],sb.c[5]), f4=pickSafe(sb.c[6],sb.c[7]);
 
                         if(sb.isPT) {
-                            let totalG = f4.m || f2.m || f1.m || "-";
-                            html += `<tr><td class="sub-name">${sb.n}</td><td>-</td><td>${f1.m}</td><td>${f1.m}</td><td>-</td><td>${f2.m}</td><td>${f2.m}</td><td>-</td><td>${f3.m}</td><td>${f3.m}</td><td>-</td><td>${f4.m}</td><td>${f4.m}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${totalG}</td><td class="grand-total-cell">${totalG}</td></tr>`;
+                            let g = f4.m || f2.m || f1.m || "-";
+                            html += `<tr><td class="sub-name">${sb.n}</td><td>-</td><td>${f1.m}</td><td>${f1.m}</td><td>-</td><td>${f2.m}</td><td>${f2.m}</td><td>-</td><td>${f3.m}</td><td>${f3.m}</td><td>-</td><td>${f4.m}</td><td>${f4.m}</td><td class="grand-total-cell">-</td><td class="grand-total-cell">${g}</td><td class="grand-total-cell">${g}</td></tr>`;
                         } else {
-                            let rMM = (parseFloat(f1.m)||0)+(parseFloat(f2.m)||0)+(parseFloat(f3.m)||0)+(parseFloat(f4.m)||0);
-                            let rOB = (parseFloat(f1.o)||0)+(parseFloat(f2.o)||0)+(parseFloat(f3.o)||0)+(parseFloat(f4.o)||0);
-                            tMM += rMM; tOB += rOB;
-                            html += `<tr><td class="sub-name">${sb.n}</td><td>${f1.m}</td><td>${f1.o}</td><td>${getGr(f1.o,f1.m)}</td><td>${f2.m}</td><td>${f2.o}</td><td>${getGr(f2.o,f2.m)}</td><td>${f3.m}</td><td>${f3.o}</td><td>${getGr(f3.o,f3.m)}</td><td>${f4.m}</td><td>${f4.o}</td><td>${getGr(f4.o,f4.m)}</td><td class="grand-total-cell">${rMM}</td><td class="grand-total-cell">${rOB}</td><td class="grand-total-cell">${getGr(rOB,rMM)}</td></tr>`;
+                            let rM = (parseFloat(f1.m)||0)+(parseFloat(f2.m)||0)+(parseFloat(f3.m)||0)+(parseFloat(f4.m)||0);
+                            let rO = (parseFloat(f1.o)||0)+(parseFloat(f2.o)||0)+(parseFloat(f3.o)||0)+(parseFloat(f4.o)||0);
+                            tMM += rM; tOB += rO;
+                            html += `<tr><td class="sub-name">${sb.n}</td><td>${f1.m}</td><td>${f1.o}</td><td>${getGr(f1.o,f1.m)}</td><td>${f2.m}</td><td>${f2.o}</td><td>${getGr(f2.o,f2.m)}</td><td>${f3.m}</td><td>${f3.o}</td><td>${getGr(f3.o,f3.m)}</td><td>${f4.m}</td><td>${f4.o}</td><td>${getGr(f4.o,f4.m)}</td><td class="grand-total-cell">${rM}</td><td class="grand-total-cell">${rO}</td><td class="grand-total-cell">${getGr(rO,rM)}</td></tr>`;
                         }
                     });
 
@@ -165,9 +157,10 @@
                     document.getElementById("resPerc").innerText = p;
                     document.getElementById("resGrade").innerText = getGr(tOB, tMM);
                     document.getElementById("resStatus").innerText = p >= 33 ? "PASSED" : "FAILED";
+                    document.getElementById("resStatus").style.color = p >= 33 ? "green" : "red";
                     document.getElementById("marksheetFull").style.display = "block";
-                } else alert("Record match nahi hua!");
-            } catch(e) { alert("Network Error!"); }
+                } else alert("Record matching nahi hua! Adm No sahi daalein.");
+            } catch(e) { alert("Data load nahi hua! Check internet."); }
         }
     </script>
 </body>
